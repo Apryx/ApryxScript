@@ -1,0 +1,18 @@
+package tokens;
+
+public enum TokenType {
+	
+	IDENTIFIER, KEYWORD, 
+	
+	BRACKET_OPEN, BRACKET_CLOSE, 
+	CURLY_OPEN, CURLY_CLOSE, 
+	
+	WHITESPACE, 
+	LINE_END,
+	
+	COLON, 
+	
+	EQUALS,
+	
+	INTEGER, STRING
+}
