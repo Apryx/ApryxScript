@@ -16,9 +16,14 @@ public class Main {
 			System.exit(1);
 		}
 		for(int i = 0; i < args.length; i++){
-			Lexer lexer = new Lexer(new FileInputStream(new File(args[i])));
+			File file = new File(args[i]);
+			if(!file.exists()){
+				System.err.println("Can't find file " + file.getAbsolutePath());
+				break;
+			}
+
+			Lexer lexer = new Lexer(new FileInputStream(file));
 			List<Token> tokens = lexer.tokenize();
-			
 			for(Token t : tokens){
 				System.out.println(t);
 			}
