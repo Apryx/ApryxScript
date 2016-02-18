@@ -14,5 +14,7 @@ public enum TokenType {
 	
 	EQUALS,
 	
-	INTEGER, STRING
+	INTEGER, STRING, FLOAT, DOUBLE, LONG,
+	
+	EOF
 }

@@ -5,8 +5,13 @@ public class Language {
 	public static final String VAR = "var";
 	public static final String CLASS = "class";
 	public static final String FUNCTION = "function";
-	
+
 	public static final String TYPE_OBJECT = "Object";
+	public static final String TYPE_STRING = "String";
+	
+	public static final String TYPE_INT = "int";
+	public static final String TYPE_FLOAT = "float";
+	public static final String TYPE_DOUBLE = "double";
 	
 	public static boolean isAlphabetic(char c){
 		return Character.isAlphabetic(c);

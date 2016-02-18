@@ -10,11 +10,13 @@ import tokens.Token;
 
 public class Main {
 	
+	
 	public static void main(String[] args) throws FileNotFoundException {
 		if(args.length < 1){
 			System.out.println("Insufficient arguments");
 			System.exit(1);
 		}
+		
 		for(int i = 0; i < args.length; i++){
 			File file = new File(args[i]);
 			if(!file.exists()){
@@ -33,5 +35,6 @@ public class Main {
 		}
 		System.out.println("Done");
 	}
+	
 	
 }

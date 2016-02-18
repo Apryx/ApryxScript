@@ -134,6 +134,8 @@ public class Lexer {
 			
 		}
 		
+		tokens.add(new Token(TokenType.EOF, "End of file", chars.getLine()));
+		
 		return tokens;
 	}
 }
