@@ -39,4 +39,19 @@ public class CodeBlock extends Statement{
 		
 		return null;
 	}
+	
+	@Override
+	public String toString() {
+		return statements.toString();
+	}
+	
+	public String toXML(){
+		StringBuilder builder = new StringBuilder();
+		
+		for(Statement s : statements){
+			builder.append(s.toXML());
+		}
+		
+		return builder.toString();
+	}
 }

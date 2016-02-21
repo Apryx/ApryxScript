@@ -1,6 +1,8 @@
 package statement;
 
 public class IdentifierExpression extends Expression{
+	
+	public static final String XML_STRING = "<get name=\"%s\" type=\"%s\" />";
 
 	private String name;
 	
@@ -11,6 +13,10 @@ public class IdentifierExpression extends Expression{
 	
 	public String getName() {
 		return name;
+	}
+	
+	public String toXML(){
+		return String.format(XML_STRING, name, type);
 	}
 
 }

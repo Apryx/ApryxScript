@@ -119,6 +119,27 @@ public class Lexer {
 				tokens.add(token);
 				chars.next();
 			}
+
+			//seperators
+			else if(Language.isSeperator(c)){
+				Token token = new Token(TokenType.SEPERATOR, "" + c, chars.getLine());
+				tokens.add(token);
+				chars.next();
+			}
+			
+			//multyply and devide
+			else if(Language.isMulDiv(c)){
+				Token token = new Token(TokenType.MULDIV, "" + c, chars.getLine());
+				tokens.add(token);
+				chars.next();
+			}
+			
+			//add or subtract
+			else if(Language.isPlusMin(c)){
+				Token token = new Token(TokenType.PLUSMIN, "" + c, chars.getLine());
+				tokens.add(token);
+				chars.next();
+			}
 			
 			//whitespace
 			else if(Language.isWhitespace(c)){

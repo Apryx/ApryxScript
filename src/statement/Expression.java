@@ -11,4 +11,6 @@ public abstract class Expression {
 	public String getType() {
 		return type;
 	}
+	
+	public abstract String toXML();
 }

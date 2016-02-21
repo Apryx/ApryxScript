@@ -9,6 +9,8 @@ public class Language {
 	public static final String TYPE_OBJECT = "Object";
 	public static final String TYPE_STRING = "String";
 	
+	public static final String TYPE_UNKNOWN = "?";
+	
 	public static final String TYPE_INT = "int";
 	public static final String TYPE_FLOAT = "float";
 	public static final String TYPE_DOUBLE = "double";
@@ -19,6 +21,18 @@ public class Language {
 	
 	public static boolean isDigit(char c){
 		return Character.isDigit(c);
+	}
+	
+	public static boolean isSeperator(char c){
+		return c == ',';
+	}
+	
+	public static boolean isMulDiv(char c){
+		return c == '*' || c == '/';
+	}
+	
+	public static boolean isPlusMin(char c){
+		return c == '+' || c == '-';
 	}
 	
 	public static boolean isKeyword(String word){

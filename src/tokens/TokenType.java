@@ -10,7 +10,9 @@ public enum TokenType {
 	WHITESPACE, 
 	LINE_END,
 	
-	COLON, 
+	COLON, SEPERATOR,
+	
+	MULDIV, PLUSMIN,
 	
 	EQUALS,
 	

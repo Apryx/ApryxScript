@@ -26,14 +26,13 @@ public class Main {
 
 			Lexer lexer = new Lexer(new FileInputStream(file));
 			List<Token> tokens = lexer.tokenize();
-			for(Token t : tokens){
-				System.out.println(t);
-			}
 			
 			Parser parser = new Parser(tokens);
 			parser.parse();
+			
+			System.out.println(parser.getBlock().toXML());
+			
 		}
-		System.out.println("Done");
 	}
 	
 	

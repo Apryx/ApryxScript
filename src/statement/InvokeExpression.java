@@ -2,25 +2,17 @@ package statement;
 
 import java.util.List;
 
-public class InvokeStatement extends Statement{
+public class InvokeExpression extends Expression{
 	
-	private List<Expression> arguments;
 	private String function;
-	
-	//TODO refactor to Function instead of String maybe?
-	public InvokeStatement(String function, List<Expression> arguments){
-		this.function = function;
-		this.arguments = arguments;
+	private List<Expression> arguments;
+
+	public InvokeExpression(String name, String type, List<Expression> args) {
+		super(type);
+		this.function = name;
+		this.arguments = args;
 	}
-	
-	public String getFunction() {
-		return function;
-	}
-	
-	public List<Expression> getArguments() {
-		return arguments;
-	}
-	
+
 	public String toXML(){
 		/*<invoke name="print" type="void">
 			<add type="int">
@@ -35,7 +27,9 @@ public class InvokeStatement extends Statement{
 		builder.append(function);
 		
 		//void because its not an expression
-		builder.append("\" type=\"void\">");
+		builder.append("\" type=\"");
+		builder.append(type);
+		builder.append("\">");
 		
 		for(Expression e : arguments){
 			builder.append(e.toXML());
@@ -45,4 +39,5 @@ public class InvokeStatement extends Statement{
 		
 		return builder.toString();
 	}
+	
 }

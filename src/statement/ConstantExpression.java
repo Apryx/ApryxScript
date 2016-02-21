@@ -12,4 +12,18 @@ public class ConstantExpression extends Expression{
 	public String getValue() {
 		return value;
 	}
+	
+	public String toXML(){
+		StringBuilder builder = new StringBuilder();
+		
+		builder.append("<constant type=\"");
+		builder.append(type);
+		builder.append("\">");
+		
+		builder.append(value);
+		
+		builder.append("</constant>");
+		
+		return builder.toString();
+	}
 }

@@ -8,6 +8,9 @@ import statement.ConstantExpression;
 import statement.DeclareStatement;
 import statement.Expression;
 import statement.IdentifierExpression;
+import statement.InvokeExpression;
+import statement.InvokeStatement;
+import statement.OperatorExpression;
 import statement.SetStatement;
 import tokens.Token;
 import tokens.TokenType;
@@ -26,10 +29,15 @@ public class Parser {
 		block = new CodeBlock();
 	}
 	
-	public void parse(){
+	public CodeBlock parse(){
 		while(!tokens.isDone()){
 			parseStatement();			
 		}
+		return block;
+	}
+	
+	public CodeBlock getBlock() {
+		return block;
 	}
 	
 	private void parseStatement(){
@@ -148,11 +156,24 @@ public class Parser {
 				//give it an empty list
 				e = new ArrayList<Expression>();
 				
+				//consume the bclose
+				tokens.next();
+				
 			}else{
 				e = parseExpressionList();
 				
+				Token bCloseToken = tokens.current();
+				if(bCloseToken.getType() != TokenType.BRACKET_CLOSE)
+					throw new UnexpectedTokenException(bCloseToken, TokenType.BRACKET_CLOSE);
+				
+				//consume bclose
+				tokens.next();
+				
 			}
 			//TODO IMPLEMENT FUNCTION CALLS
+			
+			InvokeStatement statement = new InvokeStatement(current.getData(), e);
+			block.add(statement);
 		}
 		
 		else if(operationToken.getType() == TokenType.EQUALS){
@@ -165,27 +186,103 @@ public class Parser {
 	}
 	
 	private List<Expression> parseExpressionList(){
-		return null;
+		ArrayList<Expression> expressions = new ArrayList<Expression>();
+		
+		boolean done = false;
+		Token current = tokens.current();
+		
+		while(!done){
+			Expression e = parseExpression();
+			expressions.add(e);
+			current = tokens.current();
+			if(current.getType() == TokenType.SEPERATOR){
+				current = tokens.next();
+			}else{
+				done = true;
+			}
+		}
+		
+		
+		return expressions;
+	}
+	
+	private List<Expression> parseExpressionListBrackets(){
+		Token bOpen = tokens.current();
+		
+		if(bOpen.getType() != TokenType.BRACKET_OPEN)
+			throw new UnexpectedTokenException(bOpen, TokenType.BRACKET_OPEN);
+		
+		Token firstArg = tokens.next();
+		List<Expression> e;
+		
+		if(firstArg.getType() == TokenType.BRACKET_CLOSE){
+			//give it an empty list
+			e = new ArrayList<Expression>();
+			
+		}else{
+			e = parseExpressionList();
+			
+			Token bCloseToken = tokens.current();
+			if(bCloseToken.getType() != TokenType.BRACKET_CLOSE)
+				throw new UnexpectedTokenException(bCloseToken, TokenType.BRACKET_CLOSE);
+			
+			//consume bclose
+			tokens.next();
+			
+		}
+		
+		return e;
 	}
 	
 	private Expression parseExpression(){
 		//TODO everything with add and stuff, will take some time
 		Token current = tokens.current();
 		
+		Expression self;
 		
-		//consume the current
-		tokens.next();
-		
-		if(current.getType() == TokenType.IDENTIFIER)
-			return parseExpressionIdentifier();
-		else if(current.getType() == TokenType.STRING)
-			return new ConstantExpression(Language.TYPE_STRING, current.getData());
-		else if(current.getType() == TokenType.INTEGER)
-			return new ConstantExpression(Language.TYPE_INT, current.getData());
-		else if(current.getType() == TokenType.FLOAT)
-			return new ConstantExpression(Language.TYPE_FLOAT, current.getData());
-		else 
+		if(current.getType() == TokenType.IDENTIFIER){
+			self =  parseExpressionIdentifier();
+		}else if(current.getType() == TokenType.STRING){
+			tokens.next();
+			self = new ConstantExpression(Language.TYPE_STRING, current.getData());
+		}else if(current.getType() == TokenType.INTEGER){
+			tokens.next();
+			self =  new ConstantExpression(Language.TYPE_INT, current.getData());
+		}else if(current.getType() == TokenType.FLOAT){
+			tokens.next();
+			self =  new ConstantExpression(Language.TYPE_FLOAT, current.getData());
+		}else 
 			throw new UnexpectedTokenException(current);
+		
+		Token operatorToken = tokens.current();
+		
+		
+		
+		//add or subtract!
+		if(operatorToken.getType() == TokenType.PLUSMIN){
+			tokens.next();
+			Expression rightHandSide = parseExpression();
+			
+			//TODO clean this up
+			Expression combined = new OperatorExpression(operatorToken.getData().equals("+") ? OperatorExpression.OPERATION_ADD : OperatorExpression.OPERATION_SUBTRACT, self, rightHandSide);
+			
+			return combined;
+		}
+		
+		//multiply or devide
+		else if(operatorToken.getType() == TokenType.MULDIV){
+			tokens.next();
+			Expression rightHandSide = parseExpression();
+			
+			//TODO clean this up
+			Expression combined = new OperatorExpression(operatorToken.getData().equals("*") ? OperatorExpression.OPERATION_MULTIPLY : OperatorExpression.OPERATION_DEVIDE, self, rightHandSide);
+			
+			return combined;
+		}
+		
+		else{
+			return self;
+		}
 		
 	}
 	
@@ -195,12 +292,31 @@ public class Parser {
 		if(current.getType() != TokenType.IDENTIFIER)
 			throw new UnexpectedTokenException(current, TokenType.IDENTIFIER);
 		
-		DeclareStatement initialDeclare = block.getVariableByName(current.getData(), true);
+		//consume the identifier
+		Token operator = tokens.next();
 		
-		if(initialDeclare == null)
-			throw new UndeclaredVariableException(current.getData());
+		Expression exp;
 		
-		return new IdentifierExpression(current.getData(), initialDeclare.getType());
+		//FUNCTION
+		if(operator.getType() == TokenType.BRACKET_OPEN){
+			List<Expression> arguments = parseExpressionListBrackets();
+			
+			//TODO find type for function!
+			exp = new InvokeExpression(current.getData(), Language.TYPE_UNKNOWN, arguments);
+		}
+		
+		//VARIABLE
+		else{
+			DeclareStatement initialDeclare = block.getVariableByName(current.getData(), true);
+			
+			if(initialDeclare == null)
+				throw new UndeclaredVariableException(current.getData());
+			exp = new IdentifierExpression(current.getData(), initialDeclare.getType());
+		}
+		
+		//TODO parse . expression
+		
+		return exp;
 	}
 	
 	
