@@ -8,8 +8,9 @@ public class Language {
 
 	public static final String TYPE_OBJECT = "Object";
 	public static final String TYPE_STRING = "String";
-	
+
 	public static final String TYPE_UNKNOWN = "?";
+	public static final String TYPE_VOID = "void";
 	
 	public static final String TYPE_INT = "int";
 	public static final String TYPE_FLOAT = "float";

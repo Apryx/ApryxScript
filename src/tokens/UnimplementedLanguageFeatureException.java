@@ -7,4 +7,8 @@ public class UnimplementedLanguageFeatureException extends RuntimeException{
 	public UnimplementedLanguageFeatureException(){
 		super("Language feature unimplemented");
 	}
+	
+	public UnimplementedLanguageFeatureException(String feature){
+		super("Language feature unimplemented " + feature);
+	}
 }

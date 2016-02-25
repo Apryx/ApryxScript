@@ -6,6 +6,9 @@ import java.util.List;
 public class CodeBlock extends Statement{
 	
 	private CodeBlock parent;
+	
+	private List<Function> functions;
+	
 	private List<Statement> statements;
 	
 	public CodeBlock(){
@@ -14,6 +17,8 @@ public class CodeBlock extends Statement{
 	
 	public CodeBlock(CodeBlock parent){
 		this.parent = parent;
+		
+		functions = new ArrayList<Function>();
 		statements = new ArrayList<Statement>();
 	}
 	
@@ -21,8 +26,29 @@ public class CodeBlock extends Statement{
 		this.statements.add(statement);
 	}
 	
+	public void add(Function function){
+		this.functions.add(function);
+	}
+	
+	public boolean isRoot(){
+		return parent == null;
+	}
+	
 	public CodeBlock getParent() {
 		return parent;
+	}
+	
+	public Function getFunctionByName(String name, boolean local){
+		for(Function f : functions){
+			
+			if(f.getName().equals(name))
+				return f;
+			
+		}
+		if(!local && parent != null)
+			return parent.getFunctionByName(name, local);
+		
+		return null;
 	}
 	
 	public DeclareStatement getVariableByName(String name, boolean local){
