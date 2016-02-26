@@ -19,7 +19,7 @@ public class NameAndType {
 	
 	@Override
 	public String toString() {
-		return name + " : " + type;
+		return name + ":" + type;
 	}
 	
 }

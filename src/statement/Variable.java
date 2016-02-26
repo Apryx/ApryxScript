@@ -1,30 +1,30 @@
 package statement;
 
-@Deprecated
-public class DeclareStatement extends Statement{
+public class Variable {
 	
-	private String name;
-	private String type;
+	private String name, type;
+	private boolean argument;
+
+	public Variable(String name, String type){
+		this(name, type, false);
+	}
 	
-	public DeclareStatement(String name, String type){
+	public Variable(String name, String type, boolean argument){
 		this.name = name;
 		this.type = type;
+		this.argument = argument;
 	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
+	
 	public String getType() {
 		return type;
 	}
-
-	public void setType(String type) {
-		this.type = type;
+	
+	public String getName() {
+		return name;
+	}
+	
+	public boolean isArgument() {
+		return argument;
 	}
 	
 	public String toXML(){

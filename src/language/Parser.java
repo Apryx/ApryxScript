@@ -7,12 +7,14 @@ import statement.CodeBlock;
 import statement.ConstantExpression;
 import statement.DeclareStatement;
 import statement.Expression;
+import statement.Function;
 import statement.IdentifierExpression;
 import statement.InvokeExpression;
 import statement.InvokeStatement;
 import statement.NameAndType;
 import statement.OperatorExpression;
 import statement.SetStatement;
+import statement.Variable;
 import tokens.Token;
 import tokens.TokenType;
 import tokens.UndeclaredVariableException;
@@ -26,7 +28,6 @@ import tokens.UnimplementedLanguageFeatureException;
 public class Parser {
 	
 	private TokenProcessor tokens;
-	
 	private CodeBlock block;
 	
 	/**
@@ -71,6 +72,12 @@ public class Parser {
 			parseIdentifier();
 		else if(current.getType() == TokenType.LINE_END)
 			tokens.next();
+		else if(current.getType() == TokenType.CURLY_CLOSE){
+			block = block.getParent();
+			if(block == null)
+				throw new UnexpectedTokenException(tokens.current());
+			tokens.next();
+		}
 		else
 			throw new UnexpectedTokenException(current);
 	}
@@ -151,16 +158,11 @@ public class Parser {
 			arguments.add(new NameAndType(nameArg, typeArg));
 		}
 		
-		synchronized(System.err){
-			System.out.println(nameToken.getData());
-			System.out.println(arguments);			
-		}
-		
 		Token colonToken = tokens.next();
 		Token statementBegin;
 		
 		//find the return type
-		if(colonToken.getType() != TokenType.COLON){
+		if(colonToken.getType() == TokenType.COLON){
 			tokens.next();
 			
 			type = parseType();
@@ -172,8 +174,33 @@ public class Parser {
 		
 		//TODO do stuff with statement begin
 		
+		//for reference, current block will be the parent for this block
+		//so that will kinda fix itself
+		CodeBlock bb = new CodeBlock(block);
 		
-		throw new UnimplementedLanguageFeatureException();
+		block = bb;
+		
+		//block
+		if(statementBegin.getType() == TokenType.CURLY_OPEN){
+			//consume curly open
+			tokens.next();
+			
+			//let the parser parse the rest of this function
+		}
+		
+		//single line function
+		else{
+			parseStatement();
+			
+			//return to normal
+			block = bb.getParent();
+		}
+		
+		//TODO add function
+		Function function = new Function(name, type, arguments, bb);
+		
+		//add it to the original block
+		bb.getParent().add(function);
 	}
 	
 	/**
@@ -204,9 +231,9 @@ public class Parser {
 			String name = nameToken.getData();
 			String type = parseType();
 			
-			DeclareStatement statement = new DeclareStatement(name, type);
+			Variable variable = new Variable(name, type);
 			
-			block.add(statement);
+			block.add(variable);
 			
 			//equals token
 			Token seperatorToken2 = tokens.next();
@@ -231,7 +258,7 @@ public class Parser {
 			String name = nameToken.getData();
 			String type = e.getType();
 			
-			block.add(new DeclareStatement(name, type));
+			block.add(new Variable(name, type));
 			block.add(new SetStatement(name, e));
 			
 			
@@ -493,17 +520,27 @@ public class Parser {
 		if(operator.getType() == TokenType.BRACKET_OPEN){
 			List<Expression> arguments = parseExpressionListBrackets();
 			
+			//check for function pointers or something
+			//maybe make function a variable type or something
+			//TODO make function a variable
+			
+			Function f = block.getFunctionByName(current.getData(), false);
+			
+			if(f == null)
+				throw new UndeclaredVariableException(current.getData());
+			
 			//TODO find type for function!
-			exp = new InvokeExpression(current.getData(), Language.TYPE_UNKNOWN, arguments);
+			exp = new InvokeExpression(current.getData(), f.getType(), arguments);
 		}
 		
 		//VARIABLE
 		else{
-			DeclareStatement initialDeclare = block.getVariableByName(current.getData(), true);
+			Variable variable = block.getVariableByName(current.getData(), false);
 			
-			if(initialDeclare == null)
+			if(variable == null)
 				throw new UndeclaredVariableException(current.getData());
-			exp = new IdentifierExpression(current.getData(), initialDeclare.getType());
+			
+			exp = new IdentifierExpression(current.getData(), variable.getType());
 		}
 		
 		//TODO parse . expression here, not in parse expression

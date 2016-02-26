@@ -30,4 +30,30 @@ public class Function {
 	public List<NameAndType> getArguments() {
 		return args;
 	}
+	
+	public String toXML(){
+		StringBuilder builder = new StringBuilder();
+		
+		builder.append("<function name=\"");
+		builder.append(name);
+		builder.append("\" type=\"");
+		builder.append(type);
+		builder.append("\" arguments=\"");
+		
+		for(int i = 0; i < args.size(); i++){
+			builder.append(args.get(i));
+			
+			if(i != args.size() - 1){
+				builder.append(',');
+			}
+		}
+		
+		builder.append("\">");
+		
+		builder.append(code.toXML());
+		
+		builder.append("</function>");
+		
+		return builder.toString();
+	}
 }

@@ -8,6 +8,7 @@ public class CodeBlock extends Statement{
 	private CodeBlock parent;
 	
 	private List<Function> functions;
+	private List<Variable> variables;
 	
 	private List<Statement> statements;
 	
@@ -20,6 +21,7 @@ public class CodeBlock extends Statement{
 		
 		functions = new ArrayList<Function>();
 		statements = new ArrayList<Statement>();
+		variables = new ArrayList<Variable>();
 	}
 	
 	public void add(Statement statement){
@@ -28,6 +30,10 @@ public class CodeBlock extends Statement{
 	
 	public void add(Function function){
 		this.functions.add(function);
+	}
+	
+	public void add(Variable variable){
+		this.variables.add(variable);
 	}
 	
 	public boolean isRoot(){
@@ -51,14 +57,11 @@ public class CodeBlock extends Statement{
 		return null;
 	}
 	
-	public DeclareStatement getVariableByName(String name, boolean local){
-		for(Statement s : statements){
-			if(s instanceof DeclareStatement){
-				DeclareStatement d = (DeclareStatement) s;
-				
-				if(d.getName().equals(name))
-					return d;
-			}
+	public Variable getVariableByName(String name, boolean local){
+		for(Variable v : variables){
+			if(v.getName().equals(name))
+				return v;
+			
 		}
 		if(!local && parent != null)
 			return parent.getVariableByName(name, local);
@@ -73,6 +76,14 @@ public class CodeBlock extends Statement{
 	
 	public String toXML(){
 		StringBuilder builder = new StringBuilder();
+		
+		for(Variable v : variables){
+			builder.append(v.toXML());
+		}
+		
+		for(Function f : functions){
+			builder.append(f.toXML());
+		}
 		
 		for(Statement s : statements){
 			builder.append(s.toXML());
