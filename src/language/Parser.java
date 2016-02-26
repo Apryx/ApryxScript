@@ -3,18 +3,21 @@ package language;
 import java.util.ArrayList;
 import java.util.List;
 
+import ast.ApryxClass;
+import ast.Function;
+import ast.NameAndType;
+import ast.Variable;
 import statement.CodeBlock;
 import statement.ConstantExpression;
-import statement.DeclareStatement;
 import statement.Expression;
-import statement.Function;
+import statement.ExpressionStatement;
 import statement.IdentifierExpression;
 import statement.InvokeExpression;
 import statement.InvokeStatement;
-import statement.NameAndType;
 import statement.OperatorExpression;
+import statement.ReturnStatement;
+import statement.SetExpression;
 import statement.SetStatement;
-import statement.Variable;
 import tokens.Token;
 import tokens.TokenType;
 import tokens.UndeclaredVariableException;
@@ -68,8 +71,8 @@ public class Parser {
 		Token current = tokens.current();
 		if(current.getType() == TokenType.KEYWORD)
 			parseKeywords();
-		else if(current.getType() == TokenType.IDENTIFIER)
-			parseIdentifier();
+		//else if(current.getType() == TokenType.IDENTIFIER)
+		//	parseIdentifier();
 		else if(current.getType() == TokenType.LINE_END)
 			tokens.next();
 		else if(current.getType() == TokenType.CURLY_CLOSE){
@@ -78,8 +81,9 @@ public class Parser {
 				throw new UnexpectedTokenException(tokens.current());
 			tokens.next();
 		}
-		else
-			throw new UnexpectedTokenException(current);
+		else{
+			block.add(new ExpressionStatement(parseExpression()));
+		}
 	}
 	
 	/**
@@ -98,6 +102,13 @@ public class Parser {
 			parseDeclareFunction();
 		else if(current.getData().equals(Language.CLASS))
 			parseDeclareClass();
+		else if(current.getData().equals(Language.RETURN)){
+			//consume the return
+			tokens.next();
+			
+			//add it as a return statement
+			block.add(new ReturnStatement(parseExpression()));
+		}
 		else
 			throw new UnimplementedLanguageFeatureException();
 		
@@ -107,7 +118,32 @@ public class Parser {
 	 * Parses a class declaration
 	 */
 	private void parseDeclareClass(){
-		throw new UnimplementedLanguageFeatureException();
+		Token nameToken = tokens.next();
+		
+		if(nameToken.getType() != TokenType.IDENTIFIER)
+			throw new UnexpectedTokenException(nameToken, TokenType.IDENTIFIER);
+		
+		//TODO implement extends and stuff
+		Token curlyToken = tokens.next();
+		CodeBlock bb = new CodeBlock(block);
+
+		block = bb;
+		
+		//code block 
+		if(curlyToken.getType() == TokenType.CURLY_OPEN){
+			//consume the curly open
+			tokens.next();
+		}
+		
+		else{
+			parseStatement();
+			
+			block = bb.getParent();
+		}
+		
+		ApryxClass cls = new ApryxClass(nameToken.getData(), bb);
+		
+		bb.getParent().add(cls);
 	}
 	
 	/**
@@ -148,8 +184,8 @@ public class Parser {
 			//parse the type
 			String typeArg = parseType();
 			
-			Token nextToken = tokens.next();
-			if(nextToken.getType() == TokenType.SEPERATOR){
+			Token seperator = tokens.current();
+			if(seperator.getType() == TokenType.SEPERATOR){
 				argToken = tokens.next();
 			}else{
 				argToken = tokens.current();
@@ -159,6 +195,7 @@ public class Parser {
 		}
 		
 		Token colonToken = tokens.next();
+		
 		Token statementBegin;
 		
 		//find the return type
@@ -196,7 +233,7 @@ public class Parser {
 			block = bb.getParent();
 		}
 		
-		//TODO add function
+		//create the given function
 		Function function = new Function(name, type, arguments, bb);
 		
 		//add it to the original block
@@ -278,6 +315,7 @@ public class Parser {
 	 * TODO will be depricated and replaced with an expression wrapped in statement (ExpressionStatement or something)
 	 * If we don't replace this, this will result in double the work
 	 */
+	@Deprecated
 	private void parseIdentifier(){
 		//TODO make this into expression parsing
 		Token current = tokens.current();
@@ -467,6 +505,21 @@ public class Parser {
 			return combined;
 		}
 		
+		//set expression
+		else if(operatorToken.getType() == TokenType.EQUALS){
+			tokens.next();
+			Expression rightHandSide = parseExpression();
+			
+			if(!(self instanceof IdentifierExpression))
+				throw new UnexpectedTokenException(operatorToken);
+			
+			IdentifierExpression e = (IdentifierExpression) self;
+			
+			Expression combined = new SetExpression(e.getName(), rightHandSide);
+			
+			return combined;
+		}
+		
 		else{
 			return self;
 		}
@@ -483,7 +536,10 @@ public class Parser {
 		Token current = tokens.current();
 		
 		//static type
-		if(current.getType() == TokenType.IDENTIFIER){			
+		if(current.getType() == TokenType.IDENTIFIER){
+			
+			//consume the identifier
+			tokens.next();
 			return current.getData();
 			
 			//TODO parse . expression
@@ -531,6 +587,9 @@ public class Parser {
 			
 			//TODO find type for function!
 			exp = new InvokeExpression(current.getData(), f.getType(), arguments);
+		
+			//consume bracket close
+			tokens.next();
 		}
 		
 		//VARIABLE

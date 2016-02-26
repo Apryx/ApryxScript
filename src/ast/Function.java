@@ -1,6 +1,8 @@
-package statement;
+package ast;
 
 import java.util.List;
+
+import statement.CodeBlock;
 
 public class Function {
 	

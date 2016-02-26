@@ -1,22 +1,13 @@
 package statement;
 
-@Deprecated
-public class SetStatement extends Statement {
+public class SetExpression extends Expression{
 	
 	private String name;
 	private Expression value;
-	
-	public SetStatement(String name, Expression value){
-		this.name = name;
+
+	public SetExpression(String name, Expression value) {
+		super(value.getType());
 		this.value = value;
-	}
-	
-	public String getName() {
-		return name;
-	}
-	
-	public Expression getValue() {
-		return value;
 	}
 	
 	public String toXML(){
@@ -38,4 +29,5 @@ public class SetStatement extends Statement {
 		
 		return builder.toString();
 	}
+
 }

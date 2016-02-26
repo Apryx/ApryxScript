@@ -2,6 +2,7 @@ package statement;
 
 import java.util.List;
 
+@Deprecated
 public class InvokeStatement extends Statement{
 	
 	private List<Expression> arguments;

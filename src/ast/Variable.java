@@ -1,4 +1,4 @@
-package statement;
+package ast;
 
 public class Variable {
 	

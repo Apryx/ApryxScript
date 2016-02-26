@@ -7,6 +7,10 @@ public class OperatorExpression extends Expression{
 	public static final String OPERATION_DEVIDE = "devide";
 	public static final String OPERATION_MULTIPLY = "multiply";
 
+	public static final int ODER_ADD = 1;
+	public static final int ODER_MUL = 2;
+	public static final int ODER_POWER = 3;
+
 	private Expression lhs, rhs;
 	private String opp;
 	

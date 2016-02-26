@@ -3,12 +3,17 @@ package statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import ast.ApryxClass;
+import ast.Function;
+import ast.Variable;
+
 public class CodeBlock extends Statement{
 	
 	private CodeBlock parent;
 	
 	private List<Function> functions;
 	private List<Variable> variables;
+	private List<ApryxClass> classes;
 	
 	private List<Statement> statements;
 	
@@ -22,10 +27,15 @@ public class CodeBlock extends Statement{
 		functions = new ArrayList<Function>();
 		statements = new ArrayList<Statement>();
 		variables = new ArrayList<Variable>();
+		classes = new ArrayList<ApryxClass>();
 	}
-	
+
 	public void add(Statement statement){
 		this.statements.add(statement);
+	}
+	
+	public void add(ApryxClass cls){
+		this.classes.add(cls);
 	}
 	
 	public void add(Function function){
@@ -76,6 +86,10 @@ public class CodeBlock extends Statement{
 	
 	public String toXML(){
 		StringBuilder builder = new StringBuilder();
+		
+		for(ApryxClass c : classes){
+			builder.append(c.toXML());
+		}
 		
 		for(Variable v : variables){
 			builder.append(v.toXML());

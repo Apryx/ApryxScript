@@ -5,7 +5,10 @@ public class Language {
 	public static final String VAR = "var";
 	public static final String CLASS = "class";
 	public static final String FUNCTION = "function";
+	public static final String RETURN = "return";
+	public static final String NATIVE = "native";
 
+	//Change into type :)
 	public static final String TYPE_OBJECT = "Object";
 	public static final String TYPE_STRING = "String";
 
@@ -39,7 +42,9 @@ public class Language {
 	public static boolean isKeyword(String word){
 		return word.equals(VAR)
 				|| word.equals(CLASS)
-				|| word.equals(FUNCTION);
+				|| word.equals(FUNCTION)
+				|| word.equals(NATIVE)
+				|| word.equals(RETURN);
 	}
 	
 	public static boolean isWhitespace(char c) {

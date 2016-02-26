@@ -30,7 +30,7 @@ public class Main {
 			Parser parser = new Parser(tokens);
 			parser.parse();
 			
-			System.out.println(parser.getBlock().toXML());
+			System.out.println("<program>"+parser.getBlock().toXML()+"</program>");
 			
 		}
 	}
