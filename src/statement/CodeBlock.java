@@ -78,6 +78,19 @@ public class CodeBlock extends Statement{
 		
 		return null;
 	}
+
+	public List<Function> getFunctions() {
+		return functions;
+	}
+	public List<Statement> getStatements() {
+		return statements;
+	}
+	public List<Variable> getVariables() {
+		return variables;
+	}
+	public List<ApryxClass> getClasses() {
+		return classes;
+	}
 	
 	@Override
 	public String toString() {

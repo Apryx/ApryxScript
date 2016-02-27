@@ -28,16 +28,6 @@ public class Variable {
 	}
 	
 	public String toXML(){
-		StringBuilder builder = new StringBuilder();
-		
-		//<declare name="a" type="int" />
-		
-		builder.append("<declare name=\"");
-		builder.append(name);
-		builder.append("\" type=\"");
-		builder.append(type);
-		builder.append("\" />");
-		
-		return builder.toString();
+		return String.format("<%s name=\"%s\" type=\"%s\" />", argument ? "argument" : "variable", name, type);
 	}
 }

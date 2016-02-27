@@ -582,11 +582,15 @@ public class Parser {
 			
 			Function f = block.getFunctionByName(current.getData(), false);
 			
+			String type;
+			
 			if(f == null)
-				throw new UndeclaredVariableException(current.getData());
+				type = Language.TYPE_UNKNOWN;
+			else
+				type = f.getType();
 			
 			//TODO find type for function!
-			exp = new InvokeExpression(current.getData(), f.getType(), arguments);
+			exp = new InvokeExpression(current.getData(), type, arguments);
 		
 			//consume bracket close
 			tokens.next();

@@ -5,6 +5,8 @@ import java.util.List;
 
 import language.Lexer;
 import language.Parser;
+import language.TypeChecker;
+import statement.CodeBlock;
 import tokens.Token;
 
 
@@ -28,9 +30,12 @@ public class Main {
 			List<Token> tokens = lexer.tokenize();
 			
 			Parser parser = new Parser(tokens);
-			parser.parse();
+			CodeBlock b = parser.parse();
 			
-			System.out.println("<program>"+parser.getBlock().toXML()+"</program>");
+			TypeChecker checker = new TypeChecker();
+			checker.check(b);
+			
+			System.out.println("<program>"+b.toXML()+"</program>");
 			
 		}
 	}

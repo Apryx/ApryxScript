@@ -15,6 +15,10 @@ public class Function {
 		this.type = type;
 		this.code = code;
 		this.args = args;
+		
+		for(NameAndType t : args){
+			code.add(new Variable(t.getName(),t.getType(),true));
+		}
 	}
 	
 	public String getName() {
@@ -40,6 +44,8 @@ public class Function {
 		builder.append(name);
 		builder.append("\" type=\"");
 		builder.append(type);
+		builder.append("\">");
+		/*
 		builder.append("\" arguments=\"");
 		
 		for(int i = 0; i < args.size(); i++){
@@ -48,9 +54,8 @@ public class Function {
 			if(i != args.size() - 1){
 				builder.append(',');
 			}
-		}
+		}*/
 		
-		builder.append("\">");
 		
 		builder.append(code.toXML());
 		
