@@ -13,6 +13,9 @@ public class Language {
 	public static final String TYPE_STRING = "String";
 
 	public static final String TYPE_UNKNOWN = "?";
+	
+	//Not cool
+	public static final String TYPE_UNDEFINED = "undefined";
 	public static final String TYPE_VOID = "void";
 	
 	public static final String TYPE_INT = "int";
@@ -81,5 +84,9 @@ public class Language {
 	
 	public static boolean isEquals(char c){
 		return c == '=';
+	}
+	
+	public static boolean isUnknownType(String type){
+		return type.equals(TYPE_UNDEFINED) || type.equals(TYPE_UNKNOWN);
 	}
 }

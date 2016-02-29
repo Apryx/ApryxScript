@@ -42,6 +42,12 @@ public class OperatorExpression extends Expression{
 		return builder.toString();
 	}
 	
+	@Override
+	public void typeCheck(CodeBlock context) {
+		// TODO operator type checking, might be a bit hard
+		lhs.typeCheck(context);
+		rhs.typeCheck(context);
+	}
 	
 
 }

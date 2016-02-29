@@ -29,5 +29,11 @@ public class SetExpression extends Expression{
 		
 		return builder.toString();
 	}
+	
+	@Override
+	public void typeCheck(CodeBlock context) {
+		// TODO Set typechecking
+		value.typeCheck(context);
+	}
 
 }

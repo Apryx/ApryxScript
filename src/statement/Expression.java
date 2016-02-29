@@ -13,4 +13,6 @@ public abstract class Expression {
 	}
 	
 	public abstract String toXML();
+	public abstract void typeCheck(CodeBlock context);
+	
 }

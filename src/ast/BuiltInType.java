@@ -11,4 +11,9 @@ public class BuiltInType extends Type{
 		return false;
 	}
 
+	@Override
+	public ApryxClass getApryxClass() {
+		return null;
+	}
+
 }

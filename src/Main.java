@@ -30,12 +30,13 @@ public class Main {
 			List<Token> tokens = lexer.tokenize();
 			
 			Parser parser = new Parser(tokens);
+			
 			CodeBlock b = parser.parse();
 			
 			TypeChecker checker = new TypeChecker();
 			checker.check(b);
 			
-			System.out.println("<program>"+b.toXML()+"</program>");
+			System.out.println("<program>"+parser.getBlock().toXML()+"</program>");
 			
 		}
 	}

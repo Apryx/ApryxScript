@@ -2,23 +2,23 @@ package ast;
 
 import statement.CodeBlock;
 
-public class ApryxClass {
+public class ApryxClass extends CodeBlock{
 	
 	private String name;
-	private CodeBlock code;
+	private Type type;
 	
-	public ApryxClass(String name, CodeBlock code){
+	public ApryxClass(String name){
+		super();
 		this.name = name;
-		
-		this.code = code;
+		type = new ClassType(this);
 	}
 	
 	public String getName() {
 		return name;
 	}
 	
-	public CodeBlock getCode() {
-		return code;
+	public Type getType() {
+		return type;
 	}
 	
 	public String toXML(){
@@ -29,7 +29,7 @@ public class ApryxClass {
 		
 		builder.append("\">");
 		
-		builder.append(code.toXML());
+		builder.append(super.toXML());
 		
 		builder.append("</class>");
 		

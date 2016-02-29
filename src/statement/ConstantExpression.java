@@ -26,4 +26,9 @@ public class ConstantExpression extends Expression{
 		
 		return builder.toString();
 	}
+
+	@Override
+	public void typeCheck(CodeBlock context) {
+		//TODO look at this, might be useful
+	}
 }

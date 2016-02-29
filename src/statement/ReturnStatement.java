@@ -24,4 +24,10 @@ public class ReturnStatement extends Statement{
 		
 		return builder.toString();
 	}
+	
+	@Override
+	public void typeCheck(CodeBlock context) {
+		// TODO implement typechecking return statement
+		exp.typeCheck(context);
+	}
 }

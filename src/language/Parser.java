@@ -13,14 +13,11 @@ import statement.Expression;
 import statement.ExpressionStatement;
 import statement.IdentifierExpression;
 import statement.InvokeExpression;
-import statement.InvokeStatement;
 import statement.OperatorExpression;
 import statement.ReturnStatement;
 import statement.SetExpression;
-import statement.SetStatement;
 import tokens.Token;
 import tokens.TokenType;
-import tokens.UndeclaredVariableException;
 import tokens.UnexpectedTokenException;
 import tokens.UnimplementedLanguageFeatureException;
 
@@ -71,8 +68,6 @@ public class Parser {
 		Token current = tokens.current();
 		if(current.getType() == TokenType.KEYWORD)
 			parseKeywords();
-		//else if(current.getType() == TokenType.IDENTIFIER)
-		//	parseIdentifier();
 		else if(current.getType() == TokenType.LINE_END)
 			tokens.next();
 		else if(current.getType() == TokenType.CURLY_CLOSE){
@@ -125,9 +120,11 @@ public class Parser {
 		
 		//TODO implement extends and stuff
 		Token curlyToken = tokens.next();
-		CodeBlock bb = new CodeBlock(block);
 
-		block = bb;
+		ApryxClass cls = new ApryxClass(nameToken.getData());
+		cls.setParent(block);
+
+		block = cls;
 		
 		//code block 
 		if(curlyToken.getType() == TokenType.CURLY_OPEN){
@@ -138,12 +135,11 @@ public class Parser {
 		else{
 			parseStatement();
 			
-			block = bb.getParent();
+			block = cls.getParent();
 		}
 		
-		ApryxClass cls = new ApryxClass(nameToken.getData(), bb);
 		
-		bb.getParent().add(cls);
+		cls.getParent().add(cls);
 	}
 	
 	/**
@@ -213,9 +209,12 @@ public class Parser {
 		
 		//for reference, current block will be the parent for this block
 		//so that will kinda fix itself
-		CodeBlock bb = new CodeBlock(block);
+
+		//create the given function
+		Function function = new Function(name, type, arguments);
+		function.setParent(block);
 		
-		block = bb;
+		block = function;
 		
 		//block
 		if(statementBegin.getType() == TokenType.CURLY_OPEN){
@@ -230,14 +229,11 @@ public class Parser {
 			parseStatement();
 			
 			//return to normal
-			block = bb.getParent();
+			block = function.getParent();
 		}
 		
-		//create the given function
-		Function function = new Function(name, type, arguments, bb);
-		
 		//add it to the original block
-		bb.getParent().add(function);
+		function.getParent().add(function);
 	}
 	
 	/**
@@ -273,7 +269,7 @@ public class Parser {
 			block.add(variable);
 			
 			//equals token
-			Token seperatorToken2 = tokens.next();
+			Token seperatorToken2 = tokens.current();
 			
 			if(seperatorToken2.getType() == TokenType.EQUALS){
 				tokens.next();
@@ -281,11 +277,16 @@ public class Parser {
 				//parse the expression on right hand side
 				Expression e = parseExpression();
 				
+				//give the initial value to the variable
+				variable.setInitialValue(e);
+				
 				//set this
-				block.add(new SetStatement(name, e));
+				//block.add(new ExpressionStatement(new SetExpression(name, e)));
 			}
 			
-		}else if(seperatorToken.getType() == TokenType.EQUALS){
+		}
+		
+		else if(seperatorToken.getType() == TokenType.EQUALS){
 			
 			//consume the equals
 			tokens.next();
@@ -295,86 +296,16 @@ public class Parser {
 			String name = nameToken.getData();
 			String type = e.getType();
 			
-			block.add(new Variable(name, type));
-			block.add(new SetStatement(name, e));
+			Variable v = new Variable(name, type);
 			
+			v.setInitialValue(e);
+			
+			block.add(v);
 			
 		}else{
 			throw new UnexpectedTokenException(nameToken, TokenType.COLON);
 		}
 		 
-	}
-	
-	/**
-	 * Parses an identifier (expression parsing)
-	 * Things like:
-	 * 
-	 * a = 3
-	 * b()
-	 * 
-	 * TODO will be depricated and replaced with an expression wrapped in statement (ExpressionStatement or something)
-	 * If we don't replace this, this will result in double the work
-	 */
-	@Deprecated
-	private void parseIdentifier(){
-		//TODO make this into expression parsing
-		Token current = tokens.current();
-		
-		if(current.getType() != TokenType.IDENTIFIER)
-			throw new UnexpectedTokenException(current, TokenType.IDENTIFIER);
-		
-		Token operationToken = tokens.next();
-		
-		//function call
-		if(operationToken.getType() == TokenType.BRACKET_OPEN){
-			//consume bracket open :D
-			
-			Token firstArg = tokens.next();
-			List<Expression> e;
-			
-			if(firstArg.getType() == TokenType.BRACKET_CLOSE){
-				//give it an empty list
-				e = new ArrayList<Expression>();
-				
-				//consume the bclose
-				tokens.next();
-				
-			}else{
-				e = parseExpressionList();
-				
-				Token bCloseToken = tokens.current();
-				if(bCloseToken.getType() != TokenType.BRACKET_CLOSE)
-					throw new UnexpectedTokenException(bCloseToken, TokenType.BRACKET_CLOSE);
-				
-				//consume bclose
-				tokens.next();
-				
-			}
-			
-			InvokeStatement statement = new InvokeStatement(current.getData(), e);
-			block.add(statement);
-		}
-		
-		//setting variable
-		else if(operationToken.getType() == TokenType.EQUALS){
-			
-			//consume the token
-			tokens.next();
-						
-			Expression e = parseExpression();
-			
-			//TODO typecheck equals expression
-			
-			SetStatement statement = new SetStatement(current.getData(), e);
-			
-			block.add(statement);
-		}
-		
-		//TODO implement . expression
-		
-		else{
-			throw new UnexpectedTokenException(operationToken);
-		}
 	}
 	
 	/**
@@ -435,6 +366,8 @@ public class Parser {
 		if(firstArg.getType() == TokenType.BRACKET_CLOSE){
 			//give it an empty list
 			e = new ArrayList<Expression>();
+			
+			tokens.next();
 			
 		}else{
 			e = parseExpressionList();
@@ -591,19 +524,25 @@ public class Parser {
 			
 			//TODO find type for function!
 			exp = new InvokeExpression(current.getData(), type, arguments);
-		
-			//consume bracket close
-			tokens.next();
+			
+			//do not consume bracket close, parseExpressionListBrackets does that!
 		}
 		
 		//VARIABLE
 		else{
 			Variable variable = block.getVariableByName(current.getData(), false);
 			
-			if(variable == null)
-				throw new UndeclaredVariableException(current.getData());
+			String type;
 			
-			exp = new IdentifierExpression(current.getData(), variable.getType());
+			//if variable does not exist, it might be a class
+			if(variable == null){
+				type = Language.TYPE_UNKNOWN;
+			}
+			else{
+				type = variable.getType();
+			}
+			
+			exp = new IdentifierExpression(current.getData(), type);
 		}
 		
 		//TODO parse . expression here, not in parse expression

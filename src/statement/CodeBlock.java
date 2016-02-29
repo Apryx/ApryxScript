@@ -7,7 +7,7 @@ import ast.ApryxClass;
 import ast.Function;
 import ast.Variable;
 
-public class CodeBlock extends Statement{
+public class CodeBlock {
 	
 	private CodeBlock parent;
 	
@@ -54,6 +54,10 @@ public class CodeBlock extends Statement{
 		return parent;
 	}
 	
+	public void setParent(CodeBlock parent) {
+		this.parent = parent;
+	}
+	
 	public Function getFunctionByName(String name, boolean local){
 		for(Function f : functions){
 			
@@ -78,6 +82,18 @@ public class CodeBlock extends Statement{
 		
 		return null;
 	}
+	
+	public ApryxClass getClassByName(String name, boolean local){
+		for(ApryxClass c : classes){
+			if(c.getName().equals(name))
+				return c;
+			
+		}
+		if(!local && parent != null)
+			return parent.getClassByName(name, local);
+		
+		return null;
+	}
 
 	public List<Function> getFunctions() {
 		return functions;
@@ -95,6 +111,24 @@ public class CodeBlock extends Statement{
 	@Override
 	public String toString() {
 		return statements.toString();
+	}
+	
+	public void typeCheck() {
+		//first check the variable types
+		for(Variable v : variables){
+			v.typeCheck(this);
+		}
+		//then functions and classes (Is this order dependent? I must look into this) TODO look into order
+		for(Function f : functions){
+			f.typeCheck();
+		}
+		for(ApryxClass c : classes){
+			c.typeCheck();
+		}
+		
+		for(Statement s : statements){
+			s.typeCheck(this);
+		}
 	}
 	
 	public String toXML(){

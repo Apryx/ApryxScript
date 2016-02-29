@@ -12,5 +12,10 @@ public class ExpressionStatement extends Statement{
 	public String toXML() {
 		return exp.toXML();
 	}
+
+	@Override
+	public void typeCheck(CodeBlock context) {
+		exp.typeCheck(context);
+	}
 	
 }
