@@ -86,6 +86,10 @@ public class Language {
 		return c == '=';
 	}
 	
+	public static boolean isLookup(char c){
+		return c == '.';
+	}
+	
 	public static boolean isUnknownType(String type){
 		return type.equals(TYPE_UNDEFINED) || type.equals(TYPE_UNKNOWN);
 	}

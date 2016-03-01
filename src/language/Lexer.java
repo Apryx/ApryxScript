@@ -133,14 +133,20 @@ public class Lexer {
 				tokens.add(token);
 				chars.next();
 			}
-			
+
 			//add or subtract
 			else if(Language.isPlusMin(c)){
 				Token token = new Token(TokenType.PLUSMIN, "" + c, chars.getLine());
 				tokens.add(token);
 				chars.next();
 			}
-			
+			//add or subtract
+			else if(Language.isLookup(c)){
+				Token token = new Token(TokenType.LOOKUP, "" + c, chars.getLine());
+				tokens.add(token);
+				chars.next();
+			}
+
 			//whitespace
 			else if(Language.isWhitespace(c)){
 				//Token token = new Token(TokenType.WHITESPACE, "" + c, chars.getLine());

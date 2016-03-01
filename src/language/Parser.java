@@ -547,6 +547,15 @@ public class Parser {
 		
 		//TODO parse . expression here, not in parse expression
 		
+		Token lookupOperator = tokens.current();
+		if(lookupOperator.getType() == TokenType.LOOKUP){
+			//consume the dot
+			tokens.next();
+			
+			//must be either a function call or sumtin
+			Expression e = parseExpressionIdentifier();
+		}
+		
 		return exp;
 	}
 	
