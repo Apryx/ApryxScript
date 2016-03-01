@@ -1,6 +1,6 @@
 package language;
 
-import statement.CodeBlock;
+import statement.Context;
 
 public class TypeChecker {
 
@@ -8,7 +8,7 @@ public class TypeChecker {
 
 	}
 
-	public void check(CodeBlock block) {
+	public void check(Context block) {
 		// check block with no parent context
 		block.typeCheck();
 	}

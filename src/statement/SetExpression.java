@@ -31,7 +31,7 @@ public class SetExpression extends Expression{
 	}
 	
 	@Override
-	public void typeCheck(CodeBlock context) {
+	public void typeCheck(Context context) {
 		// TODO Set typechecking
 		value.typeCheck(context);
 	}

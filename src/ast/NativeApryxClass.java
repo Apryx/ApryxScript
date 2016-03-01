@@ -1,6 +1,6 @@
 package ast;
 
-public class NativeApryxClass  extends ApryxClass{
+public class NativeApryxClass extends ApryxClass{
 	
 	private Class<?> nat;
 

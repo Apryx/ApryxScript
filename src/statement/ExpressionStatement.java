@@ -14,7 +14,7 @@ public class ExpressionStatement extends Statement{
 	}
 
 	@Override
-	public void typeCheck(CodeBlock context) {
+	public void typeCheck(Context context) {
 		exp.typeCheck(context);
 	}
 	

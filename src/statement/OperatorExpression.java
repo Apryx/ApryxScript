@@ -43,7 +43,7 @@ public class OperatorExpression extends Expression{
 	}
 	
 	@Override
-	public void typeCheck(CodeBlock context) {
+	public void typeCheck(Context context) {
 		// TODO operator type checking, might be a bit hard
 		lhs.typeCheck(context);
 		rhs.typeCheck(context);

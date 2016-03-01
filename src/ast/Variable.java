@@ -1,38 +1,43 @@
 package ast;
 
-import language.Language;
-import statement.CodeBlock;
+import statement.Context;
 import statement.Expression;
 import tokens.UnknownTypeException;
 
 public class Variable {
 	
-	private String name, type;
+	private String name;
+	private Type type;
 	private boolean argument;
 	private Expression initialValue;
 
-	public Variable(String name, String type){
+	public Variable(String name, Type type){
 		this(name, type, false);
 	}
 	
-	public Variable(String name, String type, boolean argument){
+	public Variable(String name, Type type, boolean argument){
 		this.name = name;
 		this.type = type;
 		this.argument = argument;
 	}
 	
-	public void typeCheck(CodeBlock block){
+	public void typeCheck(Context context){
 		//TODO actually check the type for this variable!
 		if(initialValue != null){
-			initialValue.typeCheck(block);
+			initialValue.typeCheck(context);
 			
-			if(type.equals(Language.TYPE_UNKNOWN)){
+			if(type.isUnknown()){
 				type = initialValue.getType();
 			}
 		}
 		
-		if(type.equals(Language.TYPE_UNKNOWN)){
-			throw new UnknownTypeException(name);
+		if(type.isUnknown()){
+			//TODO do the rest of the typechecking because we don't know this yet ! :D
+			
+			type = context.resolveType(type);
+			
+			if(type.isUnknown())
+				throw new UnknownTypeException(name);
 		}
 	}
 	
@@ -44,7 +49,7 @@ public class Variable {
 		this.initialValue = initialValue;
 	}
 	
-	public String getType() {
+	public Type getType() {
 		return type;
 	}
 	

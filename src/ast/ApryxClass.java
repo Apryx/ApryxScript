@@ -1,35 +1,39 @@
 package ast;
 
-import statement.CodeBlock;
+import statement.Context;
 
-public class ApryxClass extends CodeBlock{
+
+public class ApryxClass extends Type{
 	
-	private String name;
-	private Type type;
+	private Context body;
 	
 	public ApryxClass(String name){
-		super();
-		this.name = name;
-		type = new ClassType(this);
+		super(name);
+		body = new Context();
 	}
 	
-	public String getName() {
-		return name;
+	public Context getBody() {
+		return body;
 	}
 	
-	public Type getType() {
-		return type;
+	public void setBody(Context body) {
+		this.body = body;
+	}
+	
+	public void typeCheck(){
+		getBody().typeCheck();
 	}
 	
 	public String toXML(){
 		StringBuilder builder = new StringBuilder();
 		
 		builder.append("<class name=\"");
-		builder.append(name);
+		builder.append(getName());
 		
 		builder.append("\">");
 		
-		builder.append(super.toXML());
+		//TODO fix
+		builder.append(body.toXML());
 		
 		builder.append("</class>");
 		

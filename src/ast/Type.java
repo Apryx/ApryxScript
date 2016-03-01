@@ -2,11 +2,11 @@ package ast;
 
 public abstract class Type {
 
-	public static final Type OBJECT = new ClassType(new NativeApryxClass("Object", "java.lang.Object"));
-	public static final Type STRING = new ClassType(new NativeApryxClass("String", "java.lang.String"));
+	public static final Type OBJECT = new NativeApryxClass("Object", "java.lang.Object");
+	public static final Type STRING = new NativeApryxClass("String", "java.lang.String");
 
-	public static final Type UNKNOWN = new BuiltInType("?");
-	public static final Type UNDEFINED = new BuiltInType("??");
+	public static final Type UNKNOWN = new UnknownType("unknown");
+	public static final Type UNDEFINED = new UnknownType("undefined");
 	
 	public static final Type VOID = new BuiltInType("void");
 	
@@ -26,16 +26,22 @@ public abstract class Type {
 		return name;
 	}
 	
-	/**
-	 * If its an invokeable function
-	 * @return
-	 */
-	public abstract boolean isInvokeable();
-	public abstract ApryxClass getApryxClass();
+	public boolean isUnknown(){
+		return false;
+	}
 	
 	@Override
 	public String toString() {
 		return name;
+	}
+	
+	public static Type getBuildInType(String name){
+		for(Type t : DEFAULT_TYPES){
+			if(t.getName().equals(name))
+				return t;
+		}
+		
+		return null;
 	}
 	
 }

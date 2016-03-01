@@ -3,12 +3,8 @@ package language;
 import java.util.ArrayList;
 import java.util.List;
 
-import ast.ApryxClass;
-import ast.Function;
-import ast.NameAndType;
-import ast.Variable;
-import statement.CodeBlock;
 import statement.ConstantExpression;
+import statement.Context;
 import statement.Expression;
 import statement.ExpressionStatement;
 import statement.IdentifierExpression;
@@ -20,6 +16,11 @@ import tokens.Token;
 import tokens.TokenType;
 import tokens.UnexpectedTokenException;
 import tokens.UnimplementedLanguageFeatureException;
+import ast.ApryxClass;
+import ast.Function;
+import ast.NameAndType;
+import ast.Type;
+import ast.Variable;
 
 /**
  * Parser for parsing code (Apryx Script) 
@@ -28,7 +29,7 @@ import tokens.UnimplementedLanguageFeatureException;
 public class Parser {
 	
 	private TokenProcessor tokens;
-	private CodeBlock block;
+	private Context block;
 	
 	/**
 	 * Creates a new parser with the given token list
@@ -36,14 +37,14 @@ public class Parser {
 	 */
 	public Parser(List<Token> tokens){
 		this.tokens = new TokenProcessor(tokens);
-		block = new CodeBlock();
+		block = new Context();
 	}
 	
 	/**
 	 * Starts parsing the code (given in the constructor)
 	 * @return
 	 */
-	public CodeBlock parse(){
+	public Context parse(){
 		while(!tokens.isDone()){
 			parseStatement();			
 		}
@@ -57,7 +58,7 @@ public class Parser {
 	 * Returns the current code block
 	 * @return
 	 */
-	public CodeBlock getBlock() {
+	public Context getBlock() {
 		return block;
 	}
 	
@@ -122,9 +123,9 @@ public class Parser {
 		Token curlyToken = tokens.next();
 
 		ApryxClass cls = new ApryxClass(nameToken.getData());
-		cls.setParent(block);
+		cls.getBody().setParent(block);
 
-		block = cls;
+		block = cls.getBody();
 		
 		//code block 
 		if(curlyToken.getType() == TokenType.CURLY_OPEN){
@@ -135,11 +136,11 @@ public class Parser {
 		else{
 			parseStatement();
 			
-			block = cls.getParent();
+			block = cls.getBody().getParent();
 		}
 		
 		
-		cls.getParent().add(cls);
+		cls.getBody().getParent().add(cls);
 	}
 	
 	/**
@@ -187,7 +188,7 @@ public class Parser {
 				argToken = tokens.current();
 			}
 			
-			arguments.add(new NameAndType(nameArg, typeArg));
+			arguments.add(new NameAndType(nameArg, block.getTypeByName(typeArg)));
 		}
 		
 		Token colonToken = tokens.next();
@@ -211,10 +212,10 @@ public class Parser {
 		//so that will kinda fix itself
 
 		//create the given function
-		Function function = new Function(name, type, arguments);
-		function.setParent(block);
+		Function function = new Function(name, block.getTypeByName(type), arguments);
+		function.getBody().setParent(block);
 		
-		block = function;
+		block = function.getBody();
 		
 		//block
 		if(statementBegin.getType() == TokenType.CURLY_OPEN){
@@ -229,11 +230,11 @@ public class Parser {
 			parseStatement();
 			
 			//return to normal
-			block = function.getParent();
+			block = function.getBody().getParent();
 		}
 		
 		//add it to the original block
-		function.getParent().add(function);
+		function.getBody().getParent().add(function);
 	}
 	
 	/**
@@ -264,7 +265,7 @@ public class Parser {
 			String name = nameToken.getData();
 			String type = parseType();
 			
-			Variable variable = new Variable(name, type);
+			Variable variable = new Variable(name, block.getTypeByName(type));
 			
 			block.add(variable);
 			
@@ -294,7 +295,7 @@ public class Parser {
 			Expression e = parseExpression();
 
 			String name = nameToken.getData();
-			String type = e.getType();
+			Type type = e.getType();
 			
 			Variable v = new Variable(name, type);
 			
@@ -401,13 +402,13 @@ public class Parser {
 			self =  parseExpressionIdentifier();
 		}else if(current.getType() == TokenType.STRING){
 			tokens.next();
-			self = new ConstantExpression(Language.TYPE_STRING, current.getData());
+			self = new ConstantExpression(Type.STRING, current.getData());
 		}else if(current.getType() == TokenType.INTEGER){
 			tokens.next();
-			self =  new ConstantExpression(Language.TYPE_INT, current.getData());
+			self =  new ConstantExpression(Type.INT, current.getData());
 		}else if(current.getType() == TokenType.FLOAT){
 			tokens.next();
-			self =  new ConstantExpression(Language.TYPE_FLOAT, current.getData());
+			self =  new ConstantExpression(Type.FLOAT, current.getData());
 		}else 
 			throw new UnexpectedTokenException(current);
 		
@@ -515,10 +516,10 @@ public class Parser {
 			
 			Function f = block.getFunctionByName(current.getData(), false);
 			
-			String type;
+			Type type;
 			
 			if(f == null)
-				type = Language.TYPE_UNKNOWN;
+				type = Type.UNKNOWN;
 			else
 				type = f.getType();
 			
@@ -532,11 +533,11 @@ public class Parser {
 		else{
 			Variable variable = block.getVariableByName(current.getData(), false);
 			
-			String type;
+			Type type;
 			
 			//if variable does not exist, it might be a class
 			if(variable == null){
-				type = Language.TYPE_UNKNOWN;
+				type = Type.UNKNOWN;
 			}
 			else{
 				type = variable.getType();
@@ -554,6 +555,14 @@ public class Parser {
 			
 			//must be either a function call or sumtin
 			Expression e = parseExpressionIdentifier();
+			
+			if(e instanceof InvokeExpression){
+				InvokeExpression ie = (InvokeExpression) e;
+				
+				ie.setInvokationContext(exp);
+				
+				exp = ie;
+			}
 		}
 		
 		return exp;

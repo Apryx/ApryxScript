@@ -2,14 +2,14 @@ package ast;
 
 public class NameAndType {
 	private String name;
-	private String type;
+	private Type type;
 	
-	public NameAndType(String name, String type){
+	public NameAndType(String name, Type type){
 		this.name = name;
 		this.type = type;
 	}
 	
-	public String getType() {
+	public Type getType() {
 		return type;
 	}
 	

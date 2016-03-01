@@ -1,18 +1,20 @@
 package statement;
 
+import ast.Type;
+
 public abstract class Expression {
 	
-	protected String type;
+	protected Type type;
 	
-	public Expression(String type){
+	public Expression(Type type){
 		this.type = type;
 	}
 	
-	public String getType() {
+	public Type getType() {
 		return type;
 	}
 	
 	public abstract String toXML();
-	public abstract void typeCheck(CodeBlock context);
+	public abstract void typeCheck(Context context);
 	
 }

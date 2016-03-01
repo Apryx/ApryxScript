@@ -1,10 +1,12 @@
 package statement;
 
+import ast.Type;
+
 public class ConstantExpression extends Expression{
 	
 	private String value;
 	
-	public ConstantExpression(String type, String value){
+	public ConstantExpression(Type type, String value){
 		super(type);
 		this.value = value;
 	}
@@ -28,7 +30,7 @@ public class ConstantExpression extends Expression{
 	}
 
 	@Override
-	public void typeCheck(CodeBlock context) {
+	public void typeCheck(Context context) {
 		//TODO look at this, might be useful
 	}
 }

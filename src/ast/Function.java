@@ -2,29 +2,52 @@ package ast;
 
 import java.util.List;
 
-import statement.CodeBlock;
+import statement.Context;
 
-public class Function extends CodeBlock {
+public class Function extends Type {
 	
-	private String name, type;
+	private String name;
+	private Type type;
 	private List<NameAndType> args;
+	private Context body;
 	
-	public Function(String name, String type, List<NameAndType> args){
+	public Function(String name, Type type, List<NameAndType> args){
+		super(name);
+		
 		this.name = name;
 		this.type = type;
 		this.args = args;
 		
+		body = new Context();
+		
 		for(NameAndType t : args){
-			add(new Variable(t.getName(),t.getType(),true));
+			body.add(new Variable(t.getName(),t.getType(),true));
 		}
+	}
+	
+	public void typeCheck() {
+		getBody().typeCheck();
+	}
+	
+	public Context getBody() {
+		return body;
+	}
+	
+	public void setBody(Context body) {
+		this.body = body;
 	}
 	
 	public String getName() {
 		return name;
 	}
 	
-	public String getType() {
+	public Type getType() {
 		return type;
+	}
+	
+	@Override
+	public String toString() {
+		return super.toString();
 	}
 	
 	public List<NameAndType> getArguments() {
@@ -39,19 +62,9 @@ public class Function extends CodeBlock {
 		builder.append("\" type=\"");
 		builder.append(type);
 		builder.append("\">");
-		/*
-		builder.append("\" arguments=\"");
-		
-		for(int i = 0; i < args.size(); i++){
-			builder.append(args.get(i));
-			
-			if(i != args.size() - 1){
-				builder.append(',');
-			}
-		}*/
 		
 		
-		builder.append(super.toXML());
+		builder.append(body.toXML());
 		
 		builder.append("</function>");
 		

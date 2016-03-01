@@ -26,7 +26,7 @@ public class ReturnStatement extends Statement{
 	}
 	
 	@Override
-	public void typeCheck(CodeBlock context) {
+	public void typeCheck(Context context) {
 		// TODO implement typechecking return statement
 		exp.typeCheck(context);
 	}
