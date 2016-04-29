@@ -14,6 +14,8 @@ public enum TokenType {
 	
 	MULDIV, PLUSMIN,
 	
+	BOOLEANOPERATOR,
+	
 	EQUALS,
 	
 	INTEGER, STRING, FLOAT, DOUBLE, LONG,

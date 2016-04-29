@@ -37,9 +37,13 @@ public class Language {
 	public static boolean isMulDiv(char c){
 		return c == '*' || c == '/';
 	}
-	
+
 	public static boolean isPlusMin(char c){
 		return c == '+' || c == '-';
+	}
+	
+	public static boolean isBooleanOperator(char c){
+		return c == '>' || c == '<'; 
 	}
 	
 	public static boolean isKeyword(String word){
