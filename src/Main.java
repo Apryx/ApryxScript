@@ -4,6 +4,7 @@ import java.io.FileNotFoundException;
 import java.util.List;
 
 import language.Lexer;
+import language.Parser;
 import tokens.Token;
 
 
@@ -44,13 +45,15 @@ public class Main {
 
 			Lexer lexer = new Lexer(new FileInputStream(file));
 			
-			List<Token> tokens = lexer.tokenize();
-			
 			if(lexOnly){
+				List<Token> tokens = lexer.tokenize();
 				for(Token t : tokens){
 					System.out.println(t);
 				}
 				return;
+			}else{
+				Parser parser = new Parser(lexer);
+				parser.parseContext();
 			}
 			
 			
