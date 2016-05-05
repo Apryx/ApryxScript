@@ -2,7 +2,7 @@ package language;
 
 import statement.Expression;
 import statement.ExpressionStatement;
-import statement.Statement;
+import statement.IdentifierExpression;
 import tokens.Token;
 import tokens.TokenType;
 import tokens.UnexpectedTokenException;
@@ -48,31 +48,42 @@ public class Parser {
 	}
 	
 	public Expression parseExpression(){
-		Token start = lexer.current();
+		Expression lhs = parseExpressionSimple();
 		
-		//TODO parse lhs and rhs
-		//Have a function that only parses the identifier, int, string, float, etc.
+		Token operator = lexer.current();
 		
-		if(start.getType() == TokenType.IDENTIFIER){
-			Token operator = lexer.next();
-			
-			//Function call
-			if(operator.getType() == TokenType.BRACKET_OPEN){
-				
-			}
-			
-			//Set operator
-			else if(operator.getType() == TokenType.EQUALS){
-				
-			}
-			
-			else{
-				throw new UnexpectedTokenException(operator, TokenType.BRACKET_OPEN, TokenType.IDENTIFIER);
-			}
+		//plus or minus
+		if(operator.getType() == TokenType.PLUSMIN){
+			lexer.next();
+			Expression rhs = parseExpression();
+		
 		}
 		
+		//multiply or devide
+		else if(operator.getType() == TokenType.MULDIV){
+			lexer.next();
+			Expression rhs = parseExpression();
+			
+		}
 		
-		return null;
+		//function call
+		else if(operator.getType() == TokenType.BRACKET_OPEN){
+			
+		}
+		
+		return lhs;
+	}
+	
+	public Expression parseExpressionSimple(){
+		Token start = lexer.current();
+		
+		if(start.getType() == TokenType.IDENTIFIER){
+			lexer.next();
+			return new IdentifierExpression(start.getData(), null);
+		}
+		else{
+			throw new UnexpectedTokenException(start, TokenType.IDENTIFIER);
+		}
 	}
 	
 }
