@@ -1,5 +1,8 @@
 package language;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import statement.Expression;
 import statement.ExpressionStatement;
 import statement.IdentifierExpression;
@@ -68,10 +71,23 @@ public class Parser {
 		
 		//function call
 		else if(operator.getType() == TokenType.BRACKET_OPEN){
-			
+			//consume the operator
+			Token n = lexer.next();
+			List<Expression> expressions;
+			if(n.getType() == TokenType.BRACKET_CLOSE){
+				expressions = parseExpressionList();
+			}else{
+				expressions = new ArrayList<Expression>();
+			}
 		}
 		
 		return lhs;
+	}
+	
+	public List<Expression> parseExpressionList(){
+		ArrayList<Expression> expressions = new ArrayList<Expression>();
+		
+		return expressions;
 	}
 	
 	public Expression parseExpressionSimple(){
