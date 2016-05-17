@@ -3,12 +3,15 @@ package language;
 import java.util.ArrayList;
 import java.util.List;
 
+import statement.ClassType;
 import statement.Expression;
 import statement.ExpressionStatement;
 import statement.IdentifierExpression;
+import statement.Type;
 import tokens.Token;
 import tokens.TokenType;
 import tokens.UnexpectedTokenException;
+import tokens.UnimplementedLanguageFeatureException;
 import context.Context;
 
 public class Parser {
@@ -47,7 +50,49 @@ public class Parser {
 	}
 	
 	public void parseKeyword(Context context){
+		Token currentToken = lexer.current();
+		if(currentToken.getType() != TokenType.KEYWORD)
+			throw new UnexpectedTokenException(currentToken, TokenType.KEYWORD);
 		
+		if(currentToken.getData().equals(Language.VAR)){
+			Token nameToken = lexer.next();
+			if(nameToken.getType() != TokenType.IDENTIFIER)
+				throw new UnexpectedTokenException(nameToken, TokenType.IDENTIFIER);
+			
+			Type type = null;
+			
+			Token operatorToken = lexer.next();
+			
+			if(operatorToken.getType() == TokenType.COLON){
+				//Consume the operator
+				lexer.next();
+				type = parseType();
+				
+				//For next check!
+				operatorToken = lexer.current();
+			}
+			
+			context.addVariable(nameToken.getData(), type);
+			
+			if(operatorToken.getType() == TokenType.EQUALS){
+				//TODO parse this stuff
+			}
+			
+		}else{
+			throw new UnimplementedLanguageFeatureException();
+		}
+		
+	}
+	
+	public Type parseType(){
+		Token currentToken = lexer.current();
+		
+		if(currentToken.getType() != TokenType.IDENTIFIER)
+			throw new UnexpectedTokenException(currentToken, TokenType.IDENTIFIER);
+		
+		lexer.next();
+		
+		return new ClassType(currentToken.getData());
 	}
 	
 	public Expression parseExpression(){

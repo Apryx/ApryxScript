@@ -11,8 +11,13 @@ public class Context {
 	
 	private HashMap<String, Type> variables;
 	private List<Statement> statements;
+	private Context parent;
 	
 	public Context(){
+		this(null);
+	}
+	
+	public Context(Context context){
 		variables = new HashMap<String, Type>();
 		statements = new ArrayList<Statement>();
 	}
@@ -23,5 +28,17 @@ public class Context {
 	
 	public Type getTypeOfVariable(String name){
 		return variables.get(name);
+	}
+	
+	public void addVariable(String name, Type type){
+		variables.put(name, type);
+	}
+	
+	public Context getParent() {
+		return parent;
+	}
+	
+	public void setParent(Context parent) {
+		this.parent = parent;
 	}
 }
