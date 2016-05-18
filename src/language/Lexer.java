@@ -140,19 +140,12 @@ public class Lexer {
 		}
 		
 		//multyply and devide
-		else if(Language.isMulDiv(chars.current())){
-			Token token = new Token(TokenType.MULDIV, "" + chars.current(), chars.getLine());
+		//add or subtract
+		else if(Language.isMulDiv(chars.current()) || Language.isPlusMin(chars.current())){
+			Token token = new Token(TokenType.BINARYOPERATOR, "" + chars.current(), chars.getLine());
 			chars.next();
 			return token;
 		}
-
-		//add or subtract
-		else if(Language.isPlusMin(chars.current())){
-			Token token = new Token(TokenType.PLUSMIN, "" + chars.current(), chars.getLine());
-			chars.next();
-			return token;
-		}
-		//add or subtract
 		else if(Language.isLookup(chars.current())){
 			Token token = new Token(TokenType.LOOKUP, "" + chars.current(), chars.getLine());
 			chars.next();

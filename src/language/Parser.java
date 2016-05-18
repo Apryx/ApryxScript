@@ -101,17 +101,10 @@ public class Parser {
 		Token operator = lexer.current();
 		
 		//plus or minus
-		if(operator.getType() == TokenType.PLUSMIN){
+		if(operator.getType() == TokenType.BINARYOPERATOR){
 			lexer.next();
 			Expression rhs = parseExpression();
 		
-		}
-		
-		//multiply or devide
-		else if(operator.getType() == TokenType.MULDIV){
-			lexer.next();
-			Expression rhs = parseExpression();
-			
 		}
 		
 		//function call
