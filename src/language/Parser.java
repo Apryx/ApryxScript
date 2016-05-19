@@ -7,6 +7,7 @@ import statement.ClassType;
 import statement.Expression;
 import statement.ExpressionStatement;
 import statement.IdentifierExpression;
+import statement.OperatorExpression;
 import statement.Type;
 import tokens.Token;
 import tokens.TokenType;
@@ -104,7 +105,8 @@ public class Parser {
 		if(operator.getType() == TokenType.BINARYOPERATOR){
 			lexer.next();
 			Expression rhs = parseExpression();
-		
+			
+			return new OperatorExpression(lhs,rhs);
 		}
 		
 		//function call
