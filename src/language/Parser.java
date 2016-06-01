@@ -135,7 +135,7 @@ public class Parser {
 		
 		if(start.getType() == TokenType.IDENTIFIER){
 			lexer.next();
-			return new IdentifierExpression(start.getData(), null);
+			return new IdentifierExpression(start.getData());
 		}
 		else{
 			throw new UnexpectedTokenException(start, TokenType.IDENTIFIER);

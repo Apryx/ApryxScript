@@ -5,7 +5,8 @@ public class OperatorExpression extends Expression{
 	protected Expression rhs,lhs;
 	
 	public OperatorExpression(Expression lhs, Expression rhs) {
-		super(lhs.getType());
+		this.lhs = lhs;
+		this.rhs = rhs;
 	}
 	
 	public Expression getRhs() {

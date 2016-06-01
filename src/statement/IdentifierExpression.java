@@ -4,8 +4,7 @@ public class IdentifierExpression extends Expression{
 	
 	private String name;
 	
-	public IdentifierExpression(String name, Type type){
-		super(type);
+	public IdentifierExpression(String name){
 		this.name = name;
 	}
 	
