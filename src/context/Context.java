@@ -1,15 +1,15 @@
 package context;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import statement.Statement;
-import statement.Type;
 
 public class Context {
 	
-	private HashMap<String, Type> variables;
+	private Set<String> variables;
 	private List<Statement> statements;
 	private Context parent;
 	
@@ -18,7 +18,7 @@ public class Context {
 	}
 	
 	public Context(Context context){
-		variables = new HashMap<String, Type>();
+		variables = new HashSet<String>();
 		statements = new ArrayList<Statement>();
 	}
 	
@@ -26,12 +26,8 @@ public class Context {
 		statements.add(statement);
 	}
 	
-	public Type getTypeOfVariable(String name){
-		return variables.get(name);
-	}
-	
-	public void addVariable(String name, Type type){
-		variables.put(name, type);
+	public void addVariable(String name){
+		variables.add(name);
 	}
 	
 	public Context getParent() {

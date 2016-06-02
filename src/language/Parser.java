@@ -3,12 +3,13 @@ package language;
 import java.util.ArrayList;
 import java.util.List;
 
-import statement.ClassType;
 import statement.Expression;
 import statement.ExpressionStatement;
 import statement.IdentifierExpression;
+import statement.InvokeExpression;
 import statement.OperatorExpression;
-import statement.Type;
+import statement.SetExpression;
+import statement.StringExpression;
 import tokens.Token;
 import tokens.TokenType;
 import tokens.UnexpectedTokenException;
@@ -60,40 +61,22 @@ public class Parser {
 			if(nameToken.getType() != TokenType.IDENTIFIER)
 				throw new UnexpectedTokenException(nameToken, TokenType.IDENTIFIER);
 			
-			Type type = null;
-			
 			Token operatorToken = lexer.next();
 			
-			if(operatorToken.getType() == TokenType.COLON){
-				//Consume the operator
-				lexer.next();
-				type = parseType();
-				
-				//For next check!
-				operatorToken = lexer.current();
-			}
-			
-			context.addVariable(nameToken.getData(), type);
+			context.addVariable(nameToken.getData());
 			
 			if(operatorToken.getType() == TokenType.EQUALS){
-				//TODO parse this stuff
+				//consume equals token
+				lexer.next();
+				Expression e = parseExpression();
+				
+				context.addStatement(new ExpressionStatement(new SetExpression(new IdentifierExpression(nameToken.getData()), e)));
 			}
 			
 		}else{
 			throw new UnimplementedLanguageFeatureException();
 		}
 		
-	}
-	
-	public Type parseType(){
-		Token currentToken = lexer.current();
-		
-		if(currentToken.getType() != TokenType.IDENTIFIER)
-			throw new UnexpectedTokenException(currentToken, TokenType.IDENTIFIER);
-		
-		lexer.next();
-		
-		return new ClassType(currentToken.getData());
 	}
 	
 	public Expression parseExpression(){
@@ -114,13 +97,16 @@ public class Parser {
 			//consume the operator
 			Token n = lexer.next();
 			List<Expression> expressions;
-			if(n.getType() == TokenType.BRACKET_CLOSE){
+			if(n.getType() != TokenType.BRACKET_CLOSE){
 				expressions = parseExpressionList();
+				n = lexer.current();
+				if(n.getType() != TokenType.BRACKET_CLOSE)
+					throw new UnexpectedTokenException(n, TokenType.BRACKET_CLOSE);
 			}else{
 				expressions = new ArrayList<Expression>();
 			}
 			
-			//TODO do stuff with thias
+			return new InvokeExpression(lhs, expressions);
 		}
 		
 		return lhs;
@@ -128,6 +114,14 @@ public class Parser {
 	
 	public List<Expression> parseExpressionList(){
 		ArrayList<Expression> expressions = new ArrayList<Expression>();
+		
+		Expression exp = parseExpression();
+		expressions.add(exp);
+		while(lexer.current().getType() == TokenType.SEPERATOR){
+			lexer.next();
+			exp = parseExpression();
+			expressions.add(exp);
+		}
 		
 		return expressions;
 	}
@@ -138,6 +132,10 @@ public class Parser {
 		if(start.getType() == TokenType.IDENTIFIER){
 			lexer.next();
 			return new IdentifierExpression(start.getData());
+		}
+		if(start.getType() == TokenType.STRING){
+			lexer.next();
+			return new StringExpression(start.getData());
 		}
 		else{
 			throw new UnexpectedTokenException(start, TokenType.IDENTIFIER);
