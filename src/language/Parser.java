@@ -119,6 +119,8 @@ public class Parser {
 			}else{
 				expressions = new ArrayList<Expression>();
 			}
+			
+			//TODO do stuff with thias
 		}
 		
 		return lhs;
