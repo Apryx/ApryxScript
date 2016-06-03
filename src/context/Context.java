@@ -1,15 +1,15 @@
 package context;
 
+import generation.JSGenerator;
+
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import statement.Statement;
 
-public class Context {
+public class Context implements JSGenerator{
 	
-	private Set<String> variables;
+	private List<String> variables;
 	private List<Statement> statements;
 	private Context parent;
 	
@@ -18,7 +18,7 @@ public class Context {
 	}
 	
 	public Context(Context context){
-		variables = new HashSet<String>();
+		variables = new ArrayList<String>();
 		statements = new ArrayList<Statement>();
 	}
 	
@@ -36,5 +36,30 @@ public class Context {
 	
 	public void setParent(Context parent) {
 		this.parent = parent;
+	}
+	
+	@Override
+	public String toJSString() {
+		StringBuilder builder = new StringBuilder();
+		
+		for(int i = 0; i < variables.size(); i++){
+			if(i == 0){
+				builder.append("var ");
+			}
+			
+			builder.append(variables.get(i));
+			
+			if(i != variables.size() - 1){
+				builder.append(", ");
+			}else{
+				builder.append(";");
+			}
+		}
+		
+		for(int i = 0; i < statements.size(); i++){
+			builder.append(statements.get(i).toJSString());
+		}
+		
+		return builder.toString();
 	}
 }

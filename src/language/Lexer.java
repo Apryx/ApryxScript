@@ -170,11 +170,13 @@ public class Lexer {
 		}
 		
 		else{
-			System.err.println("Unknown character at " + chars.current() + " at line " + chars.getLine());
-			//What to do with the current here?
-			chars.next();
-			
-			return next();
+			if(!chars.isDone()){
+				System.err.println("Unknown character at " + chars.current() + " at line " + chars.getLine());
+				chars.next();
+				return next();
+			}else{
+				return new Token(TokenType.EOF, "" + chars.current(), chars.getLine());
+			}
 		}
 	}
 	

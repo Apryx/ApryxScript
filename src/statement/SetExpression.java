@@ -16,4 +16,15 @@ public class SetExpression extends Expression{
 	public Expression getLhs() {
 		return lhs;
 	}
+	
+	@Override
+	public String toJSString() {
+		StringBuilder builder = new StringBuilder();
+		
+		builder.append(lhs.toJSString());
+		builder.append('='); 
+		builder.append(rhs.toJSString());
+		
+		return builder.toString();
+	}
 }

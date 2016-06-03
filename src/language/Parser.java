@@ -7,9 +7,10 @@ import statement.Expression;
 import statement.ExpressionStatement;
 import statement.IdentifierExpression;
 import statement.InvokeExpression;
+import statement.LookupExpression;
 import statement.OperatorExpression;
 import statement.SetExpression;
-import statement.StringExpression;
+import statement.ConstantExpression;
 import tokens.Token;
 import tokens.TokenType;
 import tokens.UnexpectedTokenException;
@@ -29,7 +30,9 @@ public class Parser {
 		Context context = new Context();
 		
 		//TODO parse the context
-		parseStatement(context);
+		while(!lexer.isDone()){
+			parseStatement(context);			
+		}
 		
 		return context;
 	}
@@ -102,8 +105,10 @@ public class Parser {
 				n = lexer.current();
 				if(n.getType() != TokenType.BRACKET_CLOSE)
 					throw new UnexpectedTokenException(n, TokenType.BRACKET_CLOSE);
+				lexer.next();//consume bracket close
 			}else{
 				expressions = new ArrayList<Expression>();
+				lexer.next();//consume bracket close
 			}
 			
 			return new InvokeExpression(lhs, expressions);
@@ -126,17 +131,33 @@ public class Parser {
 		return expressions;
 	}
 	
+	/**
+	 * Parses a simple expression (ex. a, a.b, etc)
+	 * @return
+	 */
 	public Expression parseExpressionSimple(){
 		Token start = lexer.current();
 		
 		if(start.getType() == TokenType.IDENTIFIER){
 			lexer.next();
-			return new IdentifierExpression(start.getData());
+			Expression lhs = new IdentifierExpression(start.getData());
+			if(lexer.current().getType() == TokenType.LOOKUP){
+				lexer.next();
+				Expression rhs = parseExpressionSimple();
+				return new LookupExpression(lhs, rhs);
+			}else{
+				return lhs;
+			}
 		}
-		if(start.getType() == TokenType.STRING){
+		else if(start.getType() == TokenType.STRING){
 			lexer.next();
-			return new StringExpression(start.getData());
+			return new ConstantExpression(start.getData(), ConstantExpression.Type.STRING);
 		}
+		else if(start.getType() == TokenType.INTEGER){
+			lexer.next();
+			return new ConstantExpression(start.getData(), ConstantExpression.Type.INTEGER);
+		}
+		
 		else{
 			throw new UnexpectedTokenException(start, TokenType.IDENTIFIER);
 		}

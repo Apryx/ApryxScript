@@ -1,5 +1,7 @@
 package statement;
 
-public abstract class Expression {
+import generation.JSGenerator;
+
+public abstract class Expression implements JSGenerator{
 	
 }

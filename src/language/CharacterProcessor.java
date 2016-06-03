@@ -28,6 +28,7 @@ public class CharacterProcessor {
 			current = (char) read;
 			return current();
 		} catch (IOException e) {
+			done = true;
 			e.printStackTrace();
 		}
 		done = true;

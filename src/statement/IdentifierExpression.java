@@ -15,4 +15,9 @@ public class IdentifierExpression extends Expression{
 	public void setName(String name) {
 		this.name = name;
 	}
+
+	@Override
+	public String toJSString() {
+		return name;
+	}
 }

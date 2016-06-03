@@ -1,5 +1,7 @@
 package statement;
 
-public interface Statement {
+import generation.JSGenerator;
+
+public interface Statement extends JSGenerator{
 
 }

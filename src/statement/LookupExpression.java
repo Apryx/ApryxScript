@@ -1,10 +1,10 @@
 package statement;
 
-public class OperatorExpression extends Expression{
-
+public class LookupExpression extends Expression{
+	
 	protected Expression rhs,lhs;
 	
-	public OperatorExpression(Expression lhs, Expression rhs) {
+	public LookupExpression(Expression lhs, Expression rhs) {
 		this.lhs = lhs;
 		this.rhs = rhs;
 	}
@@ -22,10 +22,9 @@ public class OperatorExpression extends Expression{
 		StringBuilder builder = new StringBuilder();
 		
 		builder.append(lhs.toJSString());
-		builder.append('+'); //TODO fix the right operator :")
+		builder.append('.');
 		builder.append(rhs.toJSString());
 		
 		return builder.toString();
 	}
-
 }

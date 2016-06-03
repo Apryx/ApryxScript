@@ -15,4 +15,10 @@ public class ExpressionStatement implements Statement{
 	public void setExpression(Expression expression) {
 		this.expression = expression;
 	}
+
+	@Override
+	public String toJSString() {
+		//No stringbuilder needed, java compiler does that for us here :D
+		return expression.toJSString() + ";";
+	}
 }

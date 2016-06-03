@@ -6,6 +6,7 @@ import java.util.List;
 import language.Lexer;
 import language.Parser;
 import tokens.Token;
+import context.Context;
 
 
 public class Main {
@@ -53,7 +54,8 @@ public class Main {
 				return;
 			}else{
 				Parser parser = new Parser(lexer);
-				parser.parseContext();
+				Context context = parser.parseContext();
+				System.out.println(context.toJSString());
 			}
 			
 			
