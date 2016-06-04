@@ -3,10 +3,12 @@ package statement;
 public class OperatorExpression extends Expression{
 
 	protected Expression rhs,lhs;
+	private String operator;//This should not be String
 	
-	public OperatorExpression(Expression lhs, Expression rhs) {
+	public OperatorExpression(Expression lhs, Expression rhs, String operator) {
 		this.lhs = lhs;
 		this.rhs = rhs;
+		this.operator = operator;
 	}
 	
 	public Expression getRhs() {
@@ -22,7 +24,7 @@ public class OperatorExpression extends Expression{
 		StringBuilder builder = new StringBuilder();
 		
 		builder.append(lhs.toJSString());
-		builder.append('+'); //TODO fix the right operator :")
+		builder.append(operator); //TODO fix the right operator :")
 		builder.append(rhs.toJSString());
 		
 		return builder.toString();

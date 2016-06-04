@@ -87,12 +87,12 @@ public class Parser {
 		
 		Token operator = lexer.current();
 		
-		//plus or minus
+		//operators
 		if(operator.getType() == TokenType.BINARYOPERATOR){
 			lexer.next();
 			Expression rhs = parseExpression();
 			
-			return new OperatorExpression(lhs,rhs);
+			return new OperatorExpression(lhs,rhs, operator.getData());
 		}
 		
 		//function call
