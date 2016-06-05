@@ -3,6 +3,8 @@ package language;
 import java.util.ArrayList;
 import java.util.List;
 
+import statement.ConstantExpression;
+import statement.ContextStatement;
 import statement.Expression;
 import statement.ExpressionStatement;
 import statement.IdentifierExpression;
@@ -10,7 +12,6 @@ import statement.InvokeExpression;
 import statement.LookupExpression;
 import statement.OperatorExpression;
 import statement.SetExpression;
-import statement.ConstantExpression;
 import tokens.Token;
 import tokens.TokenType;
 import tokens.UnexpectedTokenException;
@@ -49,6 +50,9 @@ public class Parser {
 			//Consume the line-end
 			lexer.next();
 		}
+		else if(current.getType() == TokenType.CURLY_OPEN){
+			parseContextStatement(context);
+		}
 		else{
 			throw new UnexpectedTokenException(current, TokenType.IDENTIFIER, TokenType.KEYWORD);
 		}
@@ -76,10 +80,66 @@ public class Parser {
 				context.addStatement(new ExpressionStatement(new SetExpression(new IdentifierExpression(nameToken.getData()), e)));
 			}
 			
-		}else{
+		}
+		
+		else if(currentToken.getData().equals(Language.FUNCTION)){
+			//TODO implement fully
+			
+			Token name = lexer.next();
+			if(name.getType() != TokenType.IDENTIFIER)
+				throw new UnexpectedTokenException(name, TokenType.IDENTIFIER);
+			
+			//TODO why not change this to no brackets functions, is there somthing against it?
+			Token bOpen = lexer.next();
+			if(bOpen.getType() != TokenType.BRACKET_OPEN)
+				throw new UnexpectedTokenException(name, TokenType.IDENTIFIER);
+
+			if(lexer.next().getType() != TokenType.BRACKET_CLOSE){
+				System.out.println("params");
+				while(!lexer.isDone()){
+					Expression e = parseExpression();
+					System.out.println(e);
+					if(lexer.current().getType() != TokenType.SEPERATOR)
+						break;
+					else
+						lexer.next();//consume the seperator
+				}
+			}
+			
+			if(lexer.current().getType() != TokenType.BRACKET_CLOSE)
+				throw new UnexpectedTokenException(lexer.current(), TokenType.BRACKET_CLOSE);
+			
+			lexer.next();
+			
+			Context nContext = new Context(context);
+			parseStatement(nContext);
+			
+			System.out.println("body");
+			System.out.println(nContext.toJSString());
+		}
+		
+		else{
 			throw new UnimplementedLanguageFeatureException();
 		}
 		
+	}
+	
+	public void parseContextStatement(Context parent){
+		if(lexer.current().getType() != TokenType.CURLY_OPEN){
+			throw new UnexpectedTokenException(lexer.current(), TokenType.CURLY_OPEN);
+		}
+
+		lexer.next();
+		Context context = new Context(parent);
+		
+		while(lexer.current().getType() != TokenType.CURLY_CLOSE){
+			parseStatement(context);
+		}
+		
+		//consume
+		lexer.next();
+		
+		parent.addStatement(new ContextStatement(context));
 	}
 	
 	public Expression parseExpression(){
