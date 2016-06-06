@@ -17,6 +17,8 @@ import tokens.TokenType;
 import tokens.UnexpectedTokenException;
 import tokens.UnimplementedLanguageFeatureException;
 import context.Context;
+import context.Function;
+import context.FunctionArgument;
 
 public class Parser {
 	
@@ -93,12 +95,13 @@ public class Parser {
 			Token bOpen = lexer.next();
 			if(bOpen.getType() != TokenType.BRACKET_OPEN)
 				throw new UnexpectedTokenException(name, TokenType.IDENTIFIER);
+			
+			ArrayList<FunctionArgument> arguments = new ArrayList<FunctionArgument>();
 
 			if(lexer.next().getType() != TokenType.BRACKET_CLOSE){
-				System.out.println("params");
 				while(!lexer.isDone()){
-					Expression e = parseExpression();
-					System.out.println(e);
+					FunctionArgument arg = parseFunctionArgument();
+					arguments.add(arg);
 					if(lexer.current().getType() != TokenType.SEPERATOR)
 						break;
 					else
@@ -114,14 +117,32 @@ public class Parser {
 			Context nContext = new Context(context);
 			parseStatement(nContext);
 			
-			System.out.println("body");
-			System.out.println(nContext.toJSString());
+			Function function = new Function(name.getData(), arguments, nContext);
+			context.addFunction(function);
+			
 		}
 		
 		else{
 			throw new UnimplementedLanguageFeatureException();
 		}
 		
+	}
+	
+	public FunctionArgument parseFunctionArgument(){
+		if(lexer.current().getType() != TokenType.IDENTIFIER)
+			throw new UnexpectedTokenException(lexer.current(), TokenType.IDENTIFIER);
+		
+		Token name = lexer.current();
+		
+		Token equals = lexer.next();
+		
+		if(equals.getType() == TokenType.EQUALS){
+			lexer.next(); // consume the equals
+			Expression e = parseExpression();
+			return new FunctionArgument(name.getData(), e);
+		}else{
+			return new FunctionArgument(name.getData());
+		}
 	}
 	
 	public void parseContextStatement(Context parent){

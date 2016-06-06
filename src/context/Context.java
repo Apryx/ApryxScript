@@ -11,6 +11,7 @@ public class Context implements JSGenerator{
 	
 	private List<String> variables;
 	private List<Statement> statements;
+	private List<Function> functions;
 	private Context parent;
 	
 	public Context(){
@@ -20,10 +21,15 @@ public class Context implements JSGenerator{
 	public Context(Context context){
 		variables = new ArrayList<String>();
 		statements = new ArrayList<Statement>();
+		functions = new ArrayList<Function>();
 	}
 	
 	public void addStatement(Statement statement){
 		statements.add(statement);
+	}
+	
+	public void addFunction(Function function){
+		functions.add(function);
 	}
 	
 	public void addVariable(String name){
@@ -54,6 +60,11 @@ public class Context implements JSGenerator{
 			}else{
 				builder.append(";");
 			}
+		}
+		
+
+		for(int i = 0; i < functions.size(); i++){
+			builder.append(functions.get(i).toJSString());
 		}
 		
 		for(int i = 0; i < statements.size(); i++){
