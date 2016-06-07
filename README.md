@@ -1,24 +1,32 @@
 # ApryxScript
 Apryx Scripting Language
 
-Welcome to a short description of ApryxScript. A typesafe Javascript inspired language that has been in development for quite a while now!
+Welcome to a short description of ApryxScript. A ~~typesafe~~ Javascript inspired language that has been in development for quite a while now!
 
 ApryxScript looks a lot like Javascript, the hello world program looks like this:
 ```
-print("Hello World!")
+console.log("Hello World!")
 ```
 
 As you can see, its very straight forward C like. You can declare variables like this:
 ```
 var variableOne = 1
-var variableTwo : int = 2
 ```
+
+Note, there are not semi colons. You can still add them if you want, but they are not needed.
+For example
+```
+main() main()
+
+main();main();
+```
+The two statements do exactly the same.
 
 Some other examples that hopefully speak for themself (the readme file will become better later :) )
 
 ```
 function main(){
-  print("This is the main function")
+  console.log("This is the main function")
 }
-main();
+main()
 ```

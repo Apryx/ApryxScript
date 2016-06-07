@@ -4,8 +4,6 @@ import generation.JSGenerator;
 
 import java.util.List;
 
-import statement.Statement;
-
 public class Function implements JSGenerator{
 	
 	private String name;
@@ -68,7 +66,7 @@ public class Function implements JSGenerator{
 				builder.append(arguments.get(i).getName());
 				builder.append("=");
 				builder.append(arguments.get(i).getDefaultValue().toJSString());
-				builder.append("}");
+				builder.append(";}");
 			}
 		}
 		
