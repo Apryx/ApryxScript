@@ -5,3 +5,4 @@ bin
 *.io
 makefile
 *.js
+/bin1/
