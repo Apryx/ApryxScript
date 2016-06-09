@@ -3,10 +3,10 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.List;
 
+import context.Context;
 import language.Lexer;
 import language.Parser;
 import tokens.Token;
-import context.Context;
 
 
 public class Main {

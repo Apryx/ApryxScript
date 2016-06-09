@@ -85,47 +85,54 @@ public class Parser {
 		}
 		
 		else if(currentToken.getData().equals(Language.FUNCTION)){
-			//TODO implement fully
-			
-			Token name = lexer.next();
-			if(name.getType() != TokenType.IDENTIFIER)
-				throw new UnexpectedTokenException(name, TokenType.IDENTIFIER);
-			
-			//TODO why not change this to no brackets functions, is there somthing against it?
-			Token bOpen = lexer.next();
-			if(bOpen.getType() != TokenType.BRACKET_OPEN)
-				throw new UnexpectedTokenException(name, TokenType.IDENTIFIER);
-			
-			ArrayList<FunctionArgument> arguments = new ArrayList<FunctionArgument>();
-
-			if(lexer.next().getType() != TokenType.BRACKET_CLOSE){
-				while(!lexer.isDone()){
-					FunctionArgument arg = parseFunctionArgument();
-					arguments.add(arg);
-					if(lexer.current().getType() != TokenType.SEPERATOR)
-						break;
-					else
-						lexer.next();//consume the seperator
-				}
-			}
-			
-			if(lexer.current().getType() != TokenType.BRACKET_CLOSE)
-				throw new UnexpectedTokenException(lexer.current(), TokenType.BRACKET_CLOSE);
-			
-			lexer.next();
-			
-			Context nContext = new Context(context);
-			parseStatement(nContext);
-			
-			Function function = new Function(name.getData(), arguments, nContext);
-			context.addFunction(function);
-			
+			parseFunction(context);
 		}
 		
 		else{
 			throw new UnimplementedLanguageFeatureException();
 		}
 		
+	}
+	
+	public Function parseFunction(Context parent){
+		if(!lexer.current().getData().equals(Language.FUNCTION))
+			throw new UnexpectedTokenException(lexer.current(), TokenType.KEYWORD);
+		//TODO implement fully
+		
+		Token name = lexer.next();
+		if(name.getType() != TokenType.IDENTIFIER)
+			throw new UnexpectedTokenException(name, TokenType.IDENTIFIER);
+		
+		//TODO why not change this to no brackets functions, is there somthing against it?
+		Token bOpen = lexer.next();
+		if(bOpen.getType() != TokenType.BRACKET_OPEN)
+			throw new UnexpectedTokenException(name, TokenType.IDENTIFIER);
+		
+		ArrayList<FunctionArgument> arguments = new ArrayList<FunctionArgument>();
+
+		if(lexer.next().getType() != TokenType.BRACKET_CLOSE){
+			while(!lexer.isDone()){
+				FunctionArgument arg = parseFunctionArgument();
+				arguments.add(arg);
+				if(lexer.current().getType() != TokenType.SEPERATOR)
+					break;
+				else
+					lexer.next();//consume the seperator
+			}
+		}
+		
+		if(lexer.current().getType() != TokenType.BRACKET_CLOSE)
+			throw new UnexpectedTokenException(lexer.current(), TokenType.BRACKET_CLOSE);
+		
+		lexer.next();
+		
+		Context nContext = new Context(parent);
+		parseStatement(nContext);
+		
+		Function function = new Function(name.getData(), arguments, nContext);
+		parent.addFunction(function);
+		
+		return function;
 	}
 	
 	public FunctionArgument parseFunctionArgument(){
@@ -193,6 +200,13 @@ public class Parser {
 			}
 			
 			return new InvokeExpression(lhs, expressions);
+		}
+		
+		//Equals
+		else if(operator.getType() == TokenType.EQUALS){
+			lexer.next();
+			Expression rhs = parseExpression();
+			return new OperatorExpression(lhs, rhs, "=");
 		}
 		
 		return lhs;
