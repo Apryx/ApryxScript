@@ -7,16 +7,16 @@ import java.util.List;
 public class Function implements JSGenerator{
 	
 	private String name;
-	private List<FunctionArgument> arguments;
+	private List<ApryxVariable> arguments;
 	private Context context;
 	
-	public Function(String name, List<FunctionArgument> arguments, Context statement){
+	public Function(String name, List<ApryxVariable> arguments, Context statement){
 		this.name = name;
 		this.arguments = arguments;
 		this.context = statement;
 	}
 	
-	public List<FunctionArgument> getArguments() {
+	public List<ApryxVariable> getArguments() {
 		return arguments;
 	}
 	
@@ -28,7 +28,7 @@ public class Function implements JSGenerator{
 		return context;
 	}
 	
-	public void setArguments(List<FunctionArgument> arguments) {
+	public void setArguments(List<ApryxVariable> arguments) {
 		this.arguments = arguments;
 	}
 	

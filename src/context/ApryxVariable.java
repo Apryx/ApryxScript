@@ -2,16 +2,16 @@ package context;
 
 import statement.Expression;
 
-public class FunctionArgument {
+public class ApryxVariable {
 	
 	private String name;
 	private Expression defaultValue;
 	
-	public FunctionArgument(String name){
+	public ApryxVariable(String name){
 		this.name = name;
 	}
 	
-	public FunctionArgument(String name, Expression defaultValue){
+	public ApryxVariable(String name, Expression defaultValue){
 		this.name = name;
 		this.defaultValue = defaultValue;
 	}

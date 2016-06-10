@@ -3,6 +3,10 @@ package language;
 import java.util.ArrayList;
 import java.util.List;
 
+import context.ApryxClass;
+import context.Context;
+import context.Function;
+import context.ApryxVariable;
 import statement.ConstantExpression;
 import statement.ContextStatement;
 import statement.Expression;
@@ -16,9 +20,6 @@ import tokens.Token;
 import tokens.TokenType;
 import tokens.UnexpectedTokenException;
 import tokens.UnimplementedLanguageFeatureException;
-import context.Context;
-import context.Function;
-import context.FunctionArgument;
 
 public class Parser {
 	
@@ -72,14 +73,14 @@ public class Parser {
 			
 			Token operatorToken = lexer.next();
 			
-			context.addVariable(nameToken.getData());
-			
 			if(operatorToken.getType() == TokenType.EQUALS){
 				//consume equals token
 				lexer.next();
 				Expression e = parseExpression();
 				
-				context.addStatement(new ExpressionStatement(new SetExpression(new IdentifierExpression(nameToken.getData()), e)));
+				context.addVariable(new ApryxVariable(nameToken.getData(), e));
+			}else{
+				context.addVariable(new ApryxVariable(nameToken.getData(), null));
 			}
 			
 		}
@@ -87,11 +88,46 @@ public class Parser {
 		else if(currentToken.getData().equals(Language.FUNCTION)){
 			parseFunction(context);
 		}
+		else if(currentToken.getData().equals(Language.CLASS)){
+			parseClass(context);
+		}
 		
 		else{
 			throw new UnimplementedLanguageFeatureException();
 		}
 		
+	}
+	
+	public ApryxClass parseClass(Context parent){
+		if(!lexer.current().getData().equals(Language.CLASS))
+			throw new UnexpectedTokenException(lexer.current(), TokenType.KEYWORD);
+		
+		Token name = lexer.next();
+		if(name.getType() != TokenType.IDENTIFIER)
+			throw new UnexpectedTokenException(lexer.current(), TokenType.IDENTIFIER);
+		
+		Token bOpen = lexer.next();
+		if(bOpen.getType() != TokenType.CURLY_OPEN)//TODO make something like requireType, for readabitlity sake
+			throw new UnexpectedTokenException(lexer.current(), TokenType.CURLY_OPEN);//TODO add single line classes or something.
+		
+		ApryxClass cls = new ApryxClass(name.getData(), parent);
+		
+		lexer.next(); // consume curly open
+		
+		while(!lexer.isDone() && lexer.current().getType() != TokenType.CURLY_CLOSE){
+			while(lexer.current().getType() == TokenType.LINE_END && !lexer.isDone())
+				lexer.next();
+			if(lexer.current().getType() != TokenType.KEYWORD)
+				throw new UnexpectedTokenException(lexer.current(), TokenType.KEYWORD);
+			
+			parseKeyword(cls);
+		}
+		
+		lexer.next(); // consume curly close
+		
+		parent.addClass(cls);
+		
+		return cls;
 	}
 	
 	public Function parseFunction(Context parent){
@@ -108,11 +144,11 @@ public class Parser {
 		if(bOpen.getType() != TokenType.BRACKET_OPEN)
 			throw new UnexpectedTokenException(name, TokenType.IDENTIFIER);
 		
-		ArrayList<FunctionArgument> arguments = new ArrayList<FunctionArgument>();
+		ArrayList<ApryxVariable> arguments = new ArrayList<ApryxVariable>();
 
 		if(lexer.next().getType() != TokenType.BRACKET_CLOSE){
 			while(!lexer.isDone()){
-				FunctionArgument arg = parseFunctionArgument();
+				ApryxVariable arg = parseFunctionArgument();
 				arguments.add(arg);
 				if(lexer.current().getType() != TokenType.SEPERATOR)
 					break;
@@ -135,7 +171,7 @@ public class Parser {
 		return function;
 	}
 	
-	public FunctionArgument parseFunctionArgument(){
+	public ApryxVariable parseFunctionArgument(){
 		if(lexer.current().getType() != TokenType.IDENTIFIER)
 			throw new UnexpectedTokenException(lexer.current(), TokenType.IDENTIFIER);
 		
@@ -146,9 +182,9 @@ public class Parser {
 		if(equals.getType() == TokenType.EQUALS){
 			lexer.next(); // consume the equals
 			Expression e = parseExpression();
-			return new FunctionArgument(name.getData(), e);
+			return new ApryxVariable(name.getData(), e);
 		}else{
-			return new FunctionArgument(name.getData());
+			return new ApryxVariable(name.getData());
 		}
 	}
 	
