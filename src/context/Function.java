@@ -45,7 +45,10 @@ public class Function implements JSGenerator{
 		StringBuilder builder = new StringBuilder();
 		
 		builder.append("function ");
-		builder.append(name);
+		
+		if(name != null)
+			builder.append(name);
+		
 		builder.append('(');
 		
 		for(int i = 0; i < arguments.size(); i++){
