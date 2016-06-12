@@ -11,6 +11,7 @@ import statement.ConstantExpression;
 import statement.ContextStatement;
 import statement.Expression;
 import statement.ExpressionStatement;
+import statement.FunctionExpression;
 import statement.IdentifierExpression;
 import statement.InvokeExpression;
 import statement.LookupExpression;
@@ -86,7 +87,7 @@ public class Parser {
 		}
 		
 		else if(currentToken.getData().equals(Language.FUNCTION)){
-			parseFunction(context);
+			parseFunction(context, true);
 		}
 		else if(currentToken.getData().equals(Language.CLASS)){
 			parseClass(context);
@@ -135,17 +136,23 @@ public class Parser {
 		return cls;
 	}
 	
-	public Function parseFunction(Context parent){
+	public Function parseFunction(Context parent, boolean namedStrict){
 		if(!lexer.current().getData().equals(Language.FUNCTION))
 			throw new UnexpectedTokenException(lexer.current(), TokenType.KEYWORD);
 		//TODO implement fully
 		
 		Token name = lexer.next();
-		if(name.getType() != TokenType.IDENTIFIER)
-			throw new UnexpectedTokenException(name, TokenType.IDENTIFIER);
+		Token bOpen;
+		if(name.getType() != TokenType.IDENTIFIER){
+			if(namedStrict)
+				throw new UnexpectedTokenException(name, TokenType.IDENTIFIER);
+			else
+				bOpen = name;
+		}else{
+			bOpen = lexer.next();
+		}
 		
 		//TODO why not change this to no brackets functions, is there somthing against it?
-		Token bOpen = lexer.next();
 		if(bOpen.getType() != TokenType.BRACKET_OPEN)
 			throw new UnexpectedTokenException(name, TokenType.IDENTIFIER);
 		
@@ -170,8 +177,9 @@ public class Parser {
 		Context nContext = new Context(parent);
 		parseStatement(nContext);
 		
-		Function function = new Function(name.getData(), arguments, nContext);
-		parent.addFunction(function);
+		Function function = new Function(namedStrict ? name.getData() : null, arguments, nContext);
+		if(parent != null)//TODO pls fix this fucking stuff dude.
+			parent.addFunction(function);
 		
 		return function;
 	}
@@ -212,6 +220,13 @@ public class Parser {
 	}
 	
 	public Expression parseExpression(){
+		if(lexer.current().getType() == TokenType.KEYWORD){
+			if(lexer.current().getData().equals(Language.FUNCTION)){
+				//TODO this context is null, which is stupid ofcourse (maybe always pass context in expression functions
+				Function f = parseFunction(null, false);
+				return new FunctionExpression(f);
+			}
+		}
 		Expression lhs = parseExpressionSimple();
 		
 		Token operator = lexer.current();
