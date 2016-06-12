@@ -30,3 +30,18 @@ function main(){
 }
 main()
 ```
+
+Currently classes are also implemented
+```
+class Vector{
+	var x = 0
+	var y = 0
+	var z = 0
+	
+	function toString(){...}
+}
+
+var v = Vector()
+console.log(v.toString())
+
+```

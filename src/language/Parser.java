@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import context.ApryxClass;
+import context.ApryxVariable;
 import context.Context;
 import context.Function;
-import context.ApryxVariable;
 import statement.ConstantExpression;
 import statement.ContextStatement;
 import statement.Expression;
@@ -15,7 +15,7 @@ import statement.IdentifierExpression;
 import statement.InvokeExpression;
 import statement.LookupExpression;
 import statement.OperatorExpression;
-import statement.SetExpression;
+import statement.ReturnStatement;
 import tokens.Token;
 import tokens.TokenType;
 import tokens.UnexpectedTokenException;
@@ -90,6 +90,11 @@ public class Parser {
 		}
 		else if(currentToken.getData().equals(Language.CLASS)){
 			parseClass(context);
+		}
+		else if(currentToken.getData().equals(Language.RETURN)){
+			lexer.next();
+			Expression e = parseExpression();
+			context.addStatement(new ReturnStatement(e));
 		}
 		
 		else{
@@ -219,7 +224,7 @@ public class Parser {
 			return new OperatorExpression(lhs,rhs, operator.getData());
 		}
 		
-		//function call
+		//function call TODO . lookups after this and stuffs
 		else if(operator.getType() == TokenType.BRACKET_OPEN){
 			//consume the operator
 			Token n = lexer.next();

@@ -22,6 +22,7 @@ public class ApryxClass extends Context{
 		
 		StringBuilder builder = new StringBuilder();
 		
+		//The new function workaround, Idk whether this is a great idea or not. I probably should not do this, but whatever
 		builder.append("function ");
 		builder.append(name);
 		builder.append("(){return new __");
