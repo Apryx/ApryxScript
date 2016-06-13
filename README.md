@@ -45,3 +45,6 @@ var v = Vector()
 console.log(v.toString())
 
 ```
+
+
+Currently I'm gonna try to make this typesafe, because i know i can.
