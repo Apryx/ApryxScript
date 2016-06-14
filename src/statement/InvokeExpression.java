@@ -2,6 +2,8 @@ package statement;
 
 import java.util.List;
 
+import context.Context;
+
 public class InvokeExpression extends Expression{
 	
 	private Expression invoke;
@@ -37,5 +39,10 @@ public class InvokeExpression extends Expression{
 		builder.append(')');
 		
 		return builder.toString();
+	}
+
+	@Override
+	public void check(Context context) {
+		
 	}
 }

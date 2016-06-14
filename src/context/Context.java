@@ -42,6 +42,17 @@ public class Context implements JSGenerator{
 		classes.add(cls);
 	}
 	
+	public ApryxVariable getVariableByName(String name){
+		for(ApryxVariable v : variables){
+			if(v.getName().equals(name))
+				return v;
+		}
+		if(this.parent != null)
+			return this.parent.getVariableByName(name);
+		else
+			return null;
+	}
+	
 	public Context getParent() {
 		return parent;
 	}
@@ -86,5 +97,9 @@ public class Context implements JSGenerator{
 		}
 		
 		return builder.toString();
+	}
+	
+	public void check(){
+		
 	}
 }

@@ -24,5 +24,12 @@ public class ContextStatement implements Statement{
 		
 		return builder.toString();
 	}
+
+	@Override
+	public void check(Context context) {
+		if(this.context.getParent() != context)
+			throw new RuntimeException("Wrong contexting");
+		
+	}
 	
 }

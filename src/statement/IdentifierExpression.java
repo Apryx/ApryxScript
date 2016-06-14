@@ -1,5 +1,8 @@
 package statement;
 
+import context.ApryxVariable;
+import context.Context;
+
 public class IdentifierExpression extends Expression{
 	
 	private String name;
@@ -19,5 +22,12 @@ public class IdentifierExpression extends Expression{
 	@Override
 	public String toJSString() {
 		return name;
+	}
+
+	@Override
+	public void check(Context context) {
+		ApryxVariable v = context.getVariableByName(name);
+		if(v == null)
+			throw new RuntimeException("Variable not found");
 	}
 }
