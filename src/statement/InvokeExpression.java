@@ -2,12 +2,15 @@ package statement;
 
 import java.util.List;
 
+import context.Type;
+
 public class InvokeExpression extends Expression{
 	
 	private Expression invoke;
 	private List<Expression> arguments;
 	
 	public InvokeExpression(Expression invoke, List<Expression> arguments){
+		super(Type.UNKNOWN);
 		this.invoke = invoke;
 		this.arguments = arguments;
 	}

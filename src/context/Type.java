@@ -1,6 +1,13 @@
 package context;
 
 public class Type {
+
+	public static final Type STRING = new Type("String");
+	public static final Type INTEGER = new Type("int");
+	public static final Type FLOAT = new Type("float");
+	public static final Type DOUBLE = new Type("double");
+	
+	public static final Type UNKNOWN = new Type("__unknown__");
 	
 	private String name;
 

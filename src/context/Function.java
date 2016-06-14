@@ -39,6 +39,10 @@ public class Function implements JSGenerator{
 	public void setStatement(Context c) {
 		this.context = c;
 	}
+	
+	public Type getFunctionType(){
+		return null; // TODO implement this
+	}
 
 	@Override
 	public String toJSString() {

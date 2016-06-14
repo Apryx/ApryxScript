@@ -7,6 +7,7 @@ import context.ApryxClass;
 import context.ApryxVariable;
 import context.Context;
 import context.Function;
+import context.Type;
 import statement.ConstantExpression;
 import statement.ContextStatement;
 import statement.Expression;
@@ -302,11 +303,11 @@ public class Parser {
 		}
 		else if(start.getType() == TokenType.STRING){
 			lexer.next();
-			return new ConstantExpression(start.getData(), ConstantExpression.Type.STRING);
+			return new ConstantExpression(start.getData(), Type.STRING);
 		}
 		else if(start.getType() == TokenType.INTEGER){
 			lexer.next();
-			return new ConstantExpression(start.getData(), ConstantExpression.Type.INTEGER);
+			return new ConstantExpression(start.getData(), Type.INTEGER);
 		}
 		
 		else{
