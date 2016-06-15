@@ -7,7 +7,7 @@ import java.util.List;
 
 import statement.Statement;
 
-public class Context implements JSGenerator{
+public class Context implements JSGenerator, TypeCheckable{
 	
 	protected List<ApryxVariable> variables;
 	protected List<Statement> statements;
@@ -63,21 +63,18 @@ public class Context implements JSGenerator{
 		}
 		
 		for(int i = 0; i < variables.size(); i++){
-			if(i == 0){
-				builder.append("var ");
-			}
 			
+			if(variables.get(i).isInvisible())
+				continue;
+			
+			builder.append("var ");
 			builder.append(variables.get(i).getName());
 			if(variables.get(i).hasDefaultValue()){
 				builder.append("=");
 				builder.append(variables.get(i).getDefaultValue().toJSString());
 			}
+			builder.append(";");
 			
-			if(i != variables.size() - 1){
-				builder.append(", ");
-			}else{
-				builder.append(";");
-			}
 		}
 		
 		
@@ -86,5 +83,21 @@ public class Context implements JSGenerator{
 		}
 		
 		return builder.toString();
+	}
+
+	@Override
+	public void checkType(Context context) {
+		if(this.parent != context)
+			throw new RuntimeException("Parent context not parent! (Typechecking)");
+		
+		//TODO typecheck the variables and stuff :)
+		for(int i = 0; i < variables.size(); i++){
+			variables.get(i).checkType(this);
+		}
+		
+		
+		for(int i = 0; i < statements.size(); i++){
+			statements.get(i).checkType(this);
+		}
 	}
 }

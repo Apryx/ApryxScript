@@ -1,5 +1,7 @@
 package statement;
 
+import context.Context;
+
 public class ExpressionStatement implements Statement{
 	
 	private Expression expression;
@@ -20,5 +22,10 @@ public class ExpressionStatement implements Statement{
 	public String toJSString() {
 		//No stringbuilder needed, java compiler does that for us here :D
 		return expression.toJSString() + ";";
+	}
+	
+	@Override
+	public void checkType(Context context) {
+		//TODO check the expression
 	}
 }

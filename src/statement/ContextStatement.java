@@ -25,4 +25,9 @@ public class ContextStatement implements Statement{
 		return builder.toString();
 	}
 	
+	@Override
+	public void checkType(Context context) {
+		this.context.checkType(context);
+	}
+	
 }
