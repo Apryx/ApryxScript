@@ -1,5 +1,7 @@
 package statement;
 
+import context.Context;
+
 public class ReturnStatement implements Statement{
 	
 	private Expression expression;
@@ -17,6 +19,11 @@ public class ReturnStatement implements Statement{
 		builder.append(';');
 		
 		return builder.toString();
+	}
+	
+	@Override
+	public void checkType(Context context) {
+		//TODO typecheck the return statement stuff
 	}
 
 }

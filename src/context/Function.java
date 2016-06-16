@@ -4,7 +4,7 @@ import generation.JSGenerator;
 
 import java.util.List;
 
-public class Function implements JSGenerator{
+public class Function implements JSGenerator, TypeCheckable{
 	
 	private String name;
 	private List<ApryxVariable> arguments;
@@ -14,6 +14,10 @@ public class Function implements JSGenerator{
 		this.name = name;
 		this.arguments = arguments;
 		this.context = statement;
+		for(ApryxVariable f : arguments){
+			f.setInvisible(true);
+			this.context.addVariable(f); // Add the variables to the context			
+		}
 	}
 	
 	public List<ApryxVariable> getArguments() {
@@ -38,6 +42,10 @@ public class Function implements JSGenerator{
 	
 	public void setStatement(Context c) {
 		this.context = c;
+	}
+	
+	public Type getFunctionType(){
+		return null; // TODO implement this
 	}
 
 	@Override
@@ -78,6 +86,11 @@ public class Function implements JSGenerator{
 		builder.append('}');
 		
 		return builder.toString();
+	}
+
+	@Override
+	public void checkType(Context parent) {
+		
 	}
 	
 	

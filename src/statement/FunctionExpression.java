@@ -7,6 +7,7 @@ public class FunctionExpression extends Expression{
 	private Function function;
 	
 	public FunctionExpression(Function function){
+		super(function.getFunctionType());
 		this.function = function;
 	}
 	

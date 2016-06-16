@@ -1,17 +1,14 @@
 package statement;
 
+import context.Type;
+
 public class ConstantExpression extends Expression{
 	
-	public enum Type{
-		STRING, INTEGER, FLOAT, DOUBLE
-	}
-	
 	private String value;
-	private Type type;
 	
 	public ConstantExpression(String value, Type type){
+		super(type);
 		this.value = value;
-		this.type = type;
 	}
 	
 	public String getValue() {
@@ -22,11 +19,11 @@ public class ConstantExpression extends Expression{
 	public String toJSString() {
 		StringBuilder builder = new StringBuilder();
 
-		if(type == Type.STRING)
+		if(getType().equals(Type.STRING))
 			builder.append('"');
 		builder.append(value);
 		
-		if(type == Type.STRING)
+		if(getType().equals(Type.STRING))
 			builder.append('"');
 		
 		return builder.toString();

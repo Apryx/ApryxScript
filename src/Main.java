@@ -12,6 +12,7 @@ import tokens.Token;
 public class Main {
 	
 	private static boolean lexOnly = false;
+	private static boolean typeCheck = true;
 	private static String[] args;
 	private static int filesOffset = 0;
 	
@@ -22,7 +23,12 @@ public class Main {
 			if(args[filesOffset].equals("-l")){
 				filesOffset++;
 				lexOnly = true;
-			}else{
+			}
+			if(args[filesOffset].equals("-t")){
+				filesOffset++;
+				typeCheck = false;
+			}
+			else{
 				arg = false;
 			}
 		}
@@ -55,6 +61,10 @@ public class Main {
 			}else{
 				Parser parser = new Parser(lexer);
 				Context context = parser.parseContext();
+				if(typeCheck){
+					context.checkType(null);
+				}
+				
 				System.out.println(context.toJSString());
 			}
 			
