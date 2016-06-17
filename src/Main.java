@@ -17,6 +17,9 @@ public class Main {
 	private static int filesOffset = 0;
 	
 
+	/**
+	 * Parses the arguments given  in the command line, until it finds the beginning files
+	 */
 	public static void parseArguments(){
 		boolean arg = true;
 		while(arg){
