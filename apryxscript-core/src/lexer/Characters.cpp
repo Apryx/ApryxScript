@@ -14,11 +14,19 @@ namespace apryx {
 
 	char Characters::next()
 	{
+		if (m_Current == '\n'){
+			m_Line++;
+			m_Index = 0;
+		}
+
 		m_Input->get(m_Current);
-		if (this->operator bool())
-			return m_Current;
-		else
-			return '\0';
+		
+		m_Index++;
+
+		if (!this->operator bool())
+			m_Current = '\0';
+
+
 	}
 
 	Characters::operator bool()
