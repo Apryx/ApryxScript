@@ -1,0 +1,6 @@
+
+var a : int = 4;
+
+function main(){
+	print(a)
+}
