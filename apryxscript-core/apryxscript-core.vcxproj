@@ -127,7 +127,9 @@
     <ClInclude Include="src\lexer\Lexer.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\language\Language.cpp" />
     <ClCompile Include="src\lexer\Characters.cpp" />
+    <ClCompile Include="src\lexer\Lexer.cpp" />
     <ClCompile Include="src\main.cpp" />
   </ItemGroup>
   <ItemGroup>

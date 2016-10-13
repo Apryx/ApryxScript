@@ -26,7 +26,7 @@ namespace apryx {
 		if (!this->operator bool())
 			m_Current = '\0';
 
-
+		return m_Current;
 	}
 
 	Characters::operator bool()

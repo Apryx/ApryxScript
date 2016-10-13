@@ -12,7 +12,8 @@ int main(void)
 
 	Lexer lexer(std::make_shared<std::ifstream>("test.apx"));
 
-
+	while (lexer)
+		LOG(lexer.next());
 
 	WAIT();
 

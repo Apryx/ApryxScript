@@ -32,6 +32,8 @@ namespace apryx {
 
 		int m_Line;
 		int m_Character;
+
+		friend std::ostream &operator<<(std::ostream &o, const Token &token);
 	};
 
 	class Lexer {
@@ -42,6 +44,8 @@ namespace apryx {
 
 		const Token &current();
 		const Token &next();
+
+		operator bool();
 	};
 
 }
