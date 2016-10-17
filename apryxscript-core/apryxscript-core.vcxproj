@@ -121,16 +121,26 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\ast\Expression.h" />
+    <ClInclude Include="src\ast\Statement.h" />
     <ClInclude Include="src\debug\Debug.h" />
     <ClInclude Include="src\language\Language.h" />
     <ClInclude Include="src\lexer\Characters.h" />
     <ClInclude Include="src\lexer\Lexer.h" />
+    <ClInclude Include="src\parser\Parser.h" />
+    <ClInclude Include="src\runtime\ApryxObject.h" />
+    <ClInclude Include="src\runtime\Runtime.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\ast\Expression.cpp" />
+    <ClCompile Include="src\ast\Statement.cpp" />
     <ClCompile Include="src\language\Language.cpp" />
     <ClCompile Include="src\lexer\Characters.cpp" />
     <ClCompile Include="src\lexer\Lexer.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\parser\Parser.cpp" />
+    <ClCompile Include="src\runtime\ApryxObject.cpp" />
+    <ClCompile Include="src\runtime\Runtime.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="test.apx" />
