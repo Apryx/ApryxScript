@@ -42,6 +42,9 @@
     <ClInclude Include="src\runtime\ApryxObject.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\runtime\Type.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">

@@ -130,6 +130,7 @@
     <ClInclude Include="src\parser\Parser.h" />
     <ClInclude Include="src\runtime\ApryxObject.h" />
     <ClInclude Include="src\runtime\Runtime.h" />
+    <ClInclude Include="src\runtime\Type.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\ast\Expression.cpp" />
