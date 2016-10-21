@@ -142,6 +142,7 @@
     <ClCompile Include="src\parser\Parser.cpp" />
     <ClCompile Include="src\runtime\ApryxObject.cpp" />
     <ClCompile Include="src\runtime\Runtime.cpp" />
+    <ClCompile Include="src\runtime\Type.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="test.apx" />

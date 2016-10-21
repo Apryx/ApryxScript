@@ -30,8 +30,7 @@ int main(void)
 		while (lexer.current()) {
 			auto p = parser.parseStatement(lexer);
 			if (p) {
-				LOG(p);
-				runtime.evaluate(p);
+				LOG(p->toString());
 			}
 		}
 
