@@ -127,10 +127,15 @@
     <ClInclude Include="src\language\Language.h" />
     <ClInclude Include="src\lexer\Characters.h" />
     <ClInclude Include="src\lexer\Lexer.h" />
+    <ClInclude Include="src\logger\log.h" />
     <ClInclude Include="src\parser\Parser.h" />
     <ClInclude Include="src\runtime\ApryxObject.h" />
     <ClInclude Include="src\runtime\Runtime.h" />
     <ClInclude Include="src\runtime\Type.h" />
+    <ClInclude Include="src\vm\ScriptVM.h" />
+    <ClInclude Include="src\vm\VMResources.h" />
+    <ClInclude Include="src\vm\VMStack.h" />
+    <ClInclude Include="src\vm\VMTypes.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\ast\Expression.cpp" />
@@ -143,6 +148,9 @@
     <ClCompile Include="src\runtime\ApryxObject.cpp" />
     <ClCompile Include="src\runtime\Runtime.cpp" />
     <ClCompile Include="src\runtime\Type.cpp" />
+    <ClCompile Include="src\vm\ScriptVM.cpp" />
+    <ClCompile Include="src\vm\VMResources.cpp" />
+    <ClCompile Include="src\vm\VMTypes.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="test.apx" />

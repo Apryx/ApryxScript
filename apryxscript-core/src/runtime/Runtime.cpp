@@ -5,7 +5,7 @@
 #include "ApryxObject.h"
 
 //TODO not use debugger for real logging, whatever
-#include "debug/debug.h"
+#include "logger/log.h"
 
 namespace apryx {
 

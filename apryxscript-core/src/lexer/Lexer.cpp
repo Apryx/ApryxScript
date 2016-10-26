@@ -3,7 +3,7 @@
 
 #include <sstream>
 #include <iostream>
-#include "debug/Debug.h"
+#include "logger/log.h"
 
 #define LEXER_ERROR(x) throw std::exception(x)
 

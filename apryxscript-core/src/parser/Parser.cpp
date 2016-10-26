@@ -3,7 +3,7 @@
 #include "ast/Expression.h"
 #include "ast/Statement.h"
 #include "lexer/Lexer.h"
-#include "debug/Debug.h"
+#include "logger/log.h"
 
 namespace apryx {
 	
