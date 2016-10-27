@@ -11,32 +11,71 @@
 #include <sstream>
 
 #include "vm/ScriptVM.h"
-#include "vm/VMStack.h"
 #include "vm/VMResources.h"
+#include "vm/VMWriter.h"
 
+
+bool add(apryx::VMOperandStack &stack, int count)
+{
+	apryx::VMOperandSlot slot;
+	int res = 0;
+	for (int i = 0; i < count; i++) {
+		slot = stack.back(); stack.pop_back();
+		res += slot.i;
+	}
+	slot.i = res;
+	stack.push_back(slot);
+	return true;
+}
+
+bool print(apryx::VMOperandStack &stack, int count)
+{
+	apryx::VMOperandSlot slot;
+
+	for (int i = 0; i < count; i++) {
+		slot = stack.back(); stack.pop_back();
+		switch (slot.m_Type) {
+		case slot.FLOAT:
+			LOG(slot.f);
+			break;
+		case slot.INT:
+			LOG(slot.i);
+			break;
+		case slot.FUNCTION:
+			LOG(slot.i);
+			break;
+		case slot.NATIVE_FUNCTION:
+			LOG("nat" << slot.f);
+			break;
+		default:
+			LOG(std::hex << slot.l << std::dec);
+			break;
+		}
+	}
+
+	return true;
+}
 
 int main(void)
 {
 	using namespace apryx;
 
+	//Make sure the VM does what its supposed to do 
+
 	verify_types();
 
-	std::vector<instruction_t> target;
+	VMWriter writer;
+	writer
+		.push(2.0f)
+		.push(1)
+		.swap()
+		.f2i()
+		.iadd()
+		.push(print)
+		.invokeNative(1)
+		.exit();
 
-	VMResources::writeInstruction(target, PUSH_BYTE);
-	VMResources::writeByte(target, 3);
-	VMResources::writeInstruction(target, PUSH_FLOAT);
-	VMResources::writeFloat(target, 3);
-	VMResources::writeInstruction(target, PUSH_FLOAT);
-	VMResources::writeFloat(target, 4);
-	VMResources::writeInstruction(target, FMUL);
-	VMResources::writeInstruction(target, SWAP);
-	VMResources::writeInstruction(target, I2F);
-	VMResources::writeInstruction(target, FADD);
-	VMResources::writeInstruction(target, DUMP);
-	VMResources::writeInstruction(target, EXIT);
-
-	ScriptVM vm(target);
+	ScriptVM vm(writer.m_Target);
 	vm.execute();
 
 	WAIT();

@@ -1,5 +1,4 @@
 #include "VMResources.h"
-#include "VMStack.h"
 
 namespace apryx {
 
@@ -12,7 +11,7 @@ namespace apryx {
 
 	void VMResources::writeIndex(std::vector<instruction_t>& target, index_t i)
 	{
-		VMSlot slot;
+		VMOperandSlot slot;
 		slot.index = i;
 
 		for (int i = 0; i < 4; ++i)
@@ -21,7 +20,7 @@ namespace apryx {
 
 	void VMResources::writeFloat(std::vector<instruction_t>& target, float_t f)
 	{
-		VMSlot slot;
+		VMOperandSlot slot;
 		slot.f = f;
 
 		for (int i = 0; i < 4; ++i)
@@ -30,7 +29,7 @@ namespace apryx {
 
 	void VMResources::writeInt(std::vector<instruction_t>& target, int_t i)
 	{
-		VMSlot slot;
+		VMOperandSlot slot;
 		slot.i = i;
 
 		for (int i = 0; i < 4; ++i)
@@ -39,7 +38,7 @@ namespace apryx {
 
 	void VMResources::writeShort(std::vector<instruction_t>& target, short_t s)
 	{
-		VMSlot slot;
+		VMOperandSlot slot;
 		slot.s[0] = s;
 
 		for (int i = 0; i < 2; ++i)
@@ -52,6 +51,15 @@ namespace apryx {
 		writeInstruction(target, b);
 	}
 
+	void VMResources::writeFunction(std::vector<instruction_t>& target, native_t function)
+	{
+		VMOperandSlot slot;
+		slot.n = function;
+
+		for (int i = 0; i < 8; ++i)
+			writeInstruction(target, slot.b[i]);
+	}
+
 	//==============================READ==============================//
 
 	instruction_t VMResources::readInstruction(std::vector<instruction_t>& target, index_t & pc)
@@ -60,7 +68,7 @@ namespace apryx {
 	}
 	index_t VMResources::readIndex(std::vector<instruction_t>& target, index_t & pc)
 	{
-		VMSlot slot;
+		VMOperandSlot slot;
 
 		for (int i = 0; i < 4; ++i) {
 			slot.b[i] = target[pc++];
@@ -70,7 +78,7 @@ namespace apryx {
 	}
 	float_t VMResources::readFloat(std::vector<instruction_t>& target, index_t & pc)
 	{
-		VMSlot slot;
+		VMOperandSlot slot;
 
 		for (int i = 0; i < 4; ++i) {
 			slot.b[i] = target[pc++];
@@ -80,7 +88,7 @@ namespace apryx {
 	}
 	int_t VMResources::readInt(std::vector<instruction_t>& target, index_t & pc)
 	{
-		VMSlot slot;
+		VMOperandSlot slot;
 
 		for (int i = 0; i < 4; ++i) {
 			slot.b[i] = target[pc++];
@@ -90,7 +98,7 @@ namespace apryx {
 	}
 	short_t VMResources::readShort(std::vector<instruction_t>& target, index_t & pc)
 	{
-		VMSlot slot;
+		VMOperandSlot slot;
 
 		for (int i = 0; i < 2; ++i) {
 			slot.b[i] = target[pc++];
@@ -101,5 +109,16 @@ namespace apryx {
 	byte_t VMResources::readByte(std::vector<instruction_t>& target, index_t & pc)
 	{
 		return target[pc++];
+	}
+
+	native_t VMResources::readFunction(std::vector<instruction_t>& target, index_t & pc)
+	{
+		VMOperandSlot slot;
+
+		for (int i = 0; i < 8; ++i) {
+			slot.b[i] = target[pc++];
+		}
+
+		return slot.n;
 	}
 }

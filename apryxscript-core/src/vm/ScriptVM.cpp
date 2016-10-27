@@ -2,14 +2,20 @@
 #include "VMResources.h"
 #include "logger/log.h"
 
-#define OPERATOR(TYPE, OP) \
-	{VMSlot a = m_Stack.back(); m_Stack.pop_back();VMSlot b = m_Stack.back(); m_Stack.pop_back();\
-	VMSlot r;r.TYPE = a. TYPE OP b. TYPE; m_Stack.push_back(r); }
+#define CHECK_MSG(value, message) if(!value){ERROR(message);}
+#define CHECK(value) CHECK_MSG(value, "Failed!");
 
+#define OPERATOR(TYPE, OP, TYPENAME) \
+	{VMOperandSlot a = pop();VMOperandSlot b = pop(); \
+	CHECK_MSG(a.m_Type == b.m_Type, "Incompatible types"); CHECK_MSG(a.m_Type == a.TYPENAME, "Incorrect types.");\
+	VMOperandSlot r;r.TYPE = a. TYPE OP b. TYPE;r.m_Type = a.TYPENAME; push(r); }
 namespace apryx {
 
 	ScriptVM::ScriptVM(std::vector<instruction_t> ins) : m_Instructions(ins)
-	{ }
+	{
+		VMFrame frame(0,0);
+		m_Stack.push_back(std::move(frame));
+	}
 
 	void ScriptVM::execute()
 	{
@@ -18,82 +24,120 @@ namespace apryx {
 
 		while (running) {
 			instruction_t instruction = m_Instructions[pc++];
-			VMSlot slot;
+			VMOperandSlot slot;
 
 			switch (instruction) {
 				//========================================PUSHING========================================//
-			case PUSH_BYTE:
-				slot.i = VMResources::readByte(m_Instructions, pc);
-				m_Stack.push_back(slot);
+			case PUSH_BYTE: //TODO all this can be done with just a single template read<N>(); that reads N bytes
+				slot.i = (int_t) VMResources::readByte(m_Instructions, pc);
+				slot.m_Type = slot.INT;
+				push(slot);
 				break;
 			case PUSH_SHORT:
-				slot.i = VMResources::readShort(m_Instructions, pc);
-				m_Stack.push_back(slot);
+				slot.i = (int_t)VMResources::readShort(m_Instructions, pc);
+				slot.m_Type = slot.INT;
+				push(slot);
 				break;
 			case PUSH_INT:
-				slot.i = VMResources::readInt(m_Instructions, pc);
-				m_Stack.push_back(slot);
+				slot.i = (int_t)VMResources::readInt(m_Instructions, pc);
+				slot.m_Type = slot.INT;
+				push(slot);
 				break;
 			case PUSH_FLOAT:
 				slot.f = VMResources::readFloat(m_Instructions, pc);
-				m_Stack.push_back(slot);
+				slot.m_Type = slot.FLOAT;
+				push(slot);
+				break;
+			case PUSH_NATIVE:
+				slot.n = VMResources::readFunction(m_Instructions, pc);
+				slot.m_Type = slot.NATIVE_FUNCTION;
+				push(slot);
 				break;
 
 				//========================================INTEGER OPERATORS========================================//
 			case IADD:
-				OPERATOR(i, +);
+				OPERATOR(i, +, INT);
 				break;
 			case ISUB:
-				OPERATOR(i, -);
+				OPERATOR(i, -, INT);
 				break;
 			case IMUL:
-				OPERATOR(i, *);
+				OPERATOR(i, *, INT);
 				break;
 			case IDIV:
-				OPERATOR(i, /);
+				OPERATOR(i, /, INT);
 				break;
 
 				//========================================FLOAT OPERATORS========================================//
 			case FADD:
-				OPERATOR(f, +);
+				OPERATOR(f, +, FLOAT);
 				break;
 			case FSUB:
-				OPERATOR(f, -);
+				OPERATOR(f, -, FLOAT);
 				break;
 			case FMUL:
-				OPERATOR(f, *);
+				OPERATOR(f, *, FLOAT);
 				break;
 			case FDIV:
-				OPERATOR(f, / );
+				OPERATOR(f, / , FLOAT);
 				break;
 
-				//======================================== SWAP ========================================//
+				//======================================== Invocation ========================================//
 
-			case SWAP: 
+			case INVOKE_NATIVE:
 			{
-				VMSlot a = m_Stack.back(); m_Stack.pop_back();
-				VMSlot b = m_Stack.back(); m_Stack.pop_back();
-				m_Stack.push_back(a);
-				m_Stack.push_back(b);
+				VMOperandSlot function = pop();
+				CHECK_MSG(function.m_Type == function.NATIVE_FUNCTION, "Not a native function");
+				int_t b = (int_t) VMResources::readByte(m_Instructions, pc);
+				function.n(m_Stack.back().m_OperandStack, b);
 			}
 				break;
 
+				//======================================== Helpfull stuff ========================================//
+
+			case SWAP: 
+			{
+				VMOperandSlot a = pop();
+				VMOperandSlot b = pop();
+				push(a);
+				push(b);
+			}
+				break;
+			case DUP:
+			{
+				VMOperandSlot a = top();
+				push(a);
+				push(a);
+			}
+			break;
+			case POP:
+			{
+				vpop();
+			}
+			break;
+
 				//========================================CONVERTERS========================================//
 			case F2I:
-				slot = m_Stack.back(); m_Stack.pop_back();
+			{
+				VMOperandSlot &slot = top();
 				slot.i = (int)slot.f;
-				m_Stack.push_back(slot);
+				slot.m_Type = slot.INT;
+			}
 				break;
 			case I2F:
-				slot = m_Stack.back(); m_Stack.pop_back();
-				slot.f = (float)slot.i;
-				m_Stack.push_back(slot);
+			{
+				VMOperandSlot &slot = top();
+				slot.f = (int)slot.i;
+				slot.m_Type = slot.FLOAT;
+			}
 				break;
 
 				//========================================VM INSTRUCTIONS========================================//
 			case DUMP:
-				for (auto &s : m_Stack) {
-					LOG(" > " << s.i << " " << s.f);
+				for (auto &frame : m_Stack) {
+					for (auto &stack : frame.m_OperandStack) {
+						LOG(" > " << std::hex << stack.i << std::dec);
+					}
 				}
 				break;
 			case EXIT:

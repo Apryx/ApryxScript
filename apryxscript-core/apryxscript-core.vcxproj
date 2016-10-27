@@ -134,8 +134,8 @@
     <ClInclude Include="src\runtime\Type.h" />
     <ClInclude Include="src\vm\ScriptVM.h" />
     <ClInclude Include="src\vm\VMResources.h" />
-    <ClInclude Include="src\vm\VMStack.h" />
     <ClInclude Include="src\vm\VMTypes.h" />
+    <ClInclude Include="src\vm\VMWriter.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\ast\Expression.cpp" />

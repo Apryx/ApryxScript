@@ -57,7 +57,7 @@
     <ClInclude Include="src\vm\VMResources.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\vm\VMStack.h">
+    <ClInclude Include="src\vm\VMWriter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
