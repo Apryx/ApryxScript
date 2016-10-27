@@ -8,12 +8,14 @@ namespace apryx {
 
 	class ScriptVM {
 		VMStack m_Stack;
+		VMObject m_Global;
 
 		std::vector<instruction_t> m_Instructions;
-
 	public:
 		ScriptVM(std::vector<instruction_t>);
 
+		//Note: Execute should have a function to execute
+		//so that it can use recursion to execute lots of functions!
 		void execute();
 
 		//Extra usefull stuff

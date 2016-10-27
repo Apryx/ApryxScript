@@ -72,7 +72,7 @@ namespace apryx {
 			native_t n;
 
 			struct {
-				int_t refc;	//Reference count
+				int_t cls;	//Class that it was created from
 				int_t ref;	//Object reference
 			} obj;
 		};
@@ -86,6 +86,11 @@ namespace apryx {
 			OBJECT
 		} m_Type;
 
+	};
+
+	struct VMObject {
+		int_t refCount = 0;
+		std::map<int_t, VMValue> m_Objects;
 	};
 
 	struct VMFrame {
