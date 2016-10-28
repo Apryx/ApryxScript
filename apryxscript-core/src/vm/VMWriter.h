@@ -245,7 +245,13 @@ namespace apryx {
 			}
 		}
 		inline size_t constant(const std::string &c) {
-
+			size_t index = 0;
+			for (; index < m_Constants.size(); index++) {
+				if (c == m_Constants[index])
+					return index;
+			}
+			m_Constants.push_back(c);
+			return index;
 		}
 	};
 }

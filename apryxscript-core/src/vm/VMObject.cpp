@@ -4,10 +4,8 @@
 namespace apryx {
 	VMObject::VMObject()
 	{
-		LOG("Created!");
 	}
 	VMObject::~VMObject()
 	{
-		LOG("Deleted.");
 	}
 }

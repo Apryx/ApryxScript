@@ -14,7 +14,7 @@ namespace apryx {
 
 	ScriptVM::ScriptVM()
 	{
-
+		m_Globals = std::make_shared<VMObject>();
 	}
 
 	void ScriptVM::execute(const VMFunction &function)
@@ -148,10 +148,32 @@ namespace apryx {
 
 			//========================================Fields and locals========================================//
 			case SETFIELD:
+			{
+				VMOperandSlot value = pop();
+				VMOperandSlot obj = pop();
+				int_t index = (int_t)VMResources::readShort(instructions, pc);
+				CHECK_MSG(obj.getType() == VMOperandSlot::Type::OBJECT, "Not an object to set the field to");
+				
+				//These should be runtime exceptions
+				CHECK_MSG(obj.m_VMObject != nullptr, "Nullpointer exception!");
 
+				std::string c = function.m_Constants[index];
+				obj.m_VMObject->m_Objects[c] = value;
+			}
 				break;
 			case GETFIELD:
+			{
+				VMOperandSlot obj = pop();
+				int_t index = (int_t)VMResources::readShort(instructions, pc);
 
+				CHECK_MSG(obj.getType() == VMOperandSlot::Type::OBJECT, "Not an object to set the field to");
+
+				//These should be runtime exceptions
+				CHECK_MSG(obj.m_VMObject != nullptr, "Nullpointer exception!");
+
+				std::string c = function.m_Constants[index];
+				push(obj.m_VMObject->m_Objects[c]);
+			}
 				break;
 
 			case SETLOCAL:
