@@ -8,24 +8,27 @@
 #include "VMFrame.h"
 #include "logger/log.h"
 
+#include "VMFunction.h"
+
 namespace apryx {
 
 	class ScriptVM {
 		std::vector<VMFrame> m_Stack;
+		std::shared_ptr<VMObject> m_Globals;
 
-		std::vector<VMObject> m_Objects;
-		std::vector<instruction_t> m_Instructions;
 	public:
-		ScriptVM(std::vector<instruction_t>);
+		ScriptVM();
 
 		//Note: Execute should have a function to execute
 		//so that it can use recursion to execute lots of functions!
-		void execute();
+		void execute(const VMFunction &function);
 
 		//Extra usefull stuff
 	public:
 		void gc();
 		index_t newInstance();
+
+		void dump();
 
 		inline void push(const VMOperandSlot &s)
 		{
@@ -51,6 +54,15 @@ namespace apryx {
 		inline VMOperandSlot &top()
 		{
 			return m_Stack.back().m_OperandStack.back();
+		}
+
+		inline void setlocal(int index, const VMOperandSlot &s)
+		{
+			m_Stack.back().m_Locals[index] = s;
+		}
+		inline VMOperandSlot getlocal(int index)
+		{
+			return m_Stack.back().m_Locals[index];
 		}
 
 		friend class VMResources;

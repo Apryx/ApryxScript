@@ -28,6 +28,7 @@ namespace apryx {
 
 			byte_t b[16];
 
+			//128 bit
 			struct {
 				long_t l1;
 				long_t l2;
@@ -35,7 +36,7 @@ namespace apryx {
 
 			//Careful with this one.
 			//10/10 i should do my own reference counting and not add a full shared ptr to this
-			//But whatever
+			//But whatever, this thing is fucking 128bit
 			std::shared_ptr<VMObject> m_VMObject;
 		};
 

@@ -9,10 +9,19 @@
 #define PUSH_INT		0x12		//Pushes an int onto the stack
 #define PUSH_FLOAT		0x13		//Pushes an float onto the stack
 #define PUSH_NATIVE		0x14		//Pushes a native on to the stack
+#define PUSH_NULL		0x15		//Pushes a native on to the stack
+#define PUSH_GLOBAL		0x16		//Pushes the global object onto the stack
 
 #define POP				0x20		//Pops the top of the stack
 #define DUP				0x21		//Pops the top of the stack
 #define SWAP			0x22		//Swap the two things
+
+#define SETFIELD		0x30		//Sets a field on the object on the stack
+#define GETFIELD		0x31		//Gets a field on the object on the stack
+#define SETLOCAL		0x32		//Sets a local
+#define GETLOCAL		0x33		//Gets a local
+
+//TODO dynamic field finding and stuff
 
 #define IADD			0x50		//Add two integers
 #define ISUB			0x51		//Subtract two integers

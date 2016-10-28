@@ -62,11 +62,11 @@ namespace apryx {
 
 	//==============================READ==============================//
 
-	instruction_t VMResources::readInstruction(std::vector<instruction_t>& target, index_t & pc)
+	instruction_t VMResources::readInstruction(const std::vector<instruction_t>& target, index_t & pc)
 	{
 		return target[pc++];
 	}
-	index_t VMResources::readIndex(std::vector<instruction_t>& target, index_t & pc)
+	index_t VMResources::readIndex(const std::vector<instruction_t>& target, index_t & pc)
 	{
 		VMValue slot;
 
@@ -76,7 +76,7 @@ namespace apryx {
 
 		return slot.m_Index;
 	}
-	float_t VMResources::readFloat(std::vector<instruction_t>& target, index_t & pc)
+	float_t VMResources::readFloat(const std::vector<instruction_t>& target, index_t & pc)
 	{
 		VMValue slot;
 
@@ -86,7 +86,7 @@ namespace apryx {
 
 		return slot.m_Float;
 	}
-	int_t VMResources::readInt(std::vector<instruction_t>& target, index_t & pc)
+	int_t VMResources::readInt(const std::vector<instruction_t>& target, index_t & pc)
 	{
 		VMValue slot;
 
@@ -96,7 +96,7 @@ namespace apryx {
 
 		return slot.m_Int;
 	}
-	short_t VMResources::readShort(std::vector<instruction_t>& target, index_t & pc)
+	short_t VMResources::readShort(const std::vector<instruction_t>& target, index_t & pc)
 	{
 		VMValue slot;
 
@@ -106,12 +106,12 @@ namespace apryx {
 
 		return slot.m_Short;
 	}
-	byte_t VMResources::readByte(std::vector<instruction_t>& target, index_t & pc)
+	byte_t VMResources::readByte(const std::vector<instruction_t>& target, index_t & pc)
 	{
 		return target[pc++];
 	}
 
-	native_t VMResources::readFunction(std::vector<instruction_t>& target, index_t & pc)
+	native_t VMResources::readFunction(const std::vector<instruction_t>& target, index_t & pc)
 	{
 		VMValue slot;
 

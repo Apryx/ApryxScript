@@ -154,6 +154,7 @@
     <ClCompile Include="src\runtime\Type.cpp" />
     <ClCompile Include="src\vm\ScriptVM.cpp" />
     <ClCompile Include="src\vm\VMFrame.cpp" />
+    <ClCompile Include="src\vm\VMFunction.cpp" />
     <ClCompile Include="src\vm\VMObject.cpp" />
     <ClCompile Include="src\vm\VMResources.cpp" />
     <ClCompile Include="src\vm\VMTypes.cpp" />

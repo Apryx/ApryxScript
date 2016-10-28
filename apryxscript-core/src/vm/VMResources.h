@@ -17,13 +17,13 @@ namespace apryx {
 		static void writeByte(std::vector<instruction_t> &target, byte_t b);
 		static void writeFunction(std::vector<instruction_t> &target, native_t function);
 
-		static instruction_t readInstruction(std::vector<instruction_t> &target, index_t &pc);
-		static index_t readIndex(std::vector<instruction_t> &target, index_t &pc);
-		static float_t readFloat(std::vector<instruction_t> &target, index_t &pc);
-		static int_t readInt(std::vector<instruction_t> &target, index_t &pc);
-		static short_t readShort(std::vector<instruction_t> &target, index_t &pc);
-		static byte_t readByte(std::vector<instruction_t> &target, index_t &pc);
-		static native_t readFunction(std::vector<instruction_t>& target, index_t & pc);
+		static instruction_t readInstruction(const std::vector<instruction_t> &target, index_t &pc);
+		static index_t readIndex(const std::vector<instruction_t> &target, index_t &pc);
+		static float_t readFloat(const std::vector<instruction_t> &target, index_t &pc);
+		static int_t readInt(const std::vector<instruction_t> &target, index_t &pc);
+		static short_t readShort(const std::vector<instruction_t> &target, index_t &pc);
+		static byte_t readByte(const std::vector<instruction_t> &target, index_t &pc);
+		static native_t readFunction(const std::vector<instruction_t>& target, index_t & pc);
 
 		static hash_t hash(const std::string &string, int seed = 0);
 		static hash_t hash(const char* string, int seed = 0);

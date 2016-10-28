@@ -12,49 +12,63 @@
 
 namespace apryx {
 
-	ScriptVM::ScriptVM(std::vector<instruction_t> ins) : m_Instructions(ins)
+	ScriptVM::ScriptVM()
 	{
 
 	}
 
-	void ScriptVM::execute()
+	void ScriptVM::execute(const VMFunction &function)
 	{
 		//Push a frame to the stack
-		VMFrame frame(0, 0);
+		VMFrame frame(function.m_LocalCount, function.m_StackHeight);
 		m_Stack.push_back(std::move(frame));
 
 		bool running	=	true;
 		index_t pc		=	0;
 
+		//Make a reference for easy stuff
+		const std::vector<instruction_t> &instructions = function.m_Instructions;
+
 		while (running) {
-			instruction_t instruction = m_Instructions[pc++];
+			instruction_t instruction = instructions[pc++];
 			VMOperandSlot slot;
 
 			switch (instruction) {
 				//========================================PUSHING========================================//
 			case PUSH_BYTE: //TODO all this can be done with just a single template read<N>(); that reads N bytes
-				slot.m_Int = (int_t) VMResources::readByte(m_Instructions, pc);
+				slot.m_Int = (int_t)VMResources::readByte(instructions, pc);
 				slot.setType(VMValue::Type::INT);
 				push(slot);
 				break;
 			case PUSH_SHORT:
-				slot.m_Int = (int_t)VMResources::readShort(m_Instructions, pc);
+				slot.m_Int = (int_t)VMResources::readShort(instructions, pc);
 				slot.setType(VMValue::Type::INT);
 				push(slot);
 				break;
 			case PUSH_INT:
-				slot.m_Int = (int_t)VMResources::readInt(m_Instructions, pc);
+				slot.m_Int = (int_t)VMResources::readInt(instructions, pc);
 				slot.setType(VMValue::Type::INT);
 				push(slot);
 				break;
 			case PUSH_FLOAT:
-				slot.m_Float = VMResources::readFloat(m_Instructions, pc);
+				slot.m_Float = VMResources::readFloat(instructions, pc);
 				slot.setType(VMValue::Type::FLOAT);
 				push(slot);
 				break;
 			case PUSH_NATIVE:
-				slot.m_Native = VMResources::readFunction(m_Instructions, pc);
+				slot.m_Native = VMResources::readFunction(instructions, pc);
 				slot.setType(VMValue::Type::NATIVE_FUNCTION);
+				push(slot);
+				break;
+			case PUSH_NULL:
+				slot = VMOperandSlot();
+				slot.setType(VMOperandSlot::Type::OBJECT);
+				push(slot);
+				break;
+			case PUSH_GLOBAL:
+				slot = VMOperandSlot();
+				slot.setType(VMOperandSlot::Type::OBJECT);
+				slot.m_VMObject = m_Globals;
 				push(slot);
 				break;
 
@@ -69,7 +83,7 @@ namespace apryx {
 				OPERATOR(m_Int, *, INT);
 				break;
 			case IDIV:
-				OPERATOR(m_Int, /, INT);
+				OPERATOR(m_Int, / , INT);
 				break;
 
 				//========================================FLOAT OPERATORS========================================//
@@ -92,21 +106,21 @@ namespace apryx {
 			{
 				VMOperandSlot function = pop();
 				CHECK_MSG(function.getType() == VMValue::Type::NATIVE_FUNCTION, "Not a native function");
-				int_t b = (int_t) VMResources::readByte(m_Instructions, pc);
+				int_t b = (int_t)VMResources::readByte(instructions, pc);
 				function.m_Native(m_Stack.back().m_OperandStack, b);
 			}
-				break;
+			break;
 
-				//======================================== Helpfull stuff ========================================//
+			//======================================== Helpfull stuff ========================================//
 
-			case SWAP: 
+			case SWAP:
 			{
 				VMOperandSlot a = pop();
 				VMOperandSlot b = pop();
 				push(a);
 				push(b);
 			}
-				break;
+			break;
 			case DUP:
 			{
 				VMOperandSlot a = top();
@@ -122,6 +136,7 @@ namespace apryx {
 			case RET:
 			{
 				if (m_Stack.back().m_OperandStack.size() > 0) {
+					dump();
 					ERROR("Stackheight != 0");
 				}
 				else {
@@ -130,6 +145,28 @@ namespace apryx {
 				}
 			}
 			break;
+
+			//========================================Fields and locals========================================//
+			case SETFIELD:
+
+				break;
+			case GETFIELD:
+
+				break;
+
+			case SETLOCAL:
+			{
+				VMOperandSlot value = pop();
+				int_t index = (int_t)VMResources::readByte(instructions, pc);
+				setlocal(index, value);
+			}
+			break;
+			case GETLOCAL:
+			{
+				int_t index = (int_t)VMResources::readByte(instructions, pc);
+				push(getlocal(index));
+			}
+				break;
 
 				//========================================CONVERTERS========================================//
 			case F2I:
@@ -151,13 +188,7 @@ namespace apryx {
 
 				//========================================VM INSTRUCTIONS========================================//
 			case DUMP:
-				LOG("Current stack:");
-				for (auto &frame : m_Stack) {
-					int o = 0;
-					for (auto &stack : frame.m_OperandStack) {
-						LOG(o++ << " > " << std::hex << stack.m_Long << std::dec);
-					}
-				}
+				dump();
 				break;
 			case EXIT:
 				running = false;
@@ -165,6 +196,17 @@ namespace apryx {
 			default:
 				LOG_ERROR("Unimplemented instruction: " << std::hex << (unsigned int) instruction << std::dec);
 				return;
+			}
+		}
+	}
+
+	void ScriptVM::dump()
+	{
+		LOG("Current stack:");
+		for (auto &frame : m_Stack) {
+			int o = 0;
+			for (auto &stack : frame.m_OperandStack) {
+				LOG(o++ << " > " << std::hex << stack.m_Long << std::dec);
 			}
 		}
 	}

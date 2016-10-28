@@ -14,10 +14,7 @@
 #include "vm/VMResources.h"
 #include "vm/VMWriter.h"
 #include "vm/VMObject.h"
-
-#include <chrono>
-
-#include <memory>
+#include "vm/VMFunction.h"
 
 bool add(std::vector<apryx::VMValue> &stack, int count)
 {
@@ -38,7 +35,7 @@ bool print(std::vector<apryx::VMValue> &stack, int count)
 
 	for (int i = 0; i < count; i++) {
 		slot = stack.back(); stack.pop_back();
-		/*switch (slot.getType()) {
+		switch (slot.getType()) {
 		case  apryx::VMValue::Type::FLOAT:
 			LOG(slot.m_Float);
 			break;
@@ -46,12 +43,12 @@ bool print(std::vector<apryx::VMValue> &stack, int count)
 			LOG(slot.m_Int);
 			break;
 		case apryx::VMValue::Type::NATIVE_FUNCTION:
-			LOG("nat" << slot.m_Float);
+			LOG("nat " << slot.m_Native);
 			break;
 		default:
 			LOG(std::hex << slot.m_Long << std::dec);
 			break;
-		}*/
+		}
 	}
 	
 	return true;
@@ -70,10 +67,19 @@ int main(void)
 	writer
 		.push(2)
 		.push(4)
-		.push(add)
-		.invokeNative(2)
-		.pop();
+		.iadd()
+		.setlocal(0)
+		.getlocal(0)
+		.push(print)
+		.invokeNative(1)
+		.ret();
 
-	
+	VMFunction function(writer);
+
+	ScriptVM vm;
+
+	vm.execute(function);
+
+	WAIT();
 	return 0;
 }
