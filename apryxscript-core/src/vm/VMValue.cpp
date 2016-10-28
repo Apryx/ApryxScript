@@ -66,7 +66,7 @@ namespace apryx {
 			o << *slot.m_VMObject;
 			break;
 		default:
-			o << std::hex << slot.m_Long << std::dec;
+			o << "void[possible_incorrect_order](" << std::hex << slot.m_Raw.l1 << slot.m_Raw.l2 << std::dec << ")";
 			break;
 		}
 

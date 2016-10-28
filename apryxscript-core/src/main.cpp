@@ -81,8 +81,9 @@ int main(void)
 	vm.m_Globals->set("print", value);
 
 	vm.execute(function);
-
+	
 	vm.dump();
+
 
 	WAIT();
 	return 0;
