@@ -224,12 +224,17 @@ namespace apryx {
 
 	void ScriptVM::dump()
 	{
-		LOG("Current stack:");
+		LOG("Current stack: ");
 		for (auto &frame : m_Stack) {
 			int o = 0;
 			for (auto &stack : frame.m_OperandStack) {
 				LOG(o++ << " > " << std::hex << stack.m_Long << std::dec);
 			}
+		}
+
+		LOG("Current globals: ");
+		for (auto &k : m_Globals->m_Objects) {
+			LOG(k.first << " = " << k.second);
 		}
 	}
 

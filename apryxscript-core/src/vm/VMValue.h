@@ -58,7 +58,7 @@ namespace apryx {
 		VMValue(VMValue &&);
 		~VMValue();
 
-		inline Type getType() { return m_Type; }
+		inline Type getType() const { return m_Type; }
 		inline void setType(Type type)
 		{
 			//The question is, will this be enough?
@@ -69,6 +69,8 @@ namespace apryx {
 		}
 
 		VMValue &operator=(const VMValue &);
+
+		friend std::ostream &operator<<(std::ostream &o, const VMValue &value);
 	};
 #pragma pack(pop)
 

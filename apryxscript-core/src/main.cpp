@@ -35,20 +35,7 @@ bool print(std::vector<apryx::VMValue> &stack, int count)
 
 	for (int i = 0; i < count; i++) {
 		slot = stack.back(); stack.pop_back();
-		switch (slot.getType()) {
-		case  apryx::VMValue::Type::FLOAT:
-			LOG(slot.m_Float);
-			break;
-		case apryx::VMValue::Type::INT:
-			LOG(slot.m_Int);
-			break;
-		case apryx::VMValue::Type::NATIVE_FUNCTION:
-			LOG("nat " << slot.m_Native);
-			break;
-		default:
-			LOG(std::hex << slot.m_Long << std::dec);
-			break;
-		}
+		LOG(slot);
 	}
 	
 	return true;
@@ -65,14 +52,19 @@ int main(void)
 	VMWriter writer;
 
 	writer
+		.pushglobal()
 		.push(2)
+		.setfield("a")
+		.pushglobal()
 		.push(4)
+		.setfield("b")
+
+		.pushglobal()
+		.getfield("a")
+		.pushglobal()
+		.getfield("b")
+
 		.iadd()
-		.pushglobal()
-		.swap()
-		.setfield("driver")
-		.pushglobal()
-		.getfield("driver")
 		.push(print)
 		.invokeNative(1)
 		.ret();

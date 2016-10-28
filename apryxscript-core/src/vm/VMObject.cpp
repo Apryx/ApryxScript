@@ -4,8 +4,10 @@
 namespace apryx {
 	VMObject::VMObject()
 	{
+		LOG("create");
 	}
 	VMObject::~VMObject()
 	{
+		LOG("destroy");
 	}
 }

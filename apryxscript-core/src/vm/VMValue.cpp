@@ -4,7 +4,7 @@
 namespace apryx {
 
 	VMValue::VMValue()
-		: m_VMObject(nullptr), m_Type(Type::VOID)
+		: m_Raw(), m_Type(Type::VOID)
 	{
 	}
 
@@ -48,5 +48,24 @@ namespace apryx {
 		}
 
 		return *this;
+	}
+	std::ostream & operator<<(std::ostream & o, const VMValue & slot)
+	{
+		switch (slot.getType()) {
+		case  apryx::VMValue::Type::FLOAT:
+			o << slot.m_Float;
+			break;
+		case apryx::VMValue::Type::INT:
+			o << slot.m_Int;
+			break;
+		case apryx::VMValue::Type::NATIVE_FUNCTION:
+			o << "nat " << slot.m_Native;
+			break;
+		default:
+			o << std::hex << slot.m_Long << std::dec;
+			break;
+		}
+
+		return o;
 	}
 }
