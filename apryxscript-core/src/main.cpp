@@ -13,71 +13,67 @@
 #include "vm/ScriptVM.h"
 #include "vm/VMResources.h"
 #include "vm/VMWriter.h"
+#include "vm/VMObject.h"
 
+#include <chrono>
 
-bool add(apryx::VMOperandStack &stack, int count)
+#include <memory>
+
+bool add(std::vector<apryx::VMValue> &stack, int count)
 {
-	apryx::VMOperandSlot slot;
+	apryx::VMValue slot;
 	int res = 0;
 	for (int i = 0; i < count; i++) {
 		slot = stack.back(); stack.pop_back();
-		res += slot.i;
+		res += slot.m_Int;
 	}
-	slot.i = res;
+	slot.m_Int = res;
 	stack.push_back(slot);
 	return true;
 }
 
-bool print(apryx::VMOperandStack &stack, int count)
+bool print(std::vector<apryx::VMValue> &stack, int count)
 {
-	apryx::VMOperandSlot slot;
+	apryx::VMValue slot;
 
 	for (int i = 0; i < count; i++) {
 		slot = stack.back(); stack.pop_back();
-		switch (slot.m_Type) {
-		case slot.FLOAT:
-			LOG(slot.f);
+		/*switch (slot.getType()) {
+		case  apryx::VMValue::Type::FLOAT:
+			LOG(slot.m_Float);
 			break;
-		case slot.INT:
-			LOG(slot.i);
+		case apryx::VMValue::Type::INT:
+			LOG(slot.m_Int);
 			break;
-		case slot.FUNCTION:
-			LOG(slot.i);
-			break;
-		case slot.NATIVE_FUNCTION:
-			LOG("nat" << slot.f);
+		case apryx::VMValue::Type::NATIVE_FUNCTION:
+			LOG("nat" << slot.m_Float);
 			break;
 		default:
-			LOG(std::hex << slot.l << std::dec);
+			LOG(std::hex << slot.m_Long << std::dec);
 			break;
-		}
+		}*/
 	}
-
+	
 	return true;
 }
+
 
 int main(void)
 {
 	using namespace apryx;
 
 	//Make sure the VM does what its supposed to do 
-
 	verify_types();
 
 	VMWriter writer;
+
 	writer
-		.push(2.0f)
-		.push(1)
-		.swap()
-		.f2i()
-		.iadd()
-		.push(print)
-		.invokeNative(1)
-		.exit();
+		.push(2)
+		.push(4)
+		.push(add)
+		.invokeNative(2)
+		.pop();
 
-	ScriptVM vm(writer.m_Target);
-	vm.execute();
-
-	WAIT();
+	
 	return 0;
 }

@@ -2,23 +2,27 @@
 #include "VMResources.h"
 #include "logger/log.h"
 
-#define CHECK_MSG(value, message) if(!value){ERROR(message);}
+#define CHECK_MSG(value, message) if(!(value)){ERROR(message);}
 #define CHECK(value) CHECK_MSG(value, "Failed!");
 
 #define OPERATOR(TYPE, OP, TYPENAME) \
 	{VMOperandSlot a = pop();VMOperandSlot b = pop(); \
-	CHECK_MSG(a.m_Type == b.m_Type, "Incompatible types"); CHECK_MSG(a.m_Type == a.TYPENAME, "Incorrect types.");\
-	VMOperandSlot r;r.TYPE = a. TYPE OP b. TYPE;r.m_Type = a.TYPENAME; push(r); }
+	CHECK_MSG(a.getType() == b.getType(), "Incompatible types"); CHECK_MSG(a.getType() == VMValue::Type::TYPENAME, "Incorrect types.");\
+	VMOperandSlot r;r.TYPE = a. TYPE OP b. TYPE;r.setType( VMValue::Type::TYPENAME); push(r); }
+
 namespace apryx {
 
 	ScriptVM::ScriptVM(std::vector<instruction_t> ins) : m_Instructions(ins)
 	{
-		VMFrame frame(0,0);
-		m_Stack.push_back(std::move(frame));
+
 	}
 
 	void ScriptVM::execute()
 	{
+		//Push a frame to the stack
+		VMFrame frame(0, 0);
+		m_Stack.push_back(std::move(frame));
+
 		bool running	=	true;
 		index_t pc		=	0;
 
@@ -29,57 +33,57 @@ namespace apryx {
 			switch (instruction) {
 				//========================================PUSHING========================================//
 			case PUSH_BYTE: //TODO all this can be done with just a single template read<N>(); that reads N bytes
-				slot.i = (int_t) VMResources::readByte(m_Instructions, pc);
-				slot.m_Type = slot.INT;
+				slot.m_Int = (int_t) VMResources::readByte(m_Instructions, pc);
+				slot.setType(VMValue::Type::INT);
 				push(slot);
 				break;
 			case PUSH_SHORT:
-				slot.i = (int_t)VMResources::readShort(m_Instructions, pc);
-				slot.m_Type = slot.INT;
+				slot.m_Int = (int_t)VMResources::readShort(m_Instructions, pc);
+				slot.setType(VMValue::Type::INT);
 				push(slot);
 				break;
 			case PUSH_INT:
-				slot.i = (int_t)VMResources::readInt(m_Instructions, pc);
-				slot.m_Type = slot.INT;
+				slot.m_Int = (int_t)VMResources::readInt(m_Instructions, pc);
+				slot.setType(VMValue::Type::INT);
 				push(slot);
 				break;
 			case PUSH_FLOAT:
-				slot.f = VMResources::readFloat(m_Instructions, pc);
-				slot.m_Type = slot.FLOAT;
+				slot.m_Float = VMResources::readFloat(m_Instructions, pc);
+				slot.setType(VMValue::Type::FLOAT);
 				push(slot);
 				break;
 			case PUSH_NATIVE:
-				slot.n = VMResources::readFunction(m_Instructions, pc);
-				slot.m_Type = slot.NATIVE_FUNCTION;
+				slot.m_Native = VMResources::readFunction(m_Instructions, pc);
+				slot.setType(VMValue::Type::NATIVE_FUNCTION);
 				push(slot);
 				break;
 
 				//========================================INTEGER OPERATORS========================================//
 			case IADD:
-				OPERATOR(i, +, INT);
+				OPERATOR(m_Int, +, INT);
 				break;
 			case ISUB:
-				OPERATOR(i, -, INT);
+				OPERATOR(m_Int, -, INT);
 				break;
 			case IMUL:
-				OPERATOR(i, *, INT);
+				OPERATOR(m_Int, *, INT);
 				break;
 			case IDIV:
-				OPERATOR(i, /, INT);
+				OPERATOR(m_Int, /, INT);
 				break;
 
 				//========================================FLOAT OPERATORS========================================//
 			case FADD:
-				OPERATOR(f, +, FLOAT);
+				OPERATOR(m_Float, +, FLOAT);
 				break;
 			case FSUB:
-				OPERATOR(f, -, FLOAT);
+				OPERATOR(m_Float, -, FLOAT);
 				break;
 			case FMUL:
-				OPERATOR(f, *, FLOAT);
+				OPERATOR(m_Float, *, FLOAT);
 				break;
 			case FDIV:
-				OPERATOR(f, / , FLOAT);
+				OPERATOR(m_Float, / , FLOAT);
 				break;
 
 				//======================================== Invocation ========================================//
@@ -87,9 +91,9 @@ namespace apryx {
 			case INVOKE_NATIVE:
 			{
 				VMOperandSlot function = pop();
-				CHECK_MSG(function.m_Type == function.NATIVE_FUNCTION, "Not a native function");
+				CHECK_MSG(function.getType() == VMValue::Type::NATIVE_FUNCTION, "Not a native function");
 				int_t b = (int_t) VMResources::readByte(m_Instructions, pc);
-				function.n(m_Stack.back().m_OperandStack, b);
+				function.m_Native(m_Stack.back().m_OperandStack, b);
 			}
 				break;
 
@@ -115,28 +119,43 @@ namespace apryx {
 				vpop();
 			}
 			break;
+			case RET:
+			{
+				if (m_Stack.back().m_OperandStack.size() > 0) {
+					ERROR("Stackheight != 0");
+				}
+				else {
+					m_Stack.pop_back();
+					return;
+				}
+			}
+			break;
 
 				//========================================CONVERTERS========================================//
 			case F2I:
 			{
 				VMOperandSlot &slot = top();
-				slot.i = (int)slot.f;
-				slot.m_Type = slot.INT;
+				//TODO type checks
+				slot.m_Int = (int)slot.m_Float;
+				slot.setType(VMValue::Type::INT);
 			}
 				break;
 			case I2F:
 			{
 				VMOperandSlot &slot = top();
-				slot.f = (int)slot.i;
-				slot.m_Type = slot.FLOAT;
+				//TODO type checks
+				slot.m_Float = (int)slot.m_Int;
+				slot.setType(VMValue::Type::FLOAT);
 			}
 				break;
 
 				//========================================VM INSTRUCTIONS========================================//
 			case DUMP:
+				LOG("Current stack:");
 				for (auto &frame : m_Stack) {
+					int o = 0;
 					for (auto &stack : frame.m_OperandStack) {
-						LOG(" > " << std::hex << stack.i << std::dec);
+						LOG(o++ << " > " << std::hex << stack.m_Long << std::dec);
 					}
 				}
 				break;
@@ -148,5 +167,15 @@ namespace apryx {
 				return;
 			}
 		}
+	}
+
+	void ScriptVM::gc()
+	{
+
+	}
+
+	index_t ScriptVM::newInstance()
+	{
+		return 0;
 	}
 }

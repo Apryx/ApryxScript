@@ -3,13 +3,17 @@
 #include <vector>
 
 #include "VMTypes.h"
+#include "VMValue.h"
+#include "VMObject.h"
+#include "VMFrame.h"
+#include "logger/log.h"
 
 namespace apryx {
 
 	class ScriptVM {
-		VMStack m_Stack;
-		VMObject m_Global;
+		std::vector<VMFrame> m_Stack;
 
+		std::vector<VMObject> m_Objects;
 		std::vector<instruction_t> m_Instructions;
 	public:
 		ScriptVM(std::vector<instruction_t>);
@@ -20,6 +24,9 @@ namespace apryx {
 
 		//Extra usefull stuff
 	public:
+		void gc();
+		index_t newInstance();
+
 		inline void push(const VMOperandSlot &s)
 		{
 			m_Stack.back().m_OperandStack.push_back(s);

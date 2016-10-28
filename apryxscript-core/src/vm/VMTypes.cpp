@@ -1,6 +1,8 @@
 #include "VMTypes.h"
+#include "VMValue.h"
 
 #include <assert.h>
+#include "logger/log.h"
 
 namespace apryx {
 	void verify_types()
@@ -10,14 +12,10 @@ namespace apryx {
 		assert(sizeof(float_t) == 4);
 		assert(sizeof(short_t) == 2);
 		assert(sizeof(byte_t) == 1);
+		assert(sizeof(long_t) == 8);
 		assert(sizeof(native_t) == 8);
 
-		assert(sizeof(VMOperandSlot) == 12);
+		assert(sizeof(VMValue) == 20);
 	}
 
-	VMFrame::VMFrame(int localsAmount, int operandStackSize)
-	{
-		m_Locals.resize(localsAmount);
-		m_OperandStack.resize(operandStackSize);
-	}
 }

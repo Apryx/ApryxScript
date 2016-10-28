@@ -1,11 +1,11 @@
 #pragma once
 
 #include "VMTypes.h"
+#include "VMValue.h"
 #include <vector>
 
 namespace apryx {
 
-	struct VMSlot;
 	class VMResources {
 		//TODO inlining
 	public:
@@ -24,5 +24,8 @@ namespace apryx {
 		static short_t readShort(std::vector<instruction_t> &target, index_t &pc);
 		static byte_t readByte(std::vector<instruction_t> &target, index_t &pc);
 		static native_t readFunction(std::vector<instruction_t>& target, index_t & pc);
+
+		static hash_t hash(const std::string &string, int seed = 0);
+		static hash_t hash(const char* string, int seed = 0);
 	};
 }

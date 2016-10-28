@@ -125,6 +125,15 @@ namespace apryx {
 			VMResources::writeInstruction(m_Target, EXIT);
 			return *this;
 		}
-
+		inline VMWriter &ret()
+		{
+			VMResources::writeInstruction(m_Target, RET);
+			return *this;
+		}
+		inline VMWriter &dump()
+		{
+			VMResources::writeInstruction(m_Target, DUMP);
+			return *this;
+		}
 	};
 }

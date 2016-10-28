@@ -133,8 +133,12 @@
     <ClInclude Include="src\runtime\Runtime.h" />
     <ClInclude Include="src\runtime\Type.h" />
     <ClInclude Include="src\vm\ScriptVM.h" />
+    <ClInclude Include="src\vm\VMFrame.h" />
+    <ClInclude Include="src\vm\VMFunction.h" />
+    <ClInclude Include="src\vm\VMObject.h" />
     <ClInclude Include="src\vm\VMResources.h" />
     <ClInclude Include="src\vm\VMTypes.h" />
+    <ClInclude Include="src\vm\VMValue.h" />
     <ClInclude Include="src\vm\VMWriter.h" />
   </ItemGroup>
   <ItemGroup>
@@ -149,8 +153,11 @@
     <ClCompile Include="src\runtime\Runtime.cpp" />
     <ClCompile Include="src\runtime\Type.cpp" />
     <ClCompile Include="src\vm\ScriptVM.cpp" />
+    <ClCompile Include="src\vm\VMFrame.cpp" />
+    <ClCompile Include="src\vm\VMObject.cpp" />
     <ClCompile Include="src\vm\VMResources.cpp" />
     <ClCompile Include="src\vm\VMTypes.cpp" />
+    <ClCompile Include="src\vm\VMValue.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="test.apx" />
