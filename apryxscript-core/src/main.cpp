@@ -65,15 +65,24 @@ int main(void)
 		.getfield("b")
 
 		.iadd()
-		.push(print)
-		.invokeNative(1)
+		.pushglobal()
+		.getfield("print")
+		.invoke(1)
 		.ret();
 
 	VMFunction function(writer);
 
 	ScriptVM vm;
 
+	VMValue value;
+	value.setType(VMValue::Type::NATIVE_FUNCTION);
+	value.m_Native = print;
+
+	vm.m_Globals->set("print", value);
+
 	vm.execute(function);
+
+	vm.dump();
 
 	WAIT();
 	return 0;

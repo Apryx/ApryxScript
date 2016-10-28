@@ -102,12 +102,20 @@ namespace apryx {
 
 				//======================================== Invocation ========================================//
 
-			case INVOKE_NATIVE:
+			case INVOKE:
 			{
 				VMOperandSlot function = pop();
-				CHECK_MSG(function.getType() == VMValue::Type::NATIVE_FUNCTION, "Not a native function");
-				int_t b = (int_t)VMResources::readByte(instructions, pc);
-				function.m_Native(m_Stack.back().m_OperandStack, b);
+				int_t argCount = (int_t)VMResources::readByte(instructions, pc);
+
+				if (function.getType() == VMOperandSlot::Type::FUNCTION) {
+					CHECK_MSG(false, "Unimplemented!");
+				}
+				else if (function.getType() == VMOperandSlot::Type::NATIVE_FUNCTION) {
+					function.m_Native(m_Stack.back().m_OperandStack, argCount);
+				}
+				else {
+					CHECK_MSG(false, "Not a function!");
+				}
 			}
 			break;
 
@@ -157,8 +165,7 @@ namespace apryx {
 				//These should be runtime exceptions
 				CHECK_MSG(obj.m_VMObject != nullptr, "Nullpointer exception!");
 
-				std::string c = function.m_Constants[index];
-				obj.m_VMObject->m_Objects[c] = value;
+				obj.m_VMObject->set(function.m_Constants[index], value);
 			}
 				break;
 			case GETFIELD:
@@ -171,8 +178,7 @@ namespace apryx {
 				//These should be runtime exceptions
 				CHECK_MSG(obj.m_VMObject != nullptr, "Nullpointer exception!");
 
-				std::string c = function.m_Constants[index];
-				push(obj.m_VMObject->m_Objects[c]);
+				push(obj.m_VMObject->get(function.m_Constants[index]));
 			}
 				break;
 
@@ -233,9 +239,7 @@ namespace apryx {
 		}
 
 		LOG("Current globals: ");
-		for (auto &k : m_Globals->m_Objects) {
-			LOG(k.first << " = " << k.second);
-		}
+		LOG(*m_Globals);
 	}
 
 	void ScriptVM::gc()

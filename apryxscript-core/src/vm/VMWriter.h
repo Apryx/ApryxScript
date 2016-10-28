@@ -152,14 +152,6 @@ namespace apryx {
 			return *this;
 		}
 
-		inline VMWriter &invokeNative(byte_t args)
-		{
-			VMResources::writeInstruction(m_Target, INVOKE_NATIVE);
-			VMResources::writeByte(m_Target, args);
-			stack(-(args + 1));
-			stack(1);	//TODO TODO TODO functions always have a returntype!
-			return *this;
-		}
 		inline VMWriter &invoke(byte_t args)
 		{
 			VMResources::writeInstruction(m_Target, INVOKE);

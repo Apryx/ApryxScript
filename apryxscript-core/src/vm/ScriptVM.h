@@ -14,9 +14,9 @@ namespace apryx {
 
 	class ScriptVM {
 		std::vector<VMFrame> m_Stack;
+	public:
 		std::shared_ptr<VMObject> m_Globals;
 
-	public:
 		ScriptVM();
 
 		//Note: Execute should have a function to execute

@@ -1,4 +1,5 @@
 #include "VMValue.h"
+#include "VMObject.h"
 #include "logger/log.h"
 
 namespace apryx {
@@ -59,7 +60,10 @@ namespace apryx {
 			o << slot.m_Int;
 			break;
 		case apryx::VMValue::Type::NATIVE_FUNCTION:
-			o << "nat " << slot.m_Native;
+			o << "function_native(" << slot.m_Native << ")";
+			break;
+		case apryx::VMValue::Type::OBJECT:
+			o << *slot.m_VMObject;
 			break;
 		default:
 			o << std::hex << slot.m_Long << std::dec;

@@ -38,8 +38,7 @@
 
 #define RET				0x90		//Returns void function
 
-#define INVOKE_NATIVE	0xA0		//Invoke native function (takes an extra byte, arg count)
-#define INVOKE			0xA1		//Invoke native function (takes an extra byte, arg count)
+#define INVOKE			0xA0		//Invoke native function (takes an extra byte, arg count)
 
 #include <string>
 #include <vector>
