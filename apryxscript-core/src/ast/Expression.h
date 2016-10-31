@@ -28,6 +28,17 @@ namespace apryx {
 		virtual std::string toString();
 	};
 
+	class PrefixOperatorExpression : public Expression {
+	public:
+		std::shared_ptr<Expression> m_Rhs;		//The left hand side
+		std::string m_Operator;					//The actual operator
+
+		PrefixOperatorExpression() = default;
+		PrefixOperatorExpression(std::shared_ptr<Expression> rhs, std::string op) : m_Operator(op),  m_Rhs(rhs) {};
+
+		virtual std::string toString();
+	};
+
 	class InvokeExpression : public Expression {
 	public:
 		std::shared_ptr<Expression> m_Lhs;		//The left hand side
@@ -39,11 +50,13 @@ namespace apryx {
 		virtual std::string toString();
 	};
 
-	class ListExpression : public Expression {
+	class LookupExpression : public Expression {
 	public:
-		std::vector<std::shared_ptr<Expression>> m_Expressions;		//The left hand side
+		std::shared_ptr<Expression> m_Lhs;		//The left hand side
+		std::shared_ptr<Expression> m_Rhs;		//The right hand side
 
-		ListExpression() = default;
+		LookupExpression() = default;
+		LookupExpression(std::shared_ptr<Expression> lhs, std::shared_ptr<Expression> rhs) : m_Rhs(rhs), m_Lhs(lhs) {};
 
 		virtual std::string toString();
 	};

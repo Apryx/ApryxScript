@@ -26,4 +26,11 @@ namespace apryx {
 			str == "struct" ||
 			str == "init";
 	}
+	bool isOperator(const std::string & str)
+	{
+		//Maybe i can do my casting here too?
+		return
+			str == "new" ||
+			str == "in";
+	}
 }

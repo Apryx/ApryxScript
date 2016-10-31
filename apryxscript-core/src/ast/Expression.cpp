@@ -1,28 +1,40 @@
 #include "Expression.h"
 #include <sstream>
 
+#define DEBUG_EXTRA
+
 namespace apryx {
+
 	std::string OperatorExpression::toString()
 	{
-		return m_Lhs->toString() + m_Operator + m_Rhs->toString();
+		std::stringstream stream;
+
+		stream << "(";
+		stream << m_Lhs->toString();
+		stream << m_Operator;
+		stream << m_Rhs->toString();
+		stream << ")";
+
+		return stream.str();
 	}
 	std::string IdentiefierExpression::toString()
 	{
 		return m_Identifier;
 	}
-	std::string ListExpression::toString()
-	{
-		std::stringstream stream;
-		for (auto a : this->m_Expressions)
-			stream << a->toString() << (a != m_Expressions.back() ? "," : "");
-		return stream.str();
-	}
+
 	std::string InvokeExpression::toString()
 	{
-		return m_Lhs->toString()
-			+ "("
-			+ (m_Args == nullptr ? "" : m_Args->toString())
-			+ ")";
+
+		std::stringstream stream;
+
+		stream << "(";
+		stream << m_Lhs->toString();
+		stream << "(";
+		stream << (m_Args == nullptr ? "" : m_Args->toString());
+		stream << ")";
+		stream << ")";
+
+		return stream.str();
 	}
 	std::string ConstantExpression::toString()
 	{
@@ -32,5 +44,28 @@ namespace apryx {
 		else {
 			return m_Constant;
 		}
+	}
+	std::string LookupExpression::toString()
+	{
+		std::stringstream stream;
+
+		stream << "(";
+		stream << m_Lhs->toString();
+		stream << ".";
+		stream << m_Rhs->toString();
+		stream << ")";
+
+		return stream.str();
+	}
+	std::string PrefixOperatorExpression::toString()
+	{
+		std::stringstream stream;
+
+		stream << "(";
+		stream << m_Operator;
+		stream << m_Rhs->toString();
+		stream << ")";
+
+		return stream.str();
 	}
 }
