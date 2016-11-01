@@ -44,8 +44,9 @@ namespace apryx {
 
 	void ExpressionGenerator::visit(const ListExpression & exp)
 	{
-		for (auto a : exp.m_List) {
-			a->accept(*this);
+		for (auto i = exp.m_List.rbegin(); i != exp.m_List.rend(); ++i) {
+			//Ohyea
+			(**i).accept(*this);
 		}
 	}
 
@@ -63,11 +64,30 @@ namespace apryx {
 	void ExpressionGenerator::visit(const ConstantExpression & exp)
 	{
 		switch (exp.m_Type) {
+
 		case ConstantExpression::Type::FLOAT:
 			m_Writer.push(std::stof(exp.m_Constant));
 			break;
+
+		case ConstantExpression::Type::LONG:			//TODO, this is unsupported
+			ERROR("Can't push long onto the stack (operation unsupported)");
+			break;
+		case ConstantExpression::Type::STRING:			//TODO, this is unsupported
+			ERROR("Can't push strings onto the stack (operation unsupported)");
+			break;
+		case ConstantExpression::Type::DOUBLE:			//TODO, this is unsupported
+			ERROR("Can't push double onto the stack (operation unsupported)");
+			break;
+
 		case ConstantExpression::Type::INT:
-			m_Writer.push(std::stoi(exp.m_Constant));
+			int i = std::stoi(exp.m_Constant);
+
+			if (std::abs(i) <= 127)
+				m_Writer.push((byte_t)i);
+			else if (std::abs(i) <= 32767)
+				m_Writer.push((short_t)i);
+			else
+				m_Writer.push(i);
 			break;
 		}
 	}

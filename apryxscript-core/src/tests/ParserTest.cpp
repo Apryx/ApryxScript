@@ -96,7 +96,7 @@ namespace apryx {
 	void testExpressionGenerator()
 	{
 		Lexer lexer(std::make_shared<std::istringstream>(
-			"print(1f + 3f * 2f)"
+			"print(1f + 3f * 2f, 3f * 3f + 2f * 2f / 6.6f)"
 			));
 		lexer.next();
 
