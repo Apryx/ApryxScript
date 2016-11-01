@@ -7,6 +7,10 @@
 #include <sstream>
 #include "logger/log.h"
 
+#include "generator/Generator.h"
+
+#include "vm/ScriptVM.h"
+
 namespace apryx {
 
 	static std::shared_ptr<std::istringstream> getExpressionTest(std::string input)
@@ -39,7 +43,7 @@ namespace apryx {
 			LOG(lexer.current());
 	}
 
-	static void performTest(std::string test) 
+	static void parseExpressionTest(std::string test) 
 	{
 		LOG("Test start \t " << test << " ");
 
@@ -60,38 +64,62 @@ namespace apryx {
 	void testParser()
 	{
 		LOG("Simple expressions");
-		performTest("a + b * c");
 
-		performTest("a * b + c");
+		parseExpressionTest("a + b * c");
+		//a + (b * c)
 
-		performTest("a + b + c");
+		parseExpressionTest("a * b + c");
+		//(a * b) + c
 
-		performTest("a . b . c");
+		parseExpressionTest("a + b + c");
+		//(a + b) + c
 
-		LOG("Invocations");
+		parseExpressionTest("a . b . c");
+		//(a . b) . c
 
-		performTest("print()");
+		parseExpressionTest("a = b = c");
+		//a = (b = c)
+	}
 
-		performTest("print(a)");
+	static bool testPrint(std::vector<VMValue> &stack, int argCount)
+	{
+		for (int i = 0; i < argCount; i++) {
+			VMValue v = stack.back();
+			stack.pop_back();
 
-		performTest("print(a + b * c)");
+			LOG(v);
+		}
 
-		performTest("a.b()");
+		return true;
+	}
 
-		performTest("a.b().c()");
-		performTest("a.b().c()()"); //Hardest of hardcore
+	void testExpressionGenerator()
+	{
+		Lexer lexer(std::make_shared<std::istringstream>(
+			"print(1f + 3f * 2f)"
+			));
+		lexer.next();
 
-		LOG("Prefix operators");
+		Parser parser;
 
-		performTest("!a");
+		auto ctx = std::make_shared<Context>();
 
-		performTest("!!a");
+		ExpressionGenerator generator(ctx);
+		auto exp = parser.parseExpression(lexer);
+		exp->accept(generator);
 
-		performTest("-a");
+		generator.getWriter().ret();
 
-		performTest("a * !b + -c");
+		ScriptVM vm;
 
+		//Register print function
+		VMValue value;
+		value.setType(VMValue::Type::NATIVE_FUNCTION);
+		value.m_Native = testPrint;
+		vm.m_Globals->set("print", value);
 
-		
+		VMFunction function(generator.getWriter());
+
+		vm.execute(function);
 	}
 }

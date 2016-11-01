@@ -2,10 +2,13 @@
 
 #include "Statement.h"
 #include "lexer/Lexer.h"
+#include "logger/log.h"
 
 #include <vector>
 
 namespace apryx {
+
+	class ExpressionVisitor;
 	
 	class Expression : public Statement{
 	protected:
@@ -14,6 +17,7 @@ namespace apryx {
 		Token m_Token;
 
 		virtual std::string toString() = 0;
+		virtual void accept(ExpressionVisitor &exp) = 0;
 	};
 
 	class OperatorExpression : public Expression {
@@ -26,6 +30,7 @@ namespace apryx {
 		OperatorExpression(std::shared_ptr<Expression> lhs, std::shared_ptr<Expression> rhs, std::string op) : m_Operator(op), m_Rhs(rhs), m_Lhs(lhs) {};
 
 		virtual std::string toString();
+		virtual void accept(ExpressionVisitor &exp);
 	};
 
 	class PrefixOperatorExpression : public Expression {
@@ -37,6 +42,7 @@ namespace apryx {
 		PrefixOperatorExpression(std::shared_ptr<Expression> rhs, std::string op) : m_Operator(op),  m_Rhs(rhs) {};
 
 		virtual std::string toString();
+		virtual void accept(ExpressionVisitor &exp);
 	};
 
 	class InvokeExpression : public Expression {
@@ -48,6 +54,17 @@ namespace apryx {
 		InvokeExpression(std::shared_ptr<Expression> lhs, std::shared_ptr<Expression> args) : m_Args(args), m_Lhs(lhs) {};
 
 		virtual std::string toString();
+		virtual void accept(ExpressionVisitor &exp);
+	};
+
+	class ListExpression : public Expression {
+	public:
+		std::vector<std::shared_ptr<Expression>> m_List;		//The left hand side
+
+		ListExpression() = default;
+
+		virtual std::string toString();
+		virtual void accept(ExpressionVisitor &exp);
 	};
 
 	class LookupExpression : public Expression {
@@ -59,6 +76,7 @@ namespace apryx {
 		LookupExpression(std::shared_ptr<Expression> lhs, std::shared_ptr<Expression> rhs) : m_Rhs(rhs), m_Lhs(lhs) {};
 
 		virtual std::string toString();
+		virtual void accept(ExpressionVisitor &exp);
 	};
 
 	class IdentiefierExpression : public Expression {
@@ -69,8 +87,8 @@ namespace apryx {
 		IdentiefierExpression(std::string id) : m_Identifier(id) {};
 
 		virtual std::string toString();
+		virtual void accept(ExpressionVisitor &exp);
 	};
-
 
 	class ConstantExpression : public Expression {
 	public:
@@ -83,6 +101,19 @@ namespace apryx {
 		ConstantExpression(std::string id) : m_Constant(id) {};
 
 		virtual std::string toString();
+		virtual void accept(ExpressionVisitor &exp);
 	};
 
+	class ExpressionVisitor {
+	public:
+		virtual void visit(const Expression &exp) { LOG("Unimplemented in visistor"); };
+
+		virtual void visit(const OperatorExpression &exp) = 0;
+		virtual void visit(const PrefixOperatorExpression &exp) = 0;
+		virtual void visit(const InvokeExpression &exp) = 0;
+		virtual void visit(const ListExpression &exp) = 0;
+		virtual void visit(const LookupExpression &exp) = 0;
+		virtual void visit(const IdentiefierExpression &exp) = 0;
+		virtual void visit(const ConstantExpression &exp) = 0;
+	};
 }

@@ -113,42 +113,52 @@ namespace apryx {
 		if (detail <= 0) {
 			return parseExpressionSimple(lexer);
 		}
+
 		//--------------------------------------------------------------//
 		//Lookups and invocations (TODO postfix operators like ++ and --)
 		//--------------------------------------------------------------//
 		else if (detail == 1) {
 			auto lhs = parseExpression(lexer, detail - 1);
 
-			if (lexer.current().m_Type == Token::OPERATOR_LOOKUP) {
-				lexer.next();
-				auto rhs = parseExpression(lexer, detail);
-				
-				auto exp = std::make_shared<LookupExpression>();
+			while (lexer.current().m_Type == Token::OPERATOR_LOOKUP || lexer.current().m_Type == Token::OPEN_BRACKET) {
 
-				exp->m_Lhs = lhs;
-				exp->m_Rhs = rhs;
+				if (lexer.current().m_Type == Token::OPERATOR_LOOKUP) {
+					lexer.next();
+					auto rhs = parseExpression(lexer, detail - 1);
 
-				return exp;
-			}
-			else if (lexer.current().m_Type == Token::OPEN_BRACKET) {
-				auto exp = std::make_shared<InvokeExpression>();
+					auto exp = std::make_shared<LookupExpression>();
 
-				exp->m_Lhs = lhs;
-				exp->m_Token = lexer.current();
-
-				if (lexer.next().m_Type != Token::CLOSE_BRACKET) {
-					auto rhs = parseExpression(lexer); //Parse a full expression between these brackets
-					exp->m_Args = rhs;
+					exp->m_Lhs = lhs;
+					exp->m_Rhs = rhs;
+					
+					lhs = exp;
 				}
+				else if (lexer.current().m_Type == Token::OPEN_BRACKET) {
+					auto exp = std::make_shared<InvokeExpression>();
 
-				return exp;
+					exp->m_Lhs = lhs;
+					exp->m_Token = lexer.current();
+
+					if (lexer.next().m_Type != Token::CLOSE_BRACKET) {
+						auto rhs = parseExpression(lexer); //Parse a full expression between these brackets
+						exp->m_Args = rhs;
+						if (lexer.current().m_Type != Token::CLOSE_BRACKET) {
+							unexpectedToken(lexer);
+						}
+					}
+
+					//Consume the closing bracket
+					lexer.next();
+
+					lhs = exp;
+				}
 			}
-			else {
-				return lhs;
-			}
+
+			return lhs;
 		}
+
 		//--------------------------------------------------------------//
-		// prefix operators
+		// Prefix operators
 		//--------------------------------------------------------------//
 		else if (detail == 2) {
 			if (lexer.current().m_Type == Token::OPERATOR_NOT
@@ -166,13 +176,14 @@ namespace apryx {
 				return parseExpression(lexer, detail - 1);
 			}
 		}
+
 		//--------------------------------------------------------------//
 		// Multiplication and division
 		//--------------------------------------------------------------//
 		else if (detail == 3) {
 			auto lhs = parseExpression(lexer, detail - 1);
 
-			if (lexer.current().m_Type == Token::OPERATOR_MULTIPLY
+			while (lexer.current().m_Type == Token::OPERATOR_MULTIPLY
 				|| lexer.current().m_Type == Token::OPERATOR_DIVIDE
 				|| lexer.current().m_Type == Token::OPERATOR_MOD) {
 
@@ -181,13 +192,12 @@ namespace apryx {
 				exp->m_Operator = lexer.current().m_Data;
 
 				lexer.next();
-				exp->m_Rhs = parseExpression(lexer, detail); //Parse expression with same detail level!
+				exp->m_Rhs = parseExpression(lexer, detail - 1);
 
-				return exp;
+				lhs = exp;
 			}
-			else {
-				return lhs;
-			}
+
+			return lhs;
 		}
 
 		//--------------------------------------------------------------//
@@ -196,19 +206,66 @@ namespace apryx {
 		else if (detail == 4) {
 			auto lhs = parseExpression(lexer, detail - 1);
 
-			if (lexer.current().m_Type == Token::OPERATOR_ADD
+			while (lexer.current().m_Type == Token::OPERATOR_ADD
 				|| lexer.current().m_Type == Token::OPERATOR_SUBTRACT) {
 				auto exp = std::make_shared<OperatorExpression>();
 				exp->m_Lhs = lhs;
 				exp->m_Operator = lexer.current().m_Data;
 				lexer.next();
-				exp->m_Rhs = parseExpression(lexer, detail); //Parse expression with same detail level!
+				exp->m_Rhs = parseExpression(lexer, detail - 1);
+
+				lhs = exp;
+			}
+
+			return lhs;
+		}
+
+		//--------------------------------------------------------------//
+		// Assignment
+		//--------------------------------------------------------------//
+		else if (detail == 5) {
+			auto lhs = parseExpression(lexer, detail - 1);
+
+			if (lexer.current().m_Type == Token::OPERATOR_EQUALS) {
+
+				auto exp = std::make_shared<OperatorExpression>();
+				exp->m_Lhs = lhs;
+				exp->m_Operator = lexer.current().m_Data;
+				lexer.next();
+				exp->m_Rhs = parseExpression(lexer, detail);
+
+				return exp;
+			}
+
+			return lhs;
+		}
+
+		//--------------------------------------------------------------//
+		// Seperator
+		//--------------------------------------------------------------//
+		else if (detail == 6) {
+			
+			auto lhs = parseExpression(lexer, detail - 1);
+			
+			if (lexer.current().m_Type == Token::SEPERATOR) {
+				auto exp = std::make_shared<ListExpression>();
+
+				exp->m_List.push_back(lhs);
+
+				while (lexer.current().m_Type == Token::SEPERATOR) {
+					lexer.next();
+
+					auto e = parseExpression(lexer, detail - 1);
+
+					exp->m_List.push_back(e);
+				}
 
 				return exp;
 			}
 			else {
 				return lhs;
 			}
+			
 		}
 
 		else {
@@ -249,6 +306,13 @@ namespace apryx {
 			auto exp = std::make_shared<ConstantExpression>(lexer.current().m_Data);
 			exp->m_Token = lexer.current();
 			exp->m_Type = ConstantExpression::INT;
+			lexer.next();
+			return exp;
+		}
+		if (lexer.current().m_Type == Token::FLOAT) {
+			auto exp = std::make_shared<ConstantExpression>(lexer.current().m_Data);
+			exp->m_Token = lexer.current();
+			exp->m_Type = ConstantExpression::FLOAT;
 			lexer.next();
 			return exp;
 		}

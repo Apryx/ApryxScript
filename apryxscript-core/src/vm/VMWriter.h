@@ -216,6 +216,7 @@ namespace apryx {
 		inline const std::vector<std::string> &getConstants() const { return m_Constants; }
 		inline const int getLocals() const { return m_MaxLocals; }
 		inline const int getStackHeight() const { return m_MaxStackHeight; }
+		inline const int getCurrentStackHeight() const { return m_CurrentStackHeight; }
 	private:
 		inline void stack(int amount) 
 		{

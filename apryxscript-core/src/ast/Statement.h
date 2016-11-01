@@ -30,13 +30,18 @@ namespace apryx {
 		bool isValid() { return m_Type.size() > 0 || m_InitialValue != nullptr; }
 	};
 
+	class Context : public Statement {
+	public:
+		virtual std::string toString();
+		
+		//TODO refactor this to a better place?
+		virtual void performOperator(class VMWriter &, const std::string &op);			//TODO both types ofc
+		virtual void performPrefixOperator(class VMWriter &, const std::string &op);		//TODO the one type ofc
+	};
+
 	class Structure : public Statement {
 	public:
 		virtual std::string toString() = 0;
 	};
 
-	class Context : public Statement{
-	public:
-		virtual std::string toString() = 0;
-	};
 }

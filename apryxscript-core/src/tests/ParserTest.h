@@ -3,4 +3,6 @@
 namespace apryx {
 	void testLexer();
 	void testParser();
+
+	void testExpressionGenerator();
 }

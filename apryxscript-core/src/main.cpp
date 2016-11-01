@@ -14,7 +14,7 @@
 
 int main(void)
 {
-	apryx::testParser();
+	apryx::testExpressionGenerator();
 	WAIT();
 	return 0;
 }

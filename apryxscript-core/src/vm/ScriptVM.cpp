@@ -33,6 +33,8 @@ namespace apryx {
 			instruction_t instruction = instructions[pc++];
 			VMOperandSlot slot;
 
+			//LOG(std::hex << (int) instruction << std::dec);
+
 			switch (instruction) {
 				//========================================PUSHING========================================//
 			case PUSH_BYTE: //TODO all this can be done with just a single template read<N>(); that reads N bytes
@@ -242,13 +244,4 @@ namespace apryx {
 		LOG(*m_Globals);
 	}
 
-	void ScriptVM::gc()
-	{
-
-	}
-
-	index_t ScriptVM::newInstance()
-	{
-		return 0;
-	}
 }

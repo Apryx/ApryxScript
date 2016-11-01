@@ -25,8 +25,6 @@ namespace apryx {
 
 		//Extra usefull stuff
 	public:
-		void gc();
-		index_t newInstance();
 
 		void dump();
 

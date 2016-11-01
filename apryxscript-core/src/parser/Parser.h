@@ -18,7 +18,7 @@ namespace apryx {
 	public:
 		std::shared_ptr<Statement> parseStatement(Lexer &lexer);
 	public:
-		std::shared_ptr<Expression> parseExpression(Lexer &lexer, int detail = 4);
+		std::shared_ptr<Expression> parseExpression(Lexer &lexer, int detail = 6);
 		std::shared_ptr<Expression> parseExpressionSimple(Lexer &lexer);
 		std::shared_ptr<Function> parseFunction(Lexer &lexer);
 		std::shared_ptr<Variable> parseVariable(Lexer &lexer);
