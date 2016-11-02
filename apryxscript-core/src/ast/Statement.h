@@ -9,7 +9,7 @@ namespace apryx {
 
 	class Statement {
 	protected:
-		Statement() {}; //TODO delete this
+		Statement() {};
 		virtual ~Statement()  = default;
 	public:
 		virtual std::string toString() = 0;
@@ -28,6 +28,12 @@ namespace apryx {
 
 		virtual std::string toString();
 		bool isValid() { return m_Type.size() > 0 || m_InitialValue != nullptr; }
+	};
+
+
+	class Block : public Statement {
+	public:
+		virtual std::string toString();
 	};
 
 	class Context : public Statement {

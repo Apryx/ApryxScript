@@ -4,7 +4,6 @@
 #include "lexer/Lexer.h"
 #include "parser/Parser.h"
 #include "ast/Statement.h"
-#include "runtime/Runtime.h"
 
 #include "tests/ParserTest.h"
 
@@ -14,7 +13,7 @@
 
 int main(void)
 {
-	apryx::testExpressionGenerator();
+	apryx::testTypes();
 	WAIT();
 	return 0;
 }

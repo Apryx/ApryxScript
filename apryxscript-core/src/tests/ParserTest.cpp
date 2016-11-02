@@ -10,6 +10,7 @@
 #include "generator/Generator.h"
 
 #include "vm/ScriptVM.h"
+#include "ast/Type.h"
 
 namespace apryx {
 
@@ -121,5 +122,25 @@ namespace apryx {
 		VMFunction function(generator.getWriter());
 
 		vm.execute(function);
+	}
+
+	void testTypes()
+	{
+		Type ti = Type::getInt();
+		Type tf = Type::getFloat();
+
+		assert(ti == ti);
+		assert(tf == tf);
+
+		assert(!(ti == tf));
+
+		Type c1 = Type::getClass("Object", "apryx/lang");
+		Type c2 = Type::getClass("Object", "apryx/lang");
+		Type c3 = Type::getClass("String", "apryx/lang");
+
+		assert(c1 == c1);
+		assert(!(c2 == c3));
+
+		LOG("Test done!");
 	}
 }

@@ -5,4 +5,6 @@ namespace apryx {
 	void testParser();
 
 	void testExpressionGenerator();
+
+	void testTypes();
 }

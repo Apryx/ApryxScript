@@ -121,6 +121,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\ast\ApryxClass.h" />
     <ClInclude Include="src\ast\Expression.h" />
     <ClInclude Include="src\ast\Statement.h" />
     <ClInclude Include="src\debug\Debug.h" />
@@ -130,9 +131,7 @@
     <ClInclude Include="src\lexer\Lexer.h" />
     <ClInclude Include="src\logger\log.h" />
     <ClInclude Include="src\parser\Parser.h" />
-    <ClInclude Include="src\runtime\ApryxObject.h" />
-    <ClInclude Include="src\runtime\Runtime.h" />
-    <ClInclude Include="src\runtime\Type.h" />
+    <ClInclude Include="src\ast\Type.h" />
     <ClInclude Include="src\tests\BytecodeTest.h" />
     <ClInclude Include="src\tests\ParserTest.h" />
     <ClInclude Include="src\vm\ScriptVM.h" />
@@ -145,6 +144,7 @@
     <ClInclude Include="src\vm\VMWriter.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\ast\ApryxClass.cpp" />
     <ClCompile Include="src\ast\Expression.cpp" />
     <ClCompile Include="src\ast\Statement.cpp" />
     <ClCompile Include="src\generator\Generator.cpp" />
@@ -153,9 +153,7 @@
     <ClCompile Include="src\lexer\Lexer.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\parser\Parser.cpp" />
-    <ClCompile Include="src\runtime\ApryxObject.cpp" />
-    <ClCompile Include="src\runtime\Runtime.cpp" />
-    <ClCompile Include="src\runtime\Type.cpp" />
+    <ClCompile Include="src\ast\Type.cpp" />
     <ClCompile Include="src\tests\BytecodeTest.cpp" />
     <ClCompile Include="src\tests\ParserTest.cpp" />
     <ClCompile Include="src\vm\ScriptVM.cpp" />

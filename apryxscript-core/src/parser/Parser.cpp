@@ -96,6 +96,10 @@ namespace apryx {
 				return nullptr;
 			}
 		}
+		//If its a block
+		else if (lexer.current().m_Type == Token::OPEN_CURLY) {
+
+		}
 		//Else, it basically always is an expression
 		else {
 			return parseExpression(lexer);
@@ -328,5 +332,10 @@ namespace apryx {
 			lexer.next();
 			return nullptr;
 		}
+	}
+
+	std::shared_ptr<Block> Parser::parseBlock(Lexer & lexer)
+	{
+		return std::shared_ptr<Block>();
 	}
 }

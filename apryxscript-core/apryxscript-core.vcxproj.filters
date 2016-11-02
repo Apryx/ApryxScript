@@ -36,15 +36,6 @@
     <ClInclude Include="src\ast\Statement.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\runtime\Runtime.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\runtime\ApryxObject.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\runtime\Type.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\logger\log.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -72,13 +63,19 @@
     <ClInclude Include="src\vm\VMValue.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\generator\Generator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ast\Type.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="src\tests\BytecodeTest.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\tests\ParserTest.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\generator\Generator.h">
+    <ClInclude Include="src\ast\ApryxClass.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -104,15 +101,6 @@
     <ClCompile Include="src\ast\Statement.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\runtime\Runtime.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\runtime\ApryxObject.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\runtime\Type.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\vm\VMTypes.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -134,13 +122,19 @@
     <ClCompile Include="src\vm\VMFunction.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\generator\Generator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ast\Type.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="src\tests\BytecodeTest.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\tests\ParserTest.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\generator\Generator.cpp">
+    <ClCompile Include="src\ast\ApryxClass.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
