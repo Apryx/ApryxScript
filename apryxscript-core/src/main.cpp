@@ -13,7 +13,6 @@
 
 int main(void)
 {
-	apryx::testTypes();
 	WAIT();
 	return 0;
 }

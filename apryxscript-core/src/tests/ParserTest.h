@@ -7,4 +7,6 @@ namespace apryx {
 	void testExpressionGenerator();
 
 	void testTypes();
+
+	void testDecoratedAST();
 }

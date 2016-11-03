@@ -9,6 +9,8 @@
 
 #include "generator/Generator.h"
 
+#include "ast/ApryxClass.h"
+
 #include "vm/ScriptVM.h"
 #include "ast/Type.h"
 
@@ -126,6 +128,8 @@ namespace apryx {
 
 	void testTypes()
 	{
+		LOG("Type test start...");
+
 		Type ti = Type::getInt();
 		Type tf = Type::getFloat();
 
@@ -140,6 +144,26 @@ namespace apryx {
 
 		assert(c1 == c1);
 		assert(!(c2 == c3));
+
+		LOG("Test done!");
+	}
+
+	void testDecoratedAST()
+	{
+		LOG("AST test start...");
+
+		ApryxNamespace global;
+
+		assert(global.addField("someField", Type::getInt()));
+		assert(global.addField("otherField", Type::getFloat()));
+
+		Type out;
+
+		assert(global.getFieldType("someField", out));
+		assert(out == Type::getInt());
+
+		assert(global.getFieldType("otherField", out));
+		assert(out == Type::getFloat());
 
 		LOG("Test done!");
 	}
