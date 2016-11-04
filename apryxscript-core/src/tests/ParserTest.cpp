@@ -107,10 +107,10 @@ namespace apryx {
 		LOG("Variables");
 
 		parseStatementTest("var a = 1");
-
 		parseStatementTest("var a : int");
 
 		LOG("Functions");
+
 		parseStatementTest("function a(){}");
 		parseStatementTest("function a() : int{}");
 
@@ -124,6 +124,13 @@ namespace apryx {
 			"var c = b + a * 2\n"
 			"print(c)\n"
 			"}"
+		);
+
+
+		LOG("");
+		LOG("Push it to the limit!");
+		parseStatementTest(
+			"{a + b a + b * c + d}"
 		);
 	}
 

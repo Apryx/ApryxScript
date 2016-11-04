@@ -138,7 +138,9 @@ namespace apryx {
 			return parseBlock(lexer);
 		}
 		else if (lexer.current().m_Type == Token::LINE_END) {
-			lexer.next();//Yes, we do completely ignore line ends, they mean basically nothing
+			lexer.next();
+			//Yes, we do completely ignore line ends, they mean basically nothing. The only thing there are really good for is expression seperation, and that
+			//works just fine with this current system e.g. a + b; a + b; . However a + b a + b is just as valid.
 			return parseStatement(lexer);
 		}
 		//Else, it basically always is an expression
