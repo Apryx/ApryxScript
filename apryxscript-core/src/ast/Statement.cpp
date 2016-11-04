@@ -44,4 +44,12 @@ namespace apryx {
 	{
 
 	}
+	std::string Block::toString()
+	{
+		return std::string();
+	}
+	std::string ReturnStatement::toString()
+	{
+		return std::string();
+	}
 }

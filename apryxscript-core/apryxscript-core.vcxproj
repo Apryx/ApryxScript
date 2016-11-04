@@ -69,16 +69,16 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)src</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)src;$(SolutionDir)Dependencies\boost</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)src</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)src;$(SolutionDir)Dependencies\boost</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)src</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)src;$(SolutionDir)Dependencies\boost</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)src</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)src;$(SolutionDir)Dependencies\boost</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -121,17 +121,18 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="src\ast\ApryxClass.h" />
+    <ClInclude Include="src\decorated_ast\ApryxClass.h" />
     <ClInclude Include="src\ast\Expression.h" />
     <ClInclude Include="src\ast\Statement.h" />
     <ClInclude Include="src\debug\Debug.h" />
+    <ClInclude Include="src\decorated_ast\ApryxFunction.h" />
     <ClInclude Include="src\generator\Generator.h" />
     <ClInclude Include="src\language\Language.h" />
     <ClInclude Include="src\lexer\Characters.h" />
     <ClInclude Include="src\lexer\Lexer.h" />
     <ClInclude Include="src\logger\log.h" />
     <ClInclude Include="src\parser\Parser.h" />
-    <ClInclude Include="src\ast\Type.h" />
+    <ClInclude Include="src\decorated_ast\Type.h" />
     <ClInclude Include="src\tests\BytecodeTest.h" />
     <ClInclude Include="src\tests\ParserTest.h" />
     <ClInclude Include="src\vm\ScriptVM.h" />
@@ -144,16 +145,17 @@
     <ClInclude Include="src\vm\VMWriter.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\ast\ApryxClass.cpp" />
+    <ClCompile Include="src\decorated_ast\ApryxClass.cpp" />
     <ClCompile Include="src\ast\Expression.cpp" />
     <ClCompile Include="src\ast\Statement.cpp" />
+    <ClCompile Include="src\decorated_ast\ApryxFunction.cpp" />
     <ClCompile Include="src\generator\Generator.cpp" />
     <ClCompile Include="src\language\Language.cpp" />
     <ClCompile Include="src\lexer\Characters.cpp" />
     <ClCompile Include="src\lexer\Lexer.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\parser\Parser.cpp" />
-    <ClCompile Include="src\ast\Type.cpp" />
+    <ClCompile Include="src\decorated_ast\Type.cpp" />
     <ClCompile Include="src\tests\BytecodeTest.cpp" />
     <ClCompile Include="src\tests\ParserTest.cpp" />
     <ClCompile Include="src\vm\ScriptVM.cpp" />

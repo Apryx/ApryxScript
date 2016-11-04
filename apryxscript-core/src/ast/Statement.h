@@ -30,9 +30,15 @@ namespace apryx {
 		bool isValid() { return m_Type.size() > 0 || m_InitialValue != nullptr; }
 	};
 
-
 	class Block : public Statement {
 	public:
+		virtual std::string toString();
+	};
+
+	class ReturnStatement : public Statement {
+	public:
+		std::shared_ptr<Expression> m_ReturnExpression;
+
 		virtual std::string toString();
 	};
 

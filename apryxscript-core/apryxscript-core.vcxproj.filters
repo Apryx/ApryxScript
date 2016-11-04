@@ -66,16 +66,19 @@
     <ClInclude Include="src\generator\Generator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ast\Type.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\tests\BytecodeTest.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\tests\ParserTest.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ast\ApryxClass.h">
+    <ClInclude Include="src\decorated_ast\ApryxClass.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\decorated_ast\Type.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\decorated_ast\ApryxFunction.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -125,16 +128,19 @@
     <ClCompile Include="src\generator\Generator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\ast\Type.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\tests\BytecodeTest.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\tests\ParserTest.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\ast\ApryxClass.cpp">
+    <ClCompile Include="src\decorated_ast\ApryxClass.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\decorated_ast\Type.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\decorated_ast\ApryxFunction.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

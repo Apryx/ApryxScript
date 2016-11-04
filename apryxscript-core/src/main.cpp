@@ -13,6 +13,8 @@
 
 int main(void)
 {
+	apryx::testDecoratedAST();
+
 	WAIT();
 	return 0;
 }

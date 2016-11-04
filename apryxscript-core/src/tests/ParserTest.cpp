@@ -9,10 +9,11 @@
 
 #include "generator/Generator.h"
 
-#include "ast/ApryxClass.h"
+#include "decorated_ast/ApryxClass.h"
+#include "decorated_ast/ApryxFunction.h"
+#include "decorated_ast/Type.h"
 
 #include "vm/ScriptVM.h"
-#include "ast/Type.h"
 
 namespace apryx {
 
@@ -157,13 +158,34 @@ namespace apryx {
 		assert(global.addField("someField", Type::getInt()));
 		assert(global.addField("otherField", Type::getFloat()));
 
-		Type out;
-
-		assert(global.getFieldType("someField", out));
+		auto out = global.getFieldType("someField");
+		assert(out);
 		assert(out == Type::getInt());
 
-		assert(global.getFieldType("otherField", out));
+		out = global.getFieldType("otherField");
+		assert(out);
 		assert(out == Type::getFloat());
+
+		assert(global.validate());
+
+		ApryxFunction function(Type::getVoid(), {
+			{ "hi", Type::getInt() },
+			{ "pizza", Type::getFloat() }
+		});
+
+		assert(function.getArgumentCount() == 2);
+
+		assert(function.getReturnType() == Type::getVoid());
+		assert(function.getArgumentType(0) == Type::getInt());
+		assert(function.getArgumentType(1) == Type::getFloat());
+
+		assert(function.getArgumentName(0) == "hi");
+		assert(function.getArgumentName(1) == "pizza");
+
+		assert(function.getArgumentByName("hi") == 0);
+		assert(function.getArgumentByName("pizza") == 1);
+
+		assert(function.validate());
 
 		LOG("Test done!");
 	}
