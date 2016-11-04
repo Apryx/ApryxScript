@@ -36,10 +36,14 @@ namespace apryx {
 		//-------------------------------------------------------------------------------------//
 		// Identifiers, keywords and operator keywords
 		//-------------------------------------------------------------------------------------//
-		if (isCharacter(c)) {
+		if (isCharacter(c) || c == '_') {
 			std::stringstream stream;
+
+			if (c == '_') {
+				LOG_WARNING("Warning! Names starting with '_' reserved for compiler names. Attempting to continue, but may result in unexpected behaviour!");
+			}
 			
-			while ((isCharacter(c) || isNumber(c)) && m_Chars) {
+			while ((isCharacter(c) || isNumber(c) || c == '_') && m_Chars) {
 				stream << c;
 				
 				c = m_Chars.next();
@@ -385,7 +389,6 @@ namespace apryx {
 			}
 			return m_Current;
 		}
-
 
 		else {
 			unexpectedCharacter();

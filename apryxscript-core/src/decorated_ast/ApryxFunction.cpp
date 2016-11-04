@@ -61,7 +61,7 @@ namespace apryx{
 
 		for (auto &statement : m_Statements) {
 			if (!(
-				std::dynamic_pointer_cast<Expression>(statement) ||
+				std::dynamic_pointer_cast<ExpressionStatement>(statement) ||
 				std::dynamic_pointer_cast<ReturnStatement>(statement)
 				)) {
 				return false;

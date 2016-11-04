@@ -38,6 +38,7 @@ namespace apryx {
 			">|| && \n"							//Logical operators
 			"= += -= *= /= %= \n"				//Assignments
 			"new in \n"							//Keyword operators
+			"a_b _b \n"							//Keyword operators
 			);
 	}
 

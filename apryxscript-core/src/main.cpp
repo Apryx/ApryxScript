@@ -13,6 +13,7 @@
 
 int main(void)
 {
+	apryx::testLexer();
 	apryx::testParser();
 
 	WAIT();
