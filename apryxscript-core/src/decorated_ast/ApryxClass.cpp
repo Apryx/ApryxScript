@@ -26,7 +26,7 @@ namespace apryx {
 	{
 		auto i = m_Functions.find(name);
 		if (i == m_Functions.end())
-			return false;
+			return boost::none;
 
 		std::vector<Type> v;
 
