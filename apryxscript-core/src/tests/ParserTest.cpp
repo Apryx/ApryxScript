@@ -2,6 +2,8 @@
 
 #include "lexer/Lexer.h"
 #include "parser/Parser.h"
+
+#include "ast/Statement.h"
 #include "ast/Expression.h"
 
 #include <sstream>
@@ -65,6 +67,24 @@ namespace apryx {
 		LOG("Test done. " << std::endl);
 	}
 
+	static void parseStatementTest(std::string test)
+	{
+		LOG("Test start \t " << test << " ");
+
+		Parser parser;
+
+		Lexer lexer(getExpressionTest(test));
+		lexer.next();
+		auto a = parser.parseStatement(lexer);
+		if (a) {
+			LOG(a->toString());
+		}
+		else {
+			LOG_ERROR("Result was null");
+		}
+		LOG("Test done. " << std::endl);
+	}
+
 	void testParser()
 	{
 		LOG("Simple expressions");
@@ -83,6 +103,28 @@ namespace apryx {
 
 		parseExpressionTest("a = b = c");
 		//a = (b = c)
+
+		LOG("Variables");
+
+		parseStatementTest("var a = 1");
+
+		parseStatementTest("var a : int");
+
+		LOG("Functions");
+		parseStatementTest("function a(){}");
+		parseStatementTest("function a() : int{}");
+
+		LOG("Kinda full intergration");
+
+		parseStatementTest(
+			"function main()\n"
+			"{\n"
+			"var a = 1\n"
+			"var b = 2\n"
+			"var c = b + a * 2\n"
+			"print(c)\n"
+			"}"
+		);
 	}
 
 	static bool testPrint(std::vector<VMValue> &stack, int argCount)

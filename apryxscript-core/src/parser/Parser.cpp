@@ -5,11 +5,58 @@
 #include "lexer/Lexer.h"
 #include "logger/log.h"
 
+//TODO document which function consumes what tokens
+
 namespace apryx {
-	
+
 	std::shared_ptr<Function> Parser::parseFunction(Lexer & lexer)
 	{
-		return std::shared_ptr<Function>();
+		if (lexer.current().m_Data != "function") {
+			unexpectedToken(lexer);
+			return nullptr;
+		}
+		auto function = std::make_shared<Function>();
+
+		if (lexer.next().m_Type != Token::IDENTIFIER){
+			unexpectedToken(lexer, Token::IDENTIFIER);
+			return nullptr;
+		}
+
+		function->m_Name = lexer.current().m_Data;
+
+		if (lexer.next().m_Type != Token::OPEN_BRACKET) {
+			unexpectedToken(lexer, Token::OPEN_BRACKET);
+			return nullptr;
+		}
+
+		if (lexer.next().m_Type != Token::CLOSE_BRACKET) {
+			function->m_Arguments = parseExpression(lexer);
+			if (lexer.current().m_Type != Token::CLOSE_BRACKET) {
+				unexpectedToken(lexer, Token::CLOSE_BRACKET);
+				return nullptr;
+			}
+		}
+
+		//Consume )
+		lexer.next();
+
+		if (lexer.current().m_Type == Token::COLON) {
+			//Consume the :
+			lexer.next();
+			if (auto s = parseType(lexer)) {
+				function->m_ReturnType = *s;
+			} else {
+				unexpectedToken(lexer);
+				return nullptr;
+			}
+		}
+		else {
+			function->m_ReturnType = "void";
+		}
+
+		function->m_Statement = parseStatement(lexer);
+
+		return function;
 	}
 
 	std::shared_ptr<Variable> Parser::parseVariable(Lexer & lexer)
@@ -30,7 +77,9 @@ namespace apryx {
 		lexer.next();
 		if (lexer.current().m_Type == Token::COLON) {
 			lexer.next();
-			if (!parseType(lexer, var->m_Type)) {
+			if (auto s = parseType(lexer)) {
+				var->m_Type = *s;
+			} else {
 				unexpectedToken(lexer);
 				return nullptr;
 			}
@@ -53,18 +102,6 @@ namespace apryx {
 	std::shared_ptr<Structure> Parser::parseStructure(Lexer & lexer)
 	{
 		return std::shared_ptr<Structure>();
-	}
-
-	bool Parser::parseType(Lexer & lexer, std::string & out)
-	{
-		if (lexer.current().m_Type == Token::IDENTIFIER) {
-			out = lexer.current().m_Data;
-			lexer.next();
-			return true;
-		}
-		else {
-			return false;
-		}
 	}
 
 	void Parser::unexpectedToken(Lexer & lexer, Token::Type expected)
@@ -98,11 +135,23 @@ namespace apryx {
 		}
 		//If its a block
 		else if (lexer.current().m_Type == Token::OPEN_CURLY) {
-
+			return parseBlock(lexer);
+		}
+		else if (lexer.current().m_Type == Token::LINE_END) {
+			lexer.next();//Yes, we do completely ignore line ends, they mean basically nothing
+			return parseStatement(lexer);
 		}
 		//Else, it basically always is an expression
 		else {
-			return parseExpression(lexer);
+			if (auto e = parseExpression(lexer)) {
+				auto statement = std::make_shared<ExpressionStatement>();
+				statement->m_Expression = e;
+				return statement;
+			}
+			else {
+				unexpectedToken(lexer);
+				return nullptr;
+			}
 		}
 		
 		assert(false);
@@ -336,6 +385,35 @@ namespace apryx {
 
 	std::shared_ptr<Block> Parser::parseBlock(Lexer & lexer)
 	{
-		return std::shared_ptr<Block>();
+		if (lexer.current().m_Type != Token::OPEN_CURLY) {
+			unexpectedToken(lexer, Token::OPEN_CURLY);
+			return nullptr;
+		}
+
+		auto block = std::make_shared<Block>();
+
+		//Consume {
+		lexer.next();
+
+		while (lexer && lexer.current().m_Type != Token::CLOSE_CURLY) {
+			auto s = parseStatement(lexer);
+			
+			if(s)
+				block->m_Statements.push_back(s);
+		}
+
+		return block;
+	}
+
+	boost::optional<std::string> Parser::parseType(Lexer & lexer)
+	{
+		if (lexer.current().m_Type == Token::IDENTIFIER) {
+			std::string data = lexer.current().m_Data;
+			lexer.next();
+			return data;
+		}
+		else {
+			return boost::none;
+		}
 	}
 }

@@ -1,0 +1,38 @@
+//==============================================================================//
+// Basic features
+//==============================================================================//
+class Person{
+  var name : String;
+  var age : int;
+
+  function toString() : String{
+    return name + " is " + age + " years old!";
+  }
+}
+
+//Three different options, first is null, last two are initialized
+var p : Person
+var p : Person = Person()
+var p = Person()
+
+//Now p has a value
+p = Person()
+
+p.name = "Harry Potter"
+p.age = 42
+
+print(p)  //Prints "Harry potter is 42 years old!"
+
+
+
+//==============================================================================//
+// Coroutines
+//==============================================================================//
+
+routine f() : int{
+  yield 1
+  yield 2
+  yield 3
+}
+
+var r : (routine : int) = f();

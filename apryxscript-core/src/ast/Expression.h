@@ -1,6 +1,5 @@
 #pragma once
 
-#include "Statement.h"
 #include "lexer/Lexer.h"
 #include "logger/log.h"
 
@@ -10,7 +9,7 @@ namespace apryx {
 
 	class ExpressionVisitor;
 	
-	class Expression : public Statement{
+	class Expression {
 	protected:
 		Expression() {}; //Why is this even here
 	public:

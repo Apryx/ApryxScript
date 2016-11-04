@@ -16,9 +16,57 @@ namespace apryx {
 		if (m_InitialValue)
 			stream << "=" << m_InitialValue->toString();
 
+		stream << ";";
+
 		return stream.str();
 	}
 
+	
+	std::string Block::toString()
+	{
+		std::stringstream stream;
+
+		stream << "{";
+		for (auto &a : m_Statements)
+			stream << a->toString();
+		stream << "}";
+
+		return stream.str();
+	}
+	std::string ReturnStatement::toString()
+	{
+		std::stringstream stream;
+
+		stream << "return ";
+		stream << m_ReturnExpression->toString();
+		stream << ";";
+
+		return stream.str();
+	}
+	std::string Function::toString()
+	{
+		std::stringstream stream;
+
+		stream << "function ";
+		stream << m_Name;
+		stream << "(" << (m_Arguments ? m_Arguments->toString() : "") << ")";
+		stream << ":";
+		stream << m_ReturnType;
+		stream << m_Statement->toString();
+
+		return stream.str();
+	}
+	std::string ExpressionStatement::toString()
+	{
+		std::stringstream stream;
+
+		stream << m_Expression->toString();
+		stream << ";";
+
+		return stream.str();
+	}
+
+	//LEGACY
 	std::string Context::toString()
 	{
 		return std::string();
@@ -43,13 +91,5 @@ namespace apryx {
 	void Context::performPrefixOperator(VMWriter &vmw, const std::string & op)
 	{
 
-	}
-	std::string Block::toString()
-	{
-		return std::string();
-	}
-	std::string ReturnStatement::toString()
-	{
-		return std::string();
 	}
 }

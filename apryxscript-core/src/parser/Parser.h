@@ -2,6 +2,7 @@
 
 #include <memory>
 #include <vector>
+#include <boost/optional.hpp>
 #include "lexer/Lexer.h"
 
 namespace apryx {
@@ -27,7 +28,7 @@ namespace apryx {
 		std::shared_ptr<Expression> parseExpressionSimple(Lexer &lexer);
 		std::shared_ptr<Block> parseBlock(Lexer &lexer);
 
-		bool parseType(Lexer &lexer, std::string &out);
+		boost::optional<std::string> parseType(Lexer &lexer);
 	private:
 
 		void unexpectedToken(Lexer &lexer, Token::Type expected);

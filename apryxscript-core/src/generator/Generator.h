@@ -1,5 +1,6 @@
 #pragma once
 
+#include "ast/Statement.h"
 #include "ast/Expression.h"
 #include "vm/VMWriter.h"
 
