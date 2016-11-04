@@ -8,7 +8,16 @@ namespace apryx {
 
 		enum Type {
 			IDENTIFIER,
-			KEYWORD, 
+
+			KEYWORD_FUNCTION,	//function
+			KEYWORD_VARIABLE,	//variable
+			KEYWORD_STRUCT,		//struct
+			KEYWORD_CLASS,		//class
+
+			MODIFIER_PUBLIC,	// public
+			MODIFIER_PROTECTED,	// protected
+			MODIFIER_PRIVATE,	// private
+			MODIFIER_STATIC,	// static
 
 			STRING,
 			INTEGER,
@@ -18,7 +27,7 @@ namespace apryx {
 
 			LINE_END,			// ;
 			COLON,				// :
-			
+
 			OPEN_BRACKET,		// (
 			CLOSE_BRACKET,		// )
 			OPEN_CURLY,			// {
@@ -82,6 +91,12 @@ namespace apryx {
 
 		friend bool isOperator(const Token &token);
 		friend bool isValueType(const Token &token);
+
+		friend bool isKeyword(const Token &token);
+		friend bool isModifier(const Token &token);
+
+		friend Token::Type getKeywordType(const std::string &name);
+		friend Token::Type getModifierType(const std::string &name);
 
 		operator bool() const;
 	};

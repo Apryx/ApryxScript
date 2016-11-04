@@ -50,8 +50,13 @@ namespace apryx {
 			}
 
 			m_Current.m_Data = stream.str();
-			if (isKeyword(m_Current.m_Data))
-				m_Current.m_Type = Token::KEYWORD;
+
+			if (getKeywordType(m_Current.m_Data) != Token::ERROR)
+				m_Current.m_Type = getKeywordType(m_Current.m_Data);
+
+			else if(getModifierType(m_Current.m_Data) != Token::ERROR)
+				m_Current.m_Type = getModifierType(m_Current.m_Data);
+
 			else if(isOperator(m_Current.m_Data))
 				m_Current.m_Type = Token::OPERATOR_KEYWORD;
 			else
@@ -424,8 +429,17 @@ namespace apryx {
 		case Token::IDENTIFIER:
 			o << "IDENTIFIER";
 			break;
-		case Token::KEYWORD:
+		case Token::KEYWORD_CLASS:
 			o << "KEYWORD";
+			break;
+		case Token::KEYWORD_STRUCT:
+			o << "KEYWORD_STRUCT";
+			break;
+		case Token::KEYWORD_FUNCTION:
+			o << "KEYWORD_FUNCTION";
+			break;
+		case Token::KEYWORD_VARIABLE:
+			o << "KEYWORD_VARIABLE";
 			break;
 		case Token::STRING:
 			o << "STRING";
@@ -575,7 +589,7 @@ namespace apryx {
 		return o;
 	}
 
-	const std::vector<Token::Type> valueType = {
+	const std::vector<Token::Type> valueTypes = {
 		Token::Type::IDENTIFIER,
 
 		Token::Type::STRING,
@@ -585,7 +599,22 @@ namespace apryx {
 		Token::Type::DOUBLE,
 	};
 
-	const std::vector<Token::Type> operators = {
+	const std::vector<std::pair<Token::Type, std::string>> keywordTypes = {
+		{ Token::Type::KEYWORD_CLASS, "class" },
+		{ Token::Type::KEYWORD_FUNCTION, "function" },
+		{ Token::Type::KEYWORD_STRUCT, "struct" },
+		{ Token::Type::KEYWORD_VARIABLE, "var" },
+	};
+
+
+	const std::vector<std::pair<Token::Type, std::string>> modifierTypes = {
+		{ Token::Type::MODIFIER_PUBLIC, "public" },
+		{ Token::Type::MODIFIER_PROTECTED, "protected" },
+		{ Token::Type::MODIFIER_PRIVATE, "private" },
+		{ Token::Type::MODIFIER_STATIC, "static" },
+	};
+
+	const std::vector<Token::Type> operatorTypes = {
 		Token::Type::OPERATOR_ADD,		// +
 		Token::Type::OPERATOR_SUBTRACT,	// -
 		Token::Type::OPERATOR_DIVIDE,	// /
@@ -628,7 +657,7 @@ namespace apryx {
 	{
 		auto t = token.m_Type;
 		
-		for (auto s : operators)
+		for (auto s : operatorTypes)
 		{
 			if (s == t)
 				return true;
@@ -641,13 +670,61 @@ namespace apryx {
 	{
 		auto t = token.m_Type;
 
-		for (auto s : valueType)
+		for (auto s : valueTypes)
 		{
 			if (s == t)
 				return true;
 		}
 
 		return false;
+	}
+
+	bool isKeyword(const Token & token)
+	{
+		auto t = token.m_Type;
+
+		for (auto s : keywordTypes)
+		{
+			if (s.first == t)
+				return true;
+		}
+
+		return false;
+	}
+
+	Token::Type getKeywordType(const std::string & name)
+	{
+		for (auto s : keywordTypes)
+		{
+			if (s.second == name)
+				return s.first;
+		}
+
+		return Token::ERROR;
+	}
+
+	bool isModifier(const Token & token)
+	{
+		auto t = token.m_Type;
+
+		for (auto s : modifierTypes)
+		{
+			if (s.first == t)
+				return true;
+		}
+
+		return false;
+	}
+
+	Token::Type getModifierType(const std::string & name)
+	{
+		for (auto s : modifierTypes)
+		{
+			if (s.second == name)
+				return s.first;
+		}
+
+		return Token::ERROR;
 	}
 
 	Token::operator bool() const

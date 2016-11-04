@@ -11,8 +11,8 @@ namespace apryx {
 
 	std::shared_ptr<Function> Parser::parseFunction(Lexer & lexer)
 	{
-		if (lexer.current().m_Data != "function") {
-			unexpectedToken(lexer);
+		if (lexer.current().m_Type != Token::KEYWORD_FUNCTION) {
+			unexpectedToken(lexer, Token::KEYWORD_FUNCTION);
 			return nullptr;
 		}
 		auto function = std::make_shared<Function>();
@@ -61,7 +61,7 @@ namespace apryx {
 
 	std::shared_ptr<Variable> Parser::parseVariable(Lexer & lexer)
 	{
-		if (lexer.current().m_Data != "var") {
+		if (lexer.current().m_Type != Token::KEYWORD_VARIABLE) {
 			unexpectedToken(lexer);
 			return nullptr;
 		}
@@ -117,14 +117,14 @@ namespace apryx {
 	std::shared_ptr<Statement> Parser::parseStatement(Lexer & lexer)
 	{
 		//If its a keyword, see what we can do
-		if (lexer.current().m_Type == Token::KEYWORD) {
-			if (lexer.current().m_Data == "function") {
+		if (isKeyword(lexer.current())) {
+			if (lexer.current().m_Type == Token::KEYWORD_FUNCTION) {
 				return parseFunction(lexer);
 			}
-			else if (lexer.current().m_Data == "var") {
+			else if (lexer.current().m_Type == Token::KEYWORD_VARIABLE){
 				return parseVariable(lexer);
 			}
-			else if (lexer.current().m_Data == "struct" || lexer.current().m_Data == "class") {
+			else if (lexer.current().m_Type == Token::KEYWORD_CLASS || lexer.current().m_Type == Token::KEYWORD_STRUCT) {
 				return parseStructure(lexer);
 			}
 			else {

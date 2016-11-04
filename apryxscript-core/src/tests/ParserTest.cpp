@@ -239,4 +239,9 @@ namespace apryx {
 
 		LOG("Test done!");
 	}
+
+	void testParserToDecoratedAST()
+	{
+
+	}
 }

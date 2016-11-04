@@ -15,6 +15,10 @@ int main(void)
 {
 	apryx::testLexer();
 	apryx::testParser();
+	apryx::testTypes();
+	apryx::testDecoratedAST();
+
+	apryx::testParserToDecoratedAST();
 
 	WAIT();
 	return 0;
