@@ -81,6 +81,9 @@
     <ClInclude Include="src\decorated_ast\ApryxFunction.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\ast2decorated_ast\ASTConverter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -141,6 +144,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\decorated_ast\ApryxFunction.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ast2decorated_ast\ASTConverter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

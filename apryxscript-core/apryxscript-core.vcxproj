@@ -121,6 +121,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\ast2decorated_ast\ASTConverter.h" />
     <ClInclude Include="src\decorated_ast\ApryxClass.h" />
     <ClInclude Include="src\ast\Expression.h" />
     <ClInclude Include="src\ast\Statement.h" />
@@ -145,6 +146,7 @@
     <ClInclude Include="src\vm\VMWriter.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\ast2decorated_ast\ASTConverter.cpp" />
     <ClCompile Include="src\decorated_ast\ApryxClass.cpp" />
     <ClCompile Include="src\ast\Expression.cpp" />
     <ClCompile Include="src\ast\Statement.cpp" />
