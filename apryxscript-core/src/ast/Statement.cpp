@@ -92,4 +92,16 @@ namespace apryx {
 	{
 
 	}
+	std::string Structure::toString()
+	{
+		std::stringstream stream;
+
+		stream << "class ";
+		stream << m_Name;
+		stream << " extends ";
+		stream << m_Parent;
+		stream << m_Statement->toString();
+
+		return stream.str();
+	}
 }

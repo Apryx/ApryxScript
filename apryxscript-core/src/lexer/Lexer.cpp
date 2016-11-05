@@ -53,12 +53,6 @@ namespace apryx {
 
 			if (getKeywordType(m_Current.m_Data) != Token::ERROR)
 				m_Current.m_Type = getKeywordType(m_Current.m_Data);
-
-			else if(getModifierType(m_Current.m_Data) != Token::ERROR)
-				m_Current.m_Type = getModifierType(m_Current.m_Data);
-
-			else if(isOperator(m_Current.m_Data))
-				m_Current.m_Type = Token::OPERATOR_KEYWORD;
 			else
 				m_Current.m_Type = Token::IDENTIFIER;
 
@@ -430,7 +424,7 @@ namespace apryx {
 			o << "IDENTIFIER";
 			break;
 		case Token::KEYWORD_CLASS:
-			o << "KEYWORD";
+			o << "KEYWORD_CLASS";
 			break;
 		case Token::KEYWORD_STRUCT:
 			o << "KEYWORD_STRUCT";
@@ -441,6 +435,46 @@ namespace apryx {
 		case Token::KEYWORD_VARIABLE:
 			o << "KEYWORD_VARIABLE";
 			break;
+
+		case Token::MODIFIER_PUBLIC:
+			o << "MODIFIER_PUBLIC";
+			break;
+		case Token::MODIFIER_PROTECTED:
+			o << "MODIFIER_PROTECTED";
+			break;
+		case Token::MODIFIER_PRIVATE:
+			o << "MODIFIER_PRIVATE";
+			break;
+		case Token::MODIFIER_STATIC:
+			o << "MODIFIER_STATIC";
+			break;
+
+		case Token::KEYWORD_IN:
+			o << "OPERATOR_KEYWORD";
+			break;
+		case Token::KEYWORD_RETURN:
+			o << "KEYWORD_RETURN";
+			break;
+
+		case Token::KEYWORD_IF:
+			o << "OPERATOR_KEYWORD";
+			break;
+		case Token::KEYWORD_ELSE:
+			o << "KEYWORD_ELSE";
+			break;
+		case Token::KEYWORD_FOR:
+			o << "KEYWORD_FOR";
+			break;
+		case Token::KEYWORD_WHILE:
+			o << "KEYWORD_WHILE";
+			break;
+		case Token::KEYWORD_REPEAT:
+			o << "KEYWORD_REPEAT";
+			break;
+		case Token::KEYWORD_EXTENDS:
+			o << "KEYWORD_EXTENDS";
+			break;
+
 		case Token::STRING:
 			o << "STRING";
 			break;
@@ -456,12 +490,14 @@ namespace apryx {
 		case Token::DOUBLE:
 			o << "DOUBLE";
 			break;
+
 		case Token::LINE_END:
 			o << "LINE_END";
 			break;
 		case Token::COLON:
 			o << "COLON";
 			break;
+
 		case Token::OPEN_BRACKET:
 			o << "OPEN_BRACKET";
 			break;
@@ -480,9 +516,11 @@ namespace apryx {
 		case Token::CLOSE_SQUARE:
 			o << "CLOSE_SQUARE";
 			break;
-		case Token::OPERATOR_KEYWORD:
-			o << "OPERATOR_KEYWORD";
+
+		case Token::OPERATOR_NEW:
+			o << "OPERATOR_NEW";
 			break;
+
 		case Token::OPERATOR_ADD:
 			o << "OPERATOR_ADD";
 			break;
@@ -604,14 +642,28 @@ namespace apryx {
 		{ Token::Type::KEYWORD_FUNCTION, "function" },
 		{ Token::Type::KEYWORD_STRUCT, "struct" },
 		{ Token::Type::KEYWORD_VARIABLE, "var" },
-	};
 
+		{ Token::Type::KEYWORD_FOR, "for" },
+		{ Token::Type::KEYWORD_REPEAT, "repeat" },
+		{ Token::Type::KEYWORD_WHILE, "while" },
+		{ Token::Type::KEYWORD_IF, "if" },
+		{ Token::Type::KEYWORD_ELSE, "else" },
+
+		{ Token::Type::KEYWORD_IN, "in" },
+		{ Token::Type::KEYWORD_RETURN, "return" },
+
+		{ Token::Type::KEYWORD_EXTENDS, "extends" },
+	};
 
 	const std::vector<std::pair<Token::Type, std::string>> modifierTypes = {
 		{ Token::Type::MODIFIER_PUBLIC, "public" },
 		{ Token::Type::MODIFIER_PROTECTED, "protected" },
 		{ Token::Type::MODIFIER_PRIVATE, "private" },
 		{ Token::Type::MODIFIER_STATIC, "static" },
+	};
+
+	const std::vector<std::pair<Token::Type, std::string>> keywordOperatorTypes = {
+		{ Token::Type::OPERATOR_NEW, "new" },
 	};
 
 	const std::vector<Token::Type> operatorTypes = {
@@ -699,6 +751,16 @@ namespace apryx {
 			if (s.second == name)
 				return s.first;
 		}
+		for (auto s : modifierTypes)
+		{
+			if (s.second == name)
+				return s.first;
+		}
+		for (auto s : keywordOperatorTypes)
+		{
+			if (s.second == name)
+				return s.first;
+		}
 
 		return Token::ERROR;
 	}
@@ -714,17 +776,6 @@ namespace apryx {
 		}
 
 		return false;
-	}
-
-	Token::Type getModifierType(const std::string & name)
-	{
-		for (auto s : modifierTypes)
-		{
-			if (s.second == name)
-				return s.first;
-		}
-
-		return Token::ERROR;
 	}
 
 	Token::operator bool() const

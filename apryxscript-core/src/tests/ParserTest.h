@@ -9,6 +9,10 @@ namespace apryx {
 	void testTypes();
 
 	void testDecoratedAST();
-	
+
 	void testParserToDecoratedAST();
+
+	void testModifiers();
+
+	void testFile();
 }

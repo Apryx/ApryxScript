@@ -6,7 +6,4 @@ namespace apryx {
 	bool isWhitespace(char c);
 	bool isCharacter(char c);
 	bool isNumber(char c);
-
-	bool isKeyword(const std::string &str); 
-	bool isOperator(const std::string & str);
 }

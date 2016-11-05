@@ -9,7 +9,7 @@
 
 namespace apryx {
 
-	std::shared_ptr<Function> Parser::parseFunction(Lexer & lexer)
+	std::shared_ptr<Function> Parser::parseFunction(Lexer & lexer, std::vector<Token> modifiers)
 	{
 		if (lexer.current().m_Type != Token::KEYWORD_FUNCTION) {
 			unexpectedToken(lexer, Token::KEYWORD_FUNCTION);
@@ -59,7 +59,7 @@ namespace apryx {
 		return function;
 	}
 
-	std::shared_ptr<Variable> Parser::parseVariable(Lexer & lexer)
+	std::shared_ptr<Variable> Parser::parseVariable(Lexer & lexer, std::vector<Token> modifiers)
 	{
 		if (lexer.current().m_Type != Token::KEYWORD_VARIABLE) {
 			unexpectedToken(lexer);
@@ -99,9 +99,40 @@ namespace apryx {
 		return var;
 	}
 
-	std::shared_ptr<Structure> Parser::parseStructure(Lexer & lexer)
+	std::shared_ptr<Structure> Parser::parseStructure(Lexer & lexer, std::vector<Token> modifiers)
 	{
-		return std::shared_ptr<Structure>();
+		if (lexer.current().m_Type != Token::KEYWORD_CLASS && lexer.current().m_Type != Token::KEYWORD_STRUCT) {
+			unexpectedToken(lexer);
+			return nullptr;
+		}
+
+		auto cls = std::make_shared<Structure>();
+
+		if (lexer.next().m_Type != Token::IDENTIFIER) {
+			unexpectedToken(lexer, Token::IDENTIFIER);
+			return nullptr;
+		}
+		cls->m_Name = lexer.current().m_Data;
+
+		//base class
+		if (lexer.next().m_Type == Token::KEYWORD_EXTENDS) {
+			lexer.next();
+			auto a = parseType(lexer);
+			if (!a) {
+				unexpectedToken(lexer, Token::IDENTIFIER);
+				return nullptr;
+			}
+			else {
+				cls->m_Parent = *a;
+			}
+		}
+		else {
+			cls->m_Parent = "Object";
+		}
+
+		cls->m_Statement = parseStatement(lexer);
+
+		return cls;
 	}
 
 	void Parser::unexpectedToken(Lexer & lexer, Token::Type expected)
@@ -116,16 +147,34 @@ namespace apryx {
 
 	std::shared_ptr<Statement> Parser::parseStatement(Lexer & lexer)
 	{
+		//First, lets find all the modifiers
+		std::vector<Token> modifiers;
+		while (isModifier(lexer.current())) {
+			modifiers.push_back(lexer.current());
+			lexer.next();
+		}
+		
 		//If its a keyword, see what we can do
 		if (isKeyword(lexer.current())) {
 			if (lexer.current().m_Type == Token::KEYWORD_FUNCTION) {
-				return parseFunction(lexer);
+				return parseFunction(lexer, modifiers);
 			}
 			else if (lexer.current().m_Type == Token::KEYWORD_VARIABLE){
-				return parseVariable(lexer);
+				return parseVariable(lexer, modifiers);
 			}
 			else if (lexer.current().m_Type == Token::KEYWORD_CLASS || lexer.current().m_Type == Token::KEYWORD_STRUCT) {
-				return parseStructure(lexer);
+				return parseStructure(lexer, modifiers);
+			}
+			else if (lexer.current().m_Type == Token::KEYWORD_RETURN) {
+				lexer.next();
+
+				if (modifiers.size() > 0)
+					LOG_WARNING("Warning! Illigal modifiers. " << lexer.current());
+
+				auto s = std::make_shared<ReturnStatement>();
+				s->m_ReturnExpression = parseExpression(lexer);
+
+				return s;
 			}
 			else {
 				unexpectedToken(lexer);
@@ -133,8 +182,12 @@ namespace apryx {
 				return nullptr;
 			}
 		}
+		else if(modifiers.size() > 0){
+			LOG_WARNING("Warning! Illigal modifiers." << lexer.current());
+		}
+		
 		//If its a block
-		else if (lexer.current().m_Type == Token::OPEN_CURLY) {
+		if (lexer.current().m_Type == Token::OPEN_CURLY) {
 			return parseBlock(lexer);
 		}
 		else if (lexer.current().m_Type == Token::LINE_END) {
@@ -158,6 +211,22 @@ namespace apryx {
 		
 		assert(false);
 		return nullptr;
+	}
+
+	std::shared_ptr<Block> Parser::parseAll(Lexer & lexer)
+	{
+		auto block = std::make_shared<Block>();
+
+		while (lexer) {
+			auto s = parseStatement(lexer);
+
+			if (s)
+				block->m_Statements.push_back(s);
+			else
+				unexpectedToken(lexer);
+		}
+
+		return block;
 	}
 
 	std::shared_ptr<Expression> Parser::parseExpression(Lexer & lexer, int detail)
@@ -391,18 +460,22 @@ namespace apryx {
 			unexpectedToken(lexer, Token::OPEN_CURLY);
 			return nullptr;
 		}
-
 		auto block = std::make_shared<Block>();
 
 		//Consume {
 		lexer.next();
 
 		while (lexer && lexer.current().m_Type != Token::CLOSE_CURLY) {
+
 			auto s = parseStatement(lexer);
 			
-			if(s)
+			if (s) {
 				block->m_Statements.push_back(s);
+			}
 		}
+
+		//consume }
+		lexer.next();
 
 		return block;
 	}

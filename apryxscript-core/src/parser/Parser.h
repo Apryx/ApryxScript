@@ -18,15 +18,18 @@ namespace apryx {
 	class Parser {
 
 	public:
-		std::shared_ptr<Statement> parseStatement(Lexer &lexer);
-	public:
-		std::shared_ptr<Function> parseFunction(Lexer &lexer);
-		std::shared_ptr<Variable> parseVariable(Lexer &lexer);
-		std::shared_ptr<Structure> parseStructure(Lexer &lexer);
+		//Use this one only. The other things are reserved
+		std::shared_ptr<Statement>	parseStatement(Lexer &lexer);
+		std::shared_ptr<Block>		parseAll(Lexer &lexer);
 
-		std::shared_ptr<Expression> parseExpression(Lexer &lexer, int detail = 6);
+	public:
+		std::shared_ptr<Function>	parseFunction(Lexer &lexer, std::vector<Token> modifiers);
+		std::shared_ptr<Variable>	parseVariable(Lexer &lexer, std::vector<Token> modifiers);
+		std::shared_ptr<Structure>	parseStructure(Lexer &lexer, std::vector<Token> modifiers);
+
+		std::shared_ptr<Expression>	parseExpression(Lexer &lexer, int detail = 6);
 		std::shared_ptr<Expression> parseExpressionSimple(Lexer &lexer);
-		std::shared_ptr<Block> parseBlock(Lexer &lexer);
+		std::shared_ptr<Block>		parseBlock(Lexer &lexer);
 
 		boost::optional<std::string> parseType(Lexer &lexer);
 	private:

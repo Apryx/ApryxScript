@@ -19,6 +19,17 @@ namespace apryx {
 			MODIFIER_PRIVATE,	// private
 			MODIFIER_STATIC,	// static
 
+			KEYWORD_RETURN,		// static
+			KEYWORD_IN,			// in
+
+			KEYWORD_IF,			// if
+			KEYWORD_ELSE,		// else
+			KEYWORD_FOR,		// for
+			KEYWORD_WHILE,		// while
+			KEYWORD_REPEAT,		// repeat
+
+			KEYWORD_EXTENDS,	// extends
+
 			STRING,
 			INTEGER,
 			LONG,
@@ -36,7 +47,7 @@ namespace apryx {
 			CLOSE_SQUARE,		// ]
 
 			//These should have their own thingy
-			OPERATOR_KEYWORD,	// new in
+			OPERATOR_NEW,		// new
 
 			OPERATOR_ADD,		// +
 			OPERATOR_SUBTRACT,	// -
@@ -96,7 +107,6 @@ namespace apryx {
 		friend bool isModifier(const Token &token);
 
 		friend Token::Type getKeywordType(const std::string &name);
-		friend Token::Type getModifierType(const std::string &name);
 
 		operator bool() const;
 	};

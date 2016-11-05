@@ -14,7 +14,7 @@
 #include "decorated_ast/ApryxClass.h"
 #include "decorated_ast/ApryxFunction.h"
 #include "decorated_ast/Type.h"
-
+#include <fstream>
 #include "vm/ScriptVM.h"
 
 namespace apryx {
@@ -29,7 +29,7 @@ namespace apryx {
 	{
 		return std::make_shared<std::istringstream>(
 			"1 1.1 1.1f 1.1d 1l 2f 2d 2 \n"		//Numbers
-			"a \"b\" var\n"						//Identifiers, literals and keywords
+			"a \"b\"\n"							//Identifiers, literals
 			";\n"								//Line end
 			"()[]{}\n"							//Parenthesis
 			"+ - * / % . ! :: , ++ --\n"		//Operators
@@ -37,8 +37,11 @@ namespace apryx {
 			"> < >= <= == != \n"				//Comparators
 			">|| && \n"							//Logical operators
 			"= += -= *= /= %= \n"				//Assignments
-			"new in \n"							//Keyword operators
-			"a_b _b \n"							//Keyword operators
+			"new \n"							//Keyword operators
+
+			"if else repeat for while \n"		//Keywords
+			"function var struct class \n"		//Keywords
+			"return in \n"						//Keywords
 			);
 	}
 
@@ -243,5 +246,27 @@ namespace apryx {
 	void testParserToDecoratedAST()
 	{
 
+	}
+
+	void testModifiers()
+	{
+		LOG("Testing modifiers");
+
+		parseStatementTest("public static var a = 3\n");
+		parseStatementTest("private static var a = 3\n");
+		parseStatementTest("protected var a = 3\n");
+		parseStatementTest("public function main() : void {}\n");
+
+		LOG("Test done!"); 
+	}
+
+	void testFile()
+	{
+		Lexer lexer(std::make_shared<std::ifstream>("test.apx"));
+		lexer.next();
+
+		Parser parser;
+
+		LOG(parser.parseAll(lexer)->toString());
 	}
 }

@@ -53,7 +53,12 @@ namespace apryx {
 
 	class Structure : public Statement {
 	public:
-		virtual std::string toString() = 0;
+		std::string m_Name;
+		std::string m_Parent;
+
+		std::shared_ptr<Statement> m_Statement;
+
+		virtual std::string toString();
 	};
 
 	class ReturnStatement : public Statement {
