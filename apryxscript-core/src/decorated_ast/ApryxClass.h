@@ -9,18 +9,17 @@
 #include <memory>
 
 #include "Type.h"
+#include "ApryxFunction.h"
 
 namespace apryx {
 
 	class ApryxClass;
-	class ApryxFunction;
 
 	class ApryxNamespace {
 		std::map<std::string, Type> m_Fields;
 
 		std::map<std::string, std::vector<ApryxFunction>> m_Functions;
 		std::map<std::string, ApryxClass> m_Classes;
-
 	public:
 		ApryxNamespace() {};
 		virtual ~ApryxNamespace() {};

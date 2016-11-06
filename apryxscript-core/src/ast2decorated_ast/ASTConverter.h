@@ -12,6 +12,6 @@ namespace apryx {
 		ASTConverter() {};
 		~ASTConverter() {};
 
-		void process(std::shared_ptr<Statement> statement, ApryxNamespace &nmsp);
+		void processNamespace(std::shared_ptr<Block> block, ApryxNamespace &nmsp);
 	};
 }

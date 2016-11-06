@@ -6,19 +6,34 @@
 
 namespace apryx {
 
-	void ASTConverter::process(std::shared_ptr<Statement> statement, ApryxNamespace & nmsp)
+	void ASTConverter::processNamespace(std::shared_ptr<Block> statement, ApryxNamespace & nmsp)
 	{
-		if (auto variable = std::dynamic_pointer_cast<Variable>(statement)) {
+		std::vector<std::shared_ptr<Structure>> structures;
+		std::vector<std::shared_ptr<Function>> functions;
+		std::vector<std::shared_ptr<Variable>> variables;
 
+		//Filter the order stuff
+		for (auto a : statement->m_Statements) {
+			if (auto variable = std::dynamic_pointer_cast<Variable>(statement)) {
+				variables.push_back(variable);
+			}
+			else if (auto function = std::dynamic_pointer_cast<Function>(statement)) {
+				functions.push_back(function);
+			}
+			else if (auto structure = std::dynamic_pointer_cast<Structure>(statement)) {
+				structures.push_back(structure);
+			}
+			else {
+				LOG_ERROR("Can't convert " << a->toString());
+			}
 		}
-		else if (auto function = std::dynamic_pointer_cast<Function>(statement)) {
 
+		for (auto structure : structures) {
+			nmsp.addClass(structure->m_Name, ApryxClass());
 		}
-		else if (auto structure = std::dynamic_pointer_cast<Structure>(statement)) {
-
-		}
-		else if (auto expression = std::dynamic_pointer_cast<Expression>(statement)) {
-
+		for (auto function : functions) {
+			
+			nmsp.addFunction(function->m_Name, ApryxFunction());
 		}
 	}
 
