@@ -28,6 +28,11 @@ namespace apryx {
 			}
 		}
 
+		// Maybe add some to be changed things
+		// like function arguments that need to be changed
+		// but maybe the class is declared later or something
+		// i need to think about this
+
 		for (auto structure : structures) {
 			nmsp.addClass(structure->m_Name, ApryxClass());
 		}
