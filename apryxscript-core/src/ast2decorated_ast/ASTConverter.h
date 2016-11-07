@@ -6,6 +6,7 @@ namespace apryx {
 
 	class Statement;
 	class ApryxNamespace;
+	class Block;
 
 	class ASTConverter {
 	public:

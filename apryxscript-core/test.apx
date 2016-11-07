@@ -1,3 +1,6 @@
-function main(){
-	print("Hello World!")
+
+function hans(){
+  local var x : int = 0
+
+  return x
 }

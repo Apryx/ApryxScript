@@ -47,6 +47,11 @@ namespace apryx {
 		return true;
 	}
 
+	bool ApryxNamespace::addClass(const std::string & name, const ApryxClass & cls)
+	{
+		return false;
+	}
+
 	bool ApryxNamespace::validate()
 	{
 		return true;

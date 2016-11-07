@@ -18,6 +18,7 @@ namespace apryx {
 			MODIFIER_PROTECTED,	// protected
 			MODIFIER_PRIVATE,	// private
 			MODIFIER_STATIC,	// static
+			MODIFIER_LOCAL,		// local
 
 			KEYWORD_RETURN,		// static
 			KEYWORD_IN,			// in

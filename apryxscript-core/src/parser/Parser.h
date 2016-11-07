@@ -27,7 +27,7 @@ namespace apryx {
 		std::shared_ptr<Variable>	parseVariable(Lexer &lexer, std::vector<Token> modifiers);
 		std::shared_ptr<Structure>	parseStructure(Lexer &lexer, std::vector<Token> modifiers);
 
-		std::shared_ptr<Expression>	parseExpression(Lexer &lexer, int detail = 6);
+		std::shared_ptr<Expression>	parseExpression(Lexer &lexer, int detail = 7);
 		std::shared_ptr<Expression> parseExpressionSimple(Lexer &lexer);
 		std::shared_ptr<Block>		parseBlock(Lexer &lexer);
 

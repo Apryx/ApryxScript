@@ -38,7 +38,7 @@ namespace apryx {
 		}
 		for (auto function : functions) {
 			
-			nmsp.addFunction(function->m_Name, ApryxFunction());
+			//nmsp.addFunction(function->m_Name, ApryxFunction());
 		}
 	}
 

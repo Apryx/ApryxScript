@@ -2,11 +2,11 @@
 // Basic features
 //==============================================================================//
 class Person{
-  var name : String;
-  var age : int;
+  var name : String
+  var age : int
 
   function toString() : String{
-    return name + " is " + age + " years old!";
+    return name + " is " + age + " years old!"
   }
 }
 
@@ -29,10 +29,70 @@ print(p)  //Prints "Harry potter is 42 years old!"
 // Coroutines
 //==============================================================================//
 
-routine f() : int{
-  yield 1
-  yield 2
-  yield 3
+class EventHandler{
+
+  function onClick(){
+    print("Ayy lmao!")
+  }
+
+  coroutine handle(e : Event) : bool{
+    if(e.isMouseDown()){
+      yield true;
+
+      while(!e.isMouseUp()){
+        yield false;
+      }
+
+      onClick();
+      return true;
+    }
+    else{
+      return false;
+    }
+  }
+
 }
 
-var r : (routine : int) = f();
+var eventHandlers : EventHandler[] = getHandlers();
+var event : Event = getEvent();
+
+while(e in eventHandlers)
+  if(e.handle(event))
+    break;
+
+//==============================================================================//
+// Annotations
+//==============================================================================//
+
+annotation RequireLogin{
+
+  var userID : int
+
+  init(userID : int){
+    this.userID = userID
+  }
+
+  function preExecute() : bool{
+    if(loggedIn)
+      return true;
+
+    return false;
+  }
+  function postExecute() : void{
+    //Do nothing?
+  }
+}
+
+class User{
+
+  var userID : int
+
+  init(userID : int){
+    this.userID = userID
+  }
+
+  function login(){}
+
+  @RequireLogin(userID)
+  function getName(){}
+}

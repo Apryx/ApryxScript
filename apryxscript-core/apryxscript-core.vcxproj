@@ -144,6 +144,7 @@
     <ClInclude Include="src\vm\VMTypes.h" />
     <ClInclude Include="src\vm\VMValue.h" />
     <ClInclude Include="src\vm\VMWriter.h" />
+    <ClInclude Include="src\xml\AST2XML.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\ast2decorated_ast\ASTConverter.cpp" />
@@ -167,6 +168,7 @@
     <ClCompile Include="src\vm\VMResources.cpp" />
     <ClCompile Include="src\vm\VMTypes.cpp" />
     <ClCompile Include="src\vm\VMValue.cpp" />
+    <ClCompile Include="src\xml\AST2XML.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="test.apx" />

@@ -15,6 +15,7 @@
 #include "decorated_ast/ApryxFunction.h"
 #include "decorated_ast/Type.h"
 #include <fstream>
+#include "xml/AST2XML.h"
 #include "vm/ScriptVM.h"
 
 namespace apryx {
@@ -107,6 +108,9 @@ namespace apryx {
 
 		parseExpressionTest("a = b = c");
 		//a = (b = c)
+
+		parseExpressionTest("a + (b + c)");
+		//a + (b + c)
 
 		LOG("Variables");
 
@@ -267,6 +271,13 @@ namespace apryx {
 
 		Parser parser;
 
-		LOG(parser.parseAll(lexer)->toString());
+		auto s = parser.parseAll(lexer);
+
+		if (s) {
+			LOG(s->toString());
+		}
+		else {
+			LOG("NULLPTR");
+		}
 	}
 }

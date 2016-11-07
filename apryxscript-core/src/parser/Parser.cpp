@@ -194,7 +194,9 @@ namespace apryx {
 			lexer.next();
 			//Yes, we do completely ignore line ends, they mean basically nothing. The only thing there are really good for is expression seperation, and that
 			//works just fine with this current system e.g. a + b; a + b; . However a + b a + b is just as valid.
-			return parseStatement(lexer);
+			
+			//TODO find out if this has implications
+			return nullptr;// parseStatement(lexer);
 		}
 		//Else, it basically always is an expression
 		else {
@@ -237,11 +239,37 @@ namespace apryx {
 		if (detail <= 0) {
 			return parseExpressionSimple(lexer);
 		}
+		//--------------------------------------------------------------//
+		// ()
+		//--------------------------------------------------------------//
+		else if (detail == 1) {
+			if (lexer.current().m_Type == Token::OPEN_BRACKET) {
+
+				//Consume (
+				lexer.next();
+
+				//Parse a full expression!
+				auto exp = parseExpression(lexer);
+
+				if (lexer.current().m_Type != Token::CLOSE_BRACKET) {
+					unexpectedToken(lexer);
+					return parseExpression(lexer, detail - 1);
+				}
+				
+				//Consume )
+				lexer.next();
+
+				return exp;
+			}
+			else {
+				return parseExpression(lexer, detail - 1);
+			}
+		}
 
 		//--------------------------------------------------------------//
 		//Lookups and invocations (TODO postfix operators like ++ and --)
 		//--------------------------------------------------------------//
-		else if (detail == 1) {
+		else if (detail == 2) {
 			auto lhs = parseExpression(lexer, detail - 1);
 
 			while (lexer.current().m_Type == Token::OPERATOR_LOOKUP || lexer.current().m_Type == Token::OPEN_BRACKET) {
@@ -284,7 +312,7 @@ namespace apryx {
 		//--------------------------------------------------------------//
 		// Prefix operators
 		//--------------------------------------------------------------//
-		else if (detail == 2) {
+		else if (detail == 3) {
 			if (lexer.current().m_Type == Token::OPERATOR_NOT
 				|| lexer.current().m_Type == Token::OPERATOR_ADD
 				|| lexer.current().m_Type == Token::OPERATOR_SUBTRACT) {
@@ -304,7 +332,7 @@ namespace apryx {
 		//--------------------------------------------------------------//
 		// Multiplication and division
 		//--------------------------------------------------------------//
-		else if (detail == 3) {
+		else if (detail == 4) {
 			auto lhs = parseExpression(lexer, detail - 1);
 
 			while (lexer.current().m_Type == Token::OPERATOR_MULTIPLY
@@ -327,7 +355,7 @@ namespace apryx {
 		//--------------------------------------------------------------//
 		// Adding and subtracting
 		//--------------------------------------------------------------//
-		else if (detail == 4) {
+		else if (detail == 5) {
 			auto lhs = parseExpression(lexer, detail - 1);
 
 			while (lexer.current().m_Type == Token::OPERATOR_ADD
@@ -347,7 +375,7 @@ namespace apryx {
 		//--------------------------------------------------------------//
 		// Assignment
 		//--------------------------------------------------------------//
-		else if (detail == 5) {
+		else if (detail == 6) {
 			auto lhs = parseExpression(lexer, detail - 1);
 
 			if (lexer.current().m_Type == Token::OPERATOR_EQUALS) {
@@ -367,7 +395,7 @@ namespace apryx {
 		//--------------------------------------------------------------//
 		// Seperator
 		//--------------------------------------------------------------//
-		else if (detail == 6) {
+		else if (detail == 7) {
 			
 			auto lhs = parseExpression(lexer, detail - 1);
 			

@@ -295,6 +295,32 @@ namespace apryx {
 				m_Current.m_Data = "/=";
 				m_Current.m_Type = Token::OPERATOR_DIV_EQ;
 			}
+
+			//One line comment
+			else if (c == '/') {
+				//Look for newline
+				while (c != '\n' && m_Chars) {
+					c = m_Chars.next();
+				}
+				return next();
+			}
+
+			//Mutli line comment
+			else if (c == '*') {
+				//Look for newline
+				while (m_Chars) {
+					c = m_Chars.next();
+					if (c == '*') {
+						c = m_Chars.next();
+						if (c == '/') {
+							m_Chars.next();
+							break;
+						}
+					}
+				}
+				return next();
+			}
+
 			return m_Current;
 		}
 		else if (c == '%') {
@@ -660,6 +686,7 @@ namespace apryx {
 		{ Token::Type::MODIFIER_PROTECTED, "protected" },
 		{ Token::Type::MODIFIER_PRIVATE, "private" },
 		{ Token::Type::MODIFIER_STATIC, "static" },
+		{ Token::Type::MODIFIER_LOCAL, "local" },
 	};
 
 	const std::vector<std::pair<Token::Type, std::string>> keywordOperatorTypes = {
