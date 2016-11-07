@@ -51,7 +51,7 @@ namespace apryx {
 	}
 	std::string ConstantExpression::toString()
 	{
-		if (m_Type == STRING) {
+		if (m_Type == Type::getString()) {
 			return "\"" + m_Constant + "\"";
 		}
 		else {

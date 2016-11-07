@@ -22,7 +22,6 @@ namespace apryx {
 
 		//For classes
 		std::string m_Name;
-		std::string m_Namespace;
 
 	public:
 		Type();
@@ -36,7 +35,6 @@ namespace apryx {
 		std::string getSignature() const;
 		
 		//Class
-		const std::string &getNamespace() const;
 		const std::string &getName() const;
 		
 		//Function
@@ -46,8 +44,9 @@ namespace apryx {
 
 		static Type getInt();
 		static Type getFloat();
+		static Type getString();
 		static Type getVoid();
-		static Type getClass(const std::string cls, const std::string nmspc);
+		static Type getClass(const std::string cls);
 
 		friend bool operator==(const Type &left, const Type &right);
 		operator bool();

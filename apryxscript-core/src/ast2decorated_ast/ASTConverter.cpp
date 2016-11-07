@@ -6,7 +6,7 @@
 
 namespace apryx {
 
-	void ASTConverter::processNamespace(std::shared_ptr<Block> statement, ApryxNamespace & nmsp)
+	void ASTConverter::process(std::shared_ptr<Block> statement, ApryxEnvironment & nmsp)
 	{
 		std::vector<std::shared_ptr<Structure>> structures;
 		std::vector<std::shared_ptr<Function>> functions;

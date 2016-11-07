@@ -196,9 +196,9 @@ namespace apryx {
 
 		assert(!(ti == tf));
 
-		Type c1 = Type::getClass("Object", "apryx/lang");
-		Type c2 = Type::getClass("Object", "apryx/lang");
-		Type c3 = Type::getClass("String", "apryx/lang");
+		Type c1 = Type::getClass("apryx/lang/Object");
+		Type c2 = Type::getClass("apryx/lang/Object");
+		Type c3 = Type::getClass("apryx/lang/String");
 
 		assert(c1 == c1);
 		assert(!(c2 == c3));
@@ -210,7 +210,7 @@ namespace apryx {
 	{
 		LOG("AST test start...");
 
-		ApryxNamespace global;
+		ApryxEnvironment global;
 
 		assert(global.addField("someField", Type::getInt()));
 		assert(global.addField("otherField", Type::getFloat()));

@@ -457,21 +457,21 @@ namespace apryx {
 		if (lexer.current().m_Type == Token::INTEGER) {
 			auto exp = std::make_shared<ConstantExpression>(lexer.current().m_Data);
 			exp->m_Token = lexer.current();
-			exp->m_Type = ConstantExpression::INT;
+			exp->m_Type = Type::getInt();
 			lexer.next();
 			return exp;
 		}
 		if (lexer.current().m_Type == Token::FLOAT) {
 			auto exp = std::make_shared<ConstantExpression>(lexer.current().m_Data);
 			exp->m_Token = lexer.current();
-			exp->m_Type = ConstantExpression::FLOAT;
+			exp->m_Type = Type::getFloat();
 			lexer.next();
 			return exp;
 		}
 		if (lexer.current().m_Type == Token::STRING) {
 			auto exp = std::make_shared<ConstantExpression>(lexer.current().m_Data);
 			exp->m_Token = lexer.current();
-			exp->m_Type = ConstantExpression::STRING;
+			exp->m_Type = Type::getString();
 			lexer.next();
 			return exp;
 		}

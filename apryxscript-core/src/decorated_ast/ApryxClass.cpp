@@ -3,7 +3,7 @@
 
 namespace apryx {
 
-	boost::optional<Type> ApryxNamespace::getFieldType(const std::string & name) const
+	boost::optional<Type> ApryxEnvironment::getFieldType(const std::string & name) const
 	{
 		auto i = m_Fields.find(name);
 
@@ -13,7 +13,7 @@ namespace apryx {
 		return i->second;
 	}
 
-	boost::optional<Type> ApryxNamespace::getFunctionType(const std::string & name) const
+	boost::optional<Type> ApryxEnvironment::getFunctionType(const std::string & name) const
 	{
 		auto i = m_Functions.find(name);
 		if (i == m_Functions.end())
@@ -22,7 +22,7 @@ namespace apryx {
 		return i->second[0].getFunctionType();
 	}
 
-	boost::optional<std::vector<Type>> ApryxNamespace::getFunctionTypes(const std::string & name) const
+	boost::optional<std::vector<Type>> ApryxEnvironment::getFunctionTypes(const std::string & name) const
 	{
 		auto i = m_Functions.find(name);
 		if (i == m_Functions.end())
@@ -36,7 +36,7 @@ namespace apryx {
 		return std::move(v);
 	}
 
-	bool ApryxNamespace::addField(const std::string & name, const Type & tp)
+	bool ApryxEnvironment::addField(const std::string & name, const Type & tp)
 	{
 		if (m_Fields.find(name) != m_Fields.end()) {
 			return false;
@@ -47,12 +47,12 @@ namespace apryx {
 		return true;
 	}
 
-	bool ApryxNamespace::addClass(const std::string & name, const ApryxClass & cls)
+	bool ApryxEnvironment::addClass(const std::string & name, const ApryxClass & cls)
 	{
 		return false;
 	}
 
-	bool ApryxNamespace::validate()
+	bool ApryxEnvironment::validate()
 	{
 		return true;
 	}

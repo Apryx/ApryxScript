@@ -5,14 +5,16 @@
 namespace apryx {
 
 	class Statement;
-	class ApryxNamespace;
+	class ApryxEnvironment;
 	class Block;
 
 	class ASTConverter {
+		//std::
+
 	public:
 		ASTConverter() {};
 		~ASTConverter() {};
 
-		void processNamespace(std::shared_ptr<Block> block, ApryxNamespace &nmsp);
+		void process(std::shared_ptr<Block> block, ApryxEnvironment &nmsp);
 	};
 }

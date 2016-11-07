@@ -15,14 +15,14 @@ namespace apryx {
 
 	class ApryxClass;
 
-	class ApryxNamespace {
+	class ApryxEnvironment {
 		std::map<std::string, Type> m_Fields;
 
 		std::map<std::string, std::vector<ApryxFunction>> m_Functions;
 		std::map<std::string, ApryxClass> m_Classes;
 	public:
-		ApryxNamespace() {};
-		virtual ~ApryxNamespace() {};
+		ApryxEnvironment() {};
+		virtual ~ApryxEnvironment() {};
 
 		boost::optional<Type> getFieldType(const std::string &name) const;
 		boost::optional<Type> getFunctionType(const std::string &name) const;
@@ -38,7 +38,7 @@ namespace apryx {
 		virtual bool validate();
 	};
 
-	class ApryxClass : public ApryxNamespace{
+	class ApryxClass {
 		std::map<std::string, Type> m_MemberFields;
 		std::map<std::string, std::vector<Type>> m_MemberFunctions;
 

@@ -5,6 +5,9 @@
 
 #include <vector>
 
+//TODO refactor?
+#include "decorated_ast/Type.h"
+
 namespace apryx {
 
 	class ExpressionVisitor;
@@ -14,6 +17,7 @@ namespace apryx {
 		Expression() {}; //Why is this even here
 	public:
 		Token m_Token;
+		Type m_Type;
 
 		virtual std::string toString() = 0;
 		virtual void accept(ExpressionVisitor &exp) = 0;
@@ -92,9 +96,6 @@ namespace apryx {
 	class ConstantExpression : public Expression {
 	public:
 		std::string m_Constant;
-		enum Type{
-			STRING, FLOAT, INT, DOUBLE, LONG
-		} m_Type;
 
 		ConstantExpression() = default;
 		ConstantExpression(std::string id) : m_Constant(id) {};

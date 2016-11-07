@@ -36,16 +36,12 @@ namespace apryx {
 
 		if (isClass()) {
 			stream << "L";				//L for classes
-			stream << m_Namespace;
-			stream << "/";
 			stream << m_Name;
 			stream << ";";
 		}
 
 		else if (isFunction()) {
 			stream << "R";				//R for functions :')
-			stream << m_Namespace;
-			stream << "/";
 			stream << m_Name;
 
 			stream << "(";
@@ -60,12 +56,6 @@ namespace apryx {
 		}
 
 		return stream.str();
-	}
-
-	const std::string &Type::getNamespace() const
-	{
-		assert(isClass());
-		return m_Namespace;
 	}
 
 	const std::string &Type::getName() const
@@ -108,6 +98,16 @@ namespace apryx {
 		return type;
 	}
 
+	Type Type::getString()
+	{
+		Type type;
+		type.m_Type = CLASS;
+
+		type.m_Name = "apryx/lang/String";
+
+		return type;
+	}
+
 	Type Type::getVoid()
 	{
 		Type type;
@@ -117,13 +117,12 @@ namespace apryx {
 		return type;
 	}
 
-	Type Type::getClass(const std::string cls, const std::string nmspc)
+	Type Type::getClass(const std::string cls)
 	{
 		Type type;
 		type.m_Type = CLASS;
 
 		type.m_Name = cls;
-		type.m_Namespace = nmspc;
 
 		return type;
 	}
@@ -145,7 +144,7 @@ namespace apryx {
 			return left.m_Signatures == right.m_Signatures;
 		
 		if (left.m_Type == Type::CLASS)
-			return left.m_Name == right.m_Name && left.m_Namespace == right.m_Namespace;
+			return left.m_Name == right.m_Name;
 
 		return false;
 	}
