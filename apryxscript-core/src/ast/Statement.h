@@ -25,7 +25,7 @@ namespace apryx {
 	class Function : public Statement {
 	public:
 		std::string m_Name;
-		std::string m_ReturnType; //TODO same as with variables, change this to something better (maybe even the decorated ast type system, because that just doesn't know stuff)
+		Type m_ReturnType; //TODO same as with variables, change this to something better (maybe even the decorated ast type system, because that just doesn't know stuff)
 		std::shared_ptr<Expression> m_Arguments; //Can be a list expression, so yea (this is not the decorated ast yet remember)
 
 		std::shared_ptr<Statement> m_Statement; //This can be a list (if its a block statement)

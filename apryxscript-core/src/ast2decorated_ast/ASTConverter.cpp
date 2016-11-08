@@ -6,18 +6,16 @@
 
 namespace apryx {
 
-	void ASTConverter::process(std::shared_ptr<Block> statement, ApryxEnvironment & nmsp)
+	void ASTConverter::process(std::shared_ptr<Block> statement, ApryxEnvironment & env)
 	{
 		std::vector<std::shared_ptr<Structure>> structures;
 		std::vector<std::shared_ptr<Function>> functions;
-		std::vector<std::shared_ptr<Variable>> variables;
+
+		std::vector<std::shared_ptr<Variable>> other;
 
 		//Filter the order stuff
 		for (auto a : statement->m_Statements) {
-			if (auto variable = std::dynamic_pointer_cast<Variable>(statement)) {
-				variables.push_back(variable);
-			}
-			else if (auto function = std::dynamic_pointer_cast<Function>(statement)) {
+			if (auto function = std::dynamic_pointer_cast<Function>(statement)) {
 				functions.push_back(function);
 			}
 			else if (auto structure = std::dynamic_pointer_cast<Structure>(statement)) {
@@ -34,11 +32,19 @@ namespace apryx {
 		// i need to think about this
 
 		for (auto structure : structures) {
-			nmsp.addClass(structure->m_Name, ApryxClass());
+			ApryxClass cls;
+			cls.m_Name = structure->m_Name;
+			
+			env.addClass(structure->m_Name, cls);
 		}
 		for (auto function : functions) {
-			
-			//nmsp.addFunction(function->m_Name, ApryxFunction());
+			//ApryxFunction()
+			ApryxFunction func(
+				function->m_ReturnType,
+				{}
+				);
+
+			env.addFunction(function->m_Name, func);
 		}
 	}
 

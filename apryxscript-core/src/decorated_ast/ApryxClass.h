@@ -39,8 +39,11 @@ namespace apryx {
 	};
 
 	class ApryxClass {
+	public:
 		std::map<std::string, Type> m_MemberFields;
 		std::map<std::string, std::vector<Type>> m_MemberFunctions;
+
+		std::string m_Name;
 
 	public:
 		ApryxClass() {};
