@@ -28,7 +28,7 @@ namespace apryx {
 		boost::optional<Type> getFunctionType(const std::string &name) const;
 		boost::optional<std::vector<Type>> getFunctionTypes(const std::string &name) const;
 
-		bool getClassType(const std::string &name, Type &t) const;
+		ApryxClass *getApryxClass(const std::string &name);
 
 		bool addField(const std::string &name, const Type &tp);
 		bool addClass(const std::string &name, const ApryxClass &cls);

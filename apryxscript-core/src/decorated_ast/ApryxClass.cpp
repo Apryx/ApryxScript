@@ -36,6 +36,16 @@ namespace apryx {
 		return std::move(v);
 	}
 
+	ApryxClass * ApryxEnvironment::getApryxClass(const std::string & name)
+	{
+		auto i = m_Classes.find(name);
+		if (i == m_Classes.end()) {
+			return nullptr;
+		}
+
+		return &i->second;
+	}
+
 	bool ApryxEnvironment::addField(const std::string & name, const Type & tp)
 	{
 		if (m_Fields.find(name) != m_Fields.end()) {

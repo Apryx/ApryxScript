@@ -44,14 +44,14 @@ namespace apryx {
 			//Consume the :
 			lexer.next();
 			if (auto s = parseType(lexer)) {
-				function->m_ReturnType = *s;
+				function->m_DeclaredReturnType = *s;
 			} else {
 				unexpectedToken(lexer);
 				return nullptr;
 			}
 		}
 		else {
-			function->m_ReturnType = "void";
+			function->m_DeclaredReturnType = "void";
 		}
 
 		function->m_Statement = parseStatement(lexer);
@@ -78,7 +78,7 @@ namespace apryx {
 		if (lexer.current().m_Type == Token::COLON) {
 			lexer.next();
 			if (auto s = parseType(lexer)) {
-				var->m_Type = *s;
+				var->m_DeclaredType = *s;
 			} else {
 				unexpectedToken(lexer);
 				return nullptr;

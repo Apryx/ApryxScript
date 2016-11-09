@@ -5,6 +5,7 @@
 #include <vector>
 
 #include <boost/optional.hpp>
+#include "decorated_ast/Type.h"
 
 namespace apryx {
 
@@ -25,6 +26,7 @@ namespace apryx {
 	class Function : public Statement {
 	public:
 		std::string m_Name;
+		std::string m_DeclaredReturnType;
 		Type m_ReturnType; //TODO same as with variables, change this to something better (maybe even the decorated ast type system, because that just doesn't know stuff)
 		std::shared_ptr<Expression> m_Arguments; //Can be a list expression, so yea (this is not the decorated ast yet remember)
 
@@ -36,12 +38,13 @@ namespace apryx {
 	class Variable : public Statement {
 	public:
 		std::string m_Name;
-		std::string m_Type; //Change this to a better type system with support for things other than strings
+		std::string m_DeclaredType;
+		Type m_Type; //Change this to a better type system with support for things other than strings
 
 		std::shared_ptr<Expression> m_InitialValue;
 
 		virtual std::string toString();
-		bool isValid() { return m_Type.size() > 0 || m_InitialValue != nullptr; }
+		bool isValid() { return m_DeclaredType.size() > 0 || m_InitialValue != nullptr; }
 	};
 
 	class Block : public Statement {

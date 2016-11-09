@@ -11,8 +11,8 @@ namespace apryx {
 
 		stream << "var ";
 		stream << m_Name;
-		if (m_Type.size() > 0)
-			stream << ":" << m_Type;
+		if (m_DeclaredType.size() > 0)
+			stream << ":" << m_DeclaredType;
 		if (m_InitialValue)
 			stream << "=" << m_InitialValue->toString();
 

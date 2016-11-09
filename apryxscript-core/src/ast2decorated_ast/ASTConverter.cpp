@@ -1,12 +1,14 @@
 #include "ASTConverter.h"
 
+#include <sstream>
+
 #include "ast/Statement.h"
 #include "ast/Expression.h"
 #include "decorated_ast/ApryxClass.h"
 
 namespace apryx {
 
-	void ASTConverter::process(std::shared_ptr<Block> statement, ApryxEnvironment & env)
+	void ASTConverter::process(std::shared_ptr<Block> block, ApryxEnvironment & env)
 	{
 		std::vector<std::shared_ptr<Structure>> structures;
 		std::vector<std::shared_ptr<Function>> functions;
@@ -14,7 +16,7 @@ namespace apryx {
 		std::vector<std::shared_ptr<Variable>> other;
 
 		//Filter the order stuff
-		for (auto a : statement->m_Statements) {
+		for (auto statement : block->m_Statements) {
 			if (auto function = std::dynamic_pointer_cast<Function>(statement)) {
 				functions.push_back(function);
 			}
@@ -22,7 +24,7 @@ namespace apryx {
 				structures.push_back(structure);
 			}
 			else {
-				LOG_ERROR("Can't convert " << a->toString());
+				LOG_ERROR("Can't convert " << statement->toString());
 			}
 		}
 
@@ -31,21 +33,70 @@ namespace apryx {
 		// but maybe the class is declared later or something
 		// i need to think about this
 
+		//Parse classname first
 		for (auto structure : structures) {
 			ApryxClass cls;
-			cls.m_Name = structure->m_Name;
+			cls.m_Name = getNamespace() + structure->m_Name;
 			
-			env.addClass(structure->m_Name, cls);
+			env.addClass(cls.m_Name, cls);
 		}
-		for (auto function : functions) {
-			//ApryxFunction()
-			ApryxFunction func(
-				function->m_ReturnType,
-				{}
-				);
 
-			env.addFunction(function->m_Name, func);
+		//Then parse class outlines
+		for (auto structure : structures) {
+			auto *p = env.getApryxClass(getNamespace() + structure->m_Name);
+			
+			assert(p);
+			processOutline(structure, *p);
 		}
+
+		//Parse function outlines
+		for (auto structure : structures) {
+			auto *p = env.getApryxClass(getNamespace() + structure->m_Name);
+
+			assert(p);
+			processOutline(structure, *p);
+		}
+	}
+
+	void ASTConverter::processSequencial(std::shared_ptr<Block> block)
+	{
+		for (auto statement : block->m_Statements) {
+			if (auto variable = std::dynamic_pointer_cast<Variable>(statement)) {
+
+			}
+			else if (auto expressionStatement = std::dynamic_pointer_cast<ExpressionStatement>(statement)) {
+
+			}
+		}
+	}
+
+	std::string ASTConverter::getNamespace() const
+	{
+		std::stringstream stream;
+
+		for (auto &s : m_ScopeStack) {
+			stream << s << "/";
+		}
+
+		return stream.str();
+	}
+
+	void ASTConverter::processOutline(std::shared_ptr<Function> structure, ApryxEnvironment & nmsp)
+	{
+	}
+
+	void ASTConverter::processFull(std::shared_ptr<Function> block, ApryxEnvironment & nmsp)
+	{
+	}
+
+	void ASTConverter::processOutline(std::shared_ptr<Structure> block, ApryxClass & nmsp)
+	{
+
+	}
+
+	void ASTConverter::processFull(std::shared_ptr<Structure> block, ApryxClass & nmsp)
+	{
+
 	}
 
 }

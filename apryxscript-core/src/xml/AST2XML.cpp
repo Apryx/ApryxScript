@@ -29,7 +29,7 @@ namespace apryx {
 
 		if (auto variable = dynamic_cast<Variable*>(statement)) {
 			open(stream, "variable", {
-				{"name", variable->m_Name},{"declaredType", variable->m_Type}
+				{"name", variable->m_Name},{"declaredType", variable->m_DeclaredType}
 			});
 
 			if (variable->m_InitialValue) {
@@ -40,7 +40,7 @@ namespace apryx {
 		}
 		else if (auto function = dynamic_cast<Function*>(statement)) {
 			open(stream, "function", {
-				{ "name", function->m_Name },{ "returnType", function->m_ReturnType }
+				{ "name", function->m_Name },{ "returnType", function->m_DeclaredReturnType }
 			});
 
 			if (function->m_Statement) {
