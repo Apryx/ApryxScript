@@ -1,0 +1,7 @@
+var a : int = 1
+
+var b : int
+
+var c = 3
+
+var d = a

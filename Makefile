@@ -22,6 +22,7 @@ $(BIN): $(OBJ)
 setup:
 	mkdir bin
 clean:
-	rm bin/*
+	find . -name "*.o" -type f -delete
 	rm main
+	rm bin/*
 
