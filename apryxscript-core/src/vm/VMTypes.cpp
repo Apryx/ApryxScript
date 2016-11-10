@@ -7,7 +7,7 @@
 namespace apryx {
 	void verify_types()
 	{
-		assert(sizeof(instruction_t) * CHAR_BIT == 8);
+		assert(sizeof(instruction_t) == 1);
 		assert(sizeof(index_t) == 4);
 		assert(sizeof(float_t) == 4);
 		assert(sizeof(short_t) == 2);

@@ -106,11 +106,11 @@ namespace apryx {
 
 		friend bool isKeyword(const Token &token);
 		friend bool isModifier(const Token &token);
-
 		friend Token::Type getKeywordType(const std::string &name);
 
 		operator bool() const;
 	};
+
 
 	class Lexer {
 		Characters m_Chars;

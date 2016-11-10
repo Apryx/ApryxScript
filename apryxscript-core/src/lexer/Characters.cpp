@@ -20,10 +20,10 @@ namespace apryx {
 		}
 
 		m_Input->get(m_Current);
-		
+
 		m_Index++;
 
-		if (!this->operator bool())
+		if (!((bool) *this))
 			m_Current = '\0';
 
 		return m_Current;
@@ -31,7 +31,7 @@ namespace apryx {
 
 	Characters::operator bool()
 	{
-		return m_Input.operator bool() && m_Input->operator bool();
+		return (bool)m_Input && (bool)*m_Input;
 	}
 
 	bool Characters::operator!()
