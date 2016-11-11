@@ -110,3 +110,10 @@ function getComponent<T>() : T{
 function doStuff(notnull a : ClassType){
 
 }
+
+//==============================================================================//
+// April fools
+//==============================================================================//
+
+//keyword private and protected removed in favour of public,
+//because of demands by nsa, no further information can be provided
