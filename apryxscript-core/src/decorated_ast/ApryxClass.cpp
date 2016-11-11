@@ -59,7 +59,14 @@ namespace apryx {
 
 	bool ApryxEnvironment::addClass(const std::string & name, const ApryxClass & cls)
 	{
-		return false;
+		auto i = m_Classes.find(name);
+		if (i != m_Classes.end()) {
+			return false;
+		}
+
+		m_Classes.insert(std::make_pair(name, cls));
+
+		return true;
 	}
 
 	bool ApryxEnvironment::validate()

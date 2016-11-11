@@ -48,6 +48,7 @@ namespace apryx {
 		static Type getVoid();
 		static Type getClass(const std::string cls);
 
+		friend std::ostream& operator<<(std::ostream &o, const Type &type);
 		friend bool operator==(const Type &left, const Type &right);
 		operator bool();
 	};

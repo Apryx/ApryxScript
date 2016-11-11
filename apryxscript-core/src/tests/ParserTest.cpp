@@ -13,6 +13,8 @@
 
 #include "decorated_ast/ApryxClass.h"
 #include "decorated_ast/ApryxFunction.h"
+#include "ast2decorated_ast/ASTConverter.h"
+
 #include "decorated_ast/Type.h"
 #include <fstream>
 #include "xml/AST2XML.h"
@@ -274,6 +276,14 @@ namespace apryx {
 		auto s = parser.parseAll(lexer);
 
 		if (s) {
+			ASTConverter converter;
+			ApryxEnvironment env;
+
+			//LocalsTable table;
+
+			converter.process(s, env);
+			//converter.processSequencial(s, table);
+
 			LOG(s->toString());
 		}
 		else {

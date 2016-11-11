@@ -148,4 +148,9 @@ namespace apryx {
 
 		return false;
 	}
+
+	std::ostream& operator<<(std::ostream &o, const Type &type)
+	{
+		return o << type.getSignature();
+	}
 }

@@ -45,6 +45,7 @@ namespace apryx {
 
 		virtual std::string toString();
 		bool isValid() { return m_DeclaredType.size() > 0 || m_InitialValue != nullptr; }
+		bool hasDeclaredType() { return m_DeclaredType.size() > 0;}
 	};
 
 	class Block : public Statement {

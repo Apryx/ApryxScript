@@ -102,3 +102,11 @@ class User{
 function getComponent<T>() : T{
   return cmp.get(T.getClass())
 }
+
+//==============================================================================//
+// Automatic enforcers
+//==============================================================================//
+
+function doStuff(notnull a : ClassType){
+
+}
