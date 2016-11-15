@@ -62,37 +62,15 @@ while(e in eventHandlers)
 // Annotations
 //==============================================================================//
 
-annotation RequireLogin{
-
-  var userID : int
-
-  init(userID : int){
-    this.userID = userID
-  }
-
-  function preExecute() : bool{
-    if(loggedIn)
-      return true;
-
-    return false;
-  }
-  function postExecute() : void{
-    //Do nothing?
-  }
+//                            function<void>     ?
+function RequireLogin(fwd : (function() : void) ){
+  if(loggedIn)
+    fwd();
 }
 
-class User{
+@RequireLogin
+function getName(){
 
-  var userID : int
-
-  init(userID : int){
-    this.userID = userID
-  }
-
-  function login(){}
-
-  @RequireLogin(userID)
-  function getName(){}
 }
 
 //==============================================================================//
