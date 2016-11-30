@@ -8,16 +8,6 @@
 
 namespace apryx {
 
-	template <typename T>
-	static std::vector<std::shared_ptr<T>> filter(std::shared_ptr<Block> block) 
-	{
-		vector<T> r;
-		for (auto s : block->m_Statements)
-			if (auto filtered : std::dynamic_pointer_cast<T>(s))
-				r.push_back(filtered);
-		return std::move(r);
-	}
-
 	void ASTConverter::process(std::shared_ptr<Block> block, ApryxEnvironment & env)
 	{
 		std::vector<std::shared_ptr<Structure>> structures;
@@ -77,7 +67,7 @@ namespace apryx {
 					processSequencial(variable->m_InitialValue, table);
 
 					//Check if the new value is even valid
-					if (!(variable->m_InitialValue->m_Type)) {
+					if (!(variable->m_InitialValue->m_Decoration.m_Type)) {
 						LOG_ERROR("Unkown type for " << variable->m_Name);
 						continue;
 					}
@@ -89,13 +79,13 @@ namespace apryx {
 						if (!t)
 							LOG_ERROR("Incorrect type for variable");
 
-						if (!(*t == variable->m_InitialValue->m_Type)) {
+						if (!(*t == variable->m_InitialValue->m_Decoration.m_Type)) {
 							LOG_ERROR("Inconsistent variable types ");
 						}
 					}
 					
 					//Insert the variable, and check if it already exists
-					if (!table.setTypeOf(variable->m_Name, variable->m_InitialValue->m_Type)) {
+					if (!table.setTypeOf(variable->m_Name, variable->m_InitialValue->m_Decoration.m_Type)) {
 						LOG_ERROR("Duplicate variable " << variable->m_Name);
 					}
 				}
@@ -143,7 +133,7 @@ namespace apryx {
 			auto typeOpt = table.getTypeOf(identifierExpression->m_Identifier);
 
 			if (typeOpt) {
-				identifierExpression->m_Type = *typeOpt;
+				identifierExpression->m_Decoration.m_Type = *typeOpt;
 			}
 			else {
 				LOG_ERROR("Unkown type for identifier " << exp->toString());
@@ -183,7 +173,7 @@ namespace apryx {
 		//List of statements
 		std::vector<std::shared_ptr<Statement>> statements;
 
-		//Get the list of statements (either one, or a block
+		//Get the list of statements (either one, or a block)
 		{
 			auto block = std::dynamic_pointer_cast<Block>(structure->m_Statement);
 			if (block) {

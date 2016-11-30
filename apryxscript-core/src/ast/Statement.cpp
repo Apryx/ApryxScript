@@ -21,6 +21,11 @@ namespace apryx {
 		return stream.str();
 	}
 
+	void Variable::accept(StatementVisitor & exp)
+	{
+		exp.visit(*this);
+	}
+
 	
 	std::string Block::toString()
 	{
@@ -33,6 +38,10 @@ namespace apryx {
 
 		return stream.str();
 	}
+	void Block::accept(StatementVisitor & exp)
+	{
+		exp.visit(*this);
+	}
 	std::string ReturnStatement::toString()
 	{
 		std::stringstream stream;
@@ -42,6 +51,10 @@ namespace apryx {
 		stream << ";";
 
 		return stream.str();
+	}
+	void ReturnStatement::accept(StatementVisitor & exp)
+	{
+		exp.visit(*this);
 	}
 	std::string Function::toString()
 	{
@@ -56,6 +69,10 @@ namespace apryx {
 
 		return stream.str();
 	}
+	void Function::accept(StatementVisitor & exp)
+	{
+		exp.visit(*this);
+	}
 	std::string ExpressionStatement::toString()
 	{
 		std::stringstream stream;
@@ -64,6 +81,11 @@ namespace apryx {
 		stream << ";";
 
 		return stream.str();
+	}
+
+	void ExpressionStatement::accept(StatementVisitor & exp)
+	{
+		exp.visit(*this);
 	}
 
 	//LEGACY
@@ -103,5 +125,116 @@ namespace apryx {
 		stream << m_Statement->toString();
 
 		return stream.str();
+	}
+
+	void Structure::accept(StatementVisitor & exp)
+	{
+		exp.visit(*this);
+	}
+
+	std::string OperatorExpression::toString()
+	{
+		std::stringstream stream;
+
+		stream << "(";
+		stream << m_Lhs->toString();
+		stream << m_Operator;
+		stream << m_Rhs->toString();
+		stream << ")";
+
+		return stream.str();
+	}
+	void OperatorExpression::accept(StatementVisitor & exp)
+	{
+		exp.visit(*this);
+	}
+	std::string IdentiefierExpression::toString()
+	{
+		return m_Identifier;
+	}
+
+	void IdentiefierExpression::accept(StatementVisitor & exp)
+	{
+		exp.visit(*this);
+	}
+
+	std::string InvokeExpression::toString()
+	{
+
+		std::stringstream stream;
+
+		stream << "(";
+		stream << m_Lhs->toString();
+		stream << "(";
+		stream << (m_Args == nullptr ? "" : m_Args->toString());
+		stream << ")";
+		stream << ")";
+
+		return stream.str();
+	}
+	void InvokeExpression::accept(StatementVisitor & exp)
+	{
+		exp.visit(*this);
+	}
+	std::string ConstantExpression::toString()
+	{
+		if (m_Decoration.m_Type == Type::getString()) {
+			return "\"" + m_Constant + "\"";
+		}
+		else {
+			return m_Constant;
+		}
+	}
+	void ConstantExpression::accept(StatementVisitor & exp)
+	{
+		exp.visit(*this);
+	}
+	std::string LookupExpression::toString()
+	{
+		std::stringstream stream;
+
+		stream << "(";
+		stream << m_Lhs->toString();
+		stream << ".";
+		stream << m_Rhs->toString();
+		stream << ")";
+
+		return stream.str();
+	}
+	void LookupExpression::accept(StatementVisitor & exp)
+	{
+		exp.visit(*this);
+	}
+	std::string PrefixOperatorExpression::toString()
+	{
+		std::stringstream stream;
+
+		stream << "(";
+		stream << m_Operator;
+		stream << m_Rhs->toString();
+		stream << ")";
+
+		return stream.str();
+	}
+	void PrefixOperatorExpression::accept(StatementVisitor & exp)
+	{
+		exp.visit(*this);
+	}
+	std::string ListExpression::toString()
+	{
+		std::stringstream stream;
+
+		for (int i = 0; i < m_List.size(); i++) {
+			stream << m_List[i]->toString();
+
+			if (i != m_List.size() - 1)
+				stream << ",";
+		}
+
+		return stream.str();
+	}
+	void ListExpression::accept(StatementVisitor & exp)
+	{
+		exp.visit(*this);
 	}
 }

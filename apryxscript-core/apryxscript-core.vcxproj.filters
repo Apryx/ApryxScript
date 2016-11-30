@@ -87,6 +87,12 @@
     <ClInclude Include="src\xml\AST2XML.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\ast2decorated_ast\Decorator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\decorated_ast\Decoration.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -153,6 +159,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\xml\AST2XML.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ast2decorated_ast\Decorator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

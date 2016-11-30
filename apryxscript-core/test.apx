@@ -1,4 +1,8 @@
-class Vector2 {
-  var x : float
-  var y : float
+class Vector{
+	var x : float
+	var y : float
 }
+
+var a : float
+var b = a
+var c : Vector

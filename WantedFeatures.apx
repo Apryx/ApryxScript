@@ -90,6 +90,55 @@ function doStuff(notnull a : ClassType){
 }
 
 //==============================================================================//
+// Flow Control
+//==============================================================================//
+
+if a {
+
+}
+if(a){
+
+}
+else if b{
+
+}
+else{
+
+}
+
+switch a {
+  case 0,1,2,3,4  : print("Niet harry potter")
+  case 1          : print("Harry potter")
+  default         : print("No sir.")
+}
+
+//==============================================================================//
+// Cross Referencing
+//==============================================================================//
+
+//Normal cross referencing
+class Node{
+  var doc : Document
+}
+class Document{
+  var root : Node
+}
+
+//Agressive cross referencing
+class A {
+  static var instance = A()
+  static var p = B.p()
+}
+class B {
+  static function p() : A { return C().a }
+}
+class C {
+  var a = instance
+}
+
+
+
+//==============================================================================//
 // April fools
 //==============================================================================//
 

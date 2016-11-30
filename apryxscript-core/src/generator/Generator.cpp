@@ -63,7 +63,7 @@ namespace apryx {
 
 	void ExpressionGenerator::visit(const ConstantExpression & exp)
 	{
-		if (exp.m_Type == Type::getInt()) {
+		if (exp.m_Decoration.m_Type == Type::getInt()) {
 			int i = std::stoi(exp.m_Constant);
 
 			if (std::abs(i) <= 127)

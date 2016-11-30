@@ -665,6 +665,7 @@ namespace apryx {
 
 	const std::vector<std::pair<Token::Type, std::string>> keywordTypes = {
 		{ Token::Type::KEYWORD_CLASS, "class" },
+		{ Token::Type::KEYWORD_FUNCTION, "func" }, //function renamed to func because shorter programs are better :)
 		{ Token::Type::KEYWORD_FUNCTION, "function" },
 		{ Token::Type::KEYWORD_STRUCT, "struct" },
 		{ Token::Type::KEYWORD_VARIABLE, "var" },

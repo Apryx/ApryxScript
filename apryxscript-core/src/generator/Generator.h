@@ -6,7 +6,7 @@
 
 namespace apryx {
 
-	class ExpressionGenerator : public ExpressionVisitor {
+	class ExpressionGenerator : public StatementVisitor {
 	private:
 		std::shared_ptr<Context> m_Context;
 		VMWriter m_Writer;

@@ -21,6 +21,7 @@ int main(void)
 	apryx::testLexer();
 	apryx::testParser();
 	*/
+
 	apryx::testFile();
 
 	WAIT();
