@@ -87,6 +87,15 @@
     <ClInclude Include="src\decorated_ast\ApryxNamespace.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\decorated_ast\ApryxVariable.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\decorated_ast\AccessModifier.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\decorated_ast\ApryxFunction.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
