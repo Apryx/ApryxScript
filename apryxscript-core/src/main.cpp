@@ -15,14 +15,14 @@ int main(void)
 {
 	/*
 	apryx::testTypes();
-	apryx::testDecoratedAST();
 	apryx::testParserToDecoratedAST();
 	apryx::testModifiers();
 	apryx::testLexer();
 	apryx::testParser();
+	apryx::testFile();
 	*/
 
-	apryx::testFile();
+	apryx::testDecoratedAST();
 
 	WAIT();
 	return 0;

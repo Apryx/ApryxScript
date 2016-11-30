@@ -7,7 +7,7 @@
 
 namespace apryx { 
 
-	class Decorator : public StatementVisitor {
+	class SemanticChecker : public StatementVisitor {
 
 		//Semantic checker
 		//
@@ -35,7 +35,7 @@ namespace apryx {
 
 		int steps = 0;
 	private:
-		virtual void visit(const Function &exp) override {};
+		virtual void visit(const Function &exp) override;
 		virtual void visit(const Variable &exp) override;
 		virtual void visit(const Block &exp) override;
 		virtual void visit(const Structure &exp) override {};

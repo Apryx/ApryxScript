@@ -5,7 +5,7 @@
 
 namespace apryx {
 
-	void Decorator::next()
+	void SemanticChecker::next()
 	{
 		if (!hasNext())
 			return;
@@ -22,22 +22,27 @@ namespace apryx {
 
 	}
 
-	void Decorator::insert(std::shared_ptr<Statement> statement)
+	void SemanticChecker::insert(std::shared_ptr<Statement> statement)
 	{
 		m_Statements.push(statement);
 	}
 	
-	bool Decorator::hasNext()
+	bool SemanticChecker::hasNext()
 	{
 		return m_Statements.size() > 0;
 	}
 
-	void Decorator::visit(const Variable & exp)
+	void SemanticChecker::visit(const Function & exp)
 	{
 
 	}
 
-	void Decorator::visit(const Block & exp)
+	void SemanticChecker::visit(const Variable & exp)
+	{
+
+	}
+
+	void SemanticChecker::visit(const Block & exp)
 	{
 		for (auto& e : exp.m_Statements)
 		{

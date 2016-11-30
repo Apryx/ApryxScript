@@ -11,15 +11,14 @@
 
 #include "generator/Generator.h"
 
-#include "decorated_ast/ApryxClass.h"
-#include "decorated_ast/ApryxFunction.h"
-#include "ast2decorated_ast/ASTConverter.h"
 #include "ast2decorated_ast/Decorator.h"
 
 #include "decorated_ast/Type.h"
 #include <fstream>
 #include "xml/AST2XML.h"
 #include "vm/ScriptVM.h"
+
+#include "decorated_ast/ApryxNamespace.h"
 
 namespace apryx {
 
@@ -211,48 +210,17 @@ namespace apryx {
 
 	void testDecoratedAST()
 	{
-		LOG("AST test start...");
-
-		ApryxEnvironment global;
-
-		assert(global.addField("someField", Type::getInt()));
-		assert(global.addField("otherField", Type::getFloat()));
-
-		auto out = global.getFieldType("someField");
-		assert(out);
-		assert(out == Type::getInt());
-
-		out = global.getFieldType("otherField");
-		assert(out);
-		assert(out == Type::getFloat());
-
-		assert(global.validate());
-
-		ApryxFunction function(Type::getVoid(), {
-			{ "hi", Type::getInt() },
-			{ "pizza", Type::getFloat() }
-		});
-
-		assert(function.getArgumentCount() == 2);
-
-		assert(function.getReturnType() == Type::getVoid());
-		assert(function.getArgumentType(0) == Type::getInt());
-		assert(function.getArgumentType(1) == Type::getFloat());
-
-		assert(function.getArgumentName(0) == "hi");
-		assert(function.getArgumentName(1) == "pizza");
-
-		assert(function.getArgumentByName("hi") == 0);
-		assert(function.getArgumentByName("pizza") == 1);
-
-		assert(function.validate());
-
-		LOG("Test done!");
+		LOG("TODO");
 	}
 
 	void testParserToDecoratedAST()
 	{
+		ApryxNamespace root("console");
 
+		root.addVariable({ "harrypottervar", Type::getInt() });
+		root.addVariable({ "rolandpottervar", Type::getInt() });
+	
+		
 	}
 
 	void testModifiers()
@@ -285,7 +253,7 @@ namespace apryx {
 			//converter.process(s, env);
 			//converter.processSequencial(s, table);
 
-			Decorator decorator;
+			SemanticChecker decorator;
 			decorator.insert(s);
 
 			while(decorator.hasNext())

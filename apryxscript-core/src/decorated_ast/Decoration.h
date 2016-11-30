@@ -1,11 +1,13 @@
 #pragma once
 
 #include "Type.h"
-#include "Scope.h"
+#include "ApryxNamespace.h"
 
 namespace apryx {
 	struct Decoration {
-		Type m_Type;
-		Scope *m_Scope;
+		Type m_Type;				//The type
+
+		ApryxNamespace *m_Scope;	//Scope it belongs to
+		bool m_Static;				//For example in class scopes, this would be false
 	};
 }

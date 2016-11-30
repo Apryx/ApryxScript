@@ -215,6 +215,8 @@ namespace apryx {
 		return nullptr;
 	}
 
+	//TODO return just a vector of Statements, because of 
+	//anonymouse scoping fucking with basically everything
 	std::shared_ptr<Block> Parser::parseAll(Lexer & lexer)
 	{
 		auto block = std::make_shared<Block>();

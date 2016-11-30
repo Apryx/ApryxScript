@@ -121,14 +121,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="src\ast2decorated_ast\ASTConverter.h" />
     <ClInclude Include="src\ast2decorated_ast\Decorator.h" />
-    <ClInclude Include="src\decorated_ast\ApryxClass.h" />
     <ClInclude Include="src\ast\Expression.h" />
     <ClInclude Include="src\ast\Statement.h" />
     <ClInclude Include="src\debug\Debug.h" />
-    <ClInclude Include="src\decorated_ast\ApryxFunction.h" />
     <ClInclude Include="src\decorated_ast\Decoration.h" />
+    <ClInclude Include="src\decorated_ast\ApryxNamespace.h" />
     <ClInclude Include="src\generator\Generator.h" />
     <ClInclude Include="src\language\Language.h" />
     <ClInclude Include="src\lexer\Characters.h" />
@@ -149,12 +147,10 @@
     <ClInclude Include="src\xml\AST2XML.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\ast2decorated_ast\ASTConverter.cpp" />
     <ClCompile Include="src\ast2decorated_ast\Decorator.cpp" />
-    <ClCompile Include="src\decorated_ast\ApryxClass.cpp" />
     <ClCompile Include="src\ast\Expression.cpp" />
     <ClCompile Include="src\ast\Statement.cpp" />
-    <ClCompile Include="src\decorated_ast\ApryxFunction.cpp" />
+    <ClCompile Include="src\decorated_ast\ApryxNamespace.cpp" />
     <ClCompile Include="src\generator\Generator.cpp" />
     <ClCompile Include="src\language\Language.cpp" />
     <ClCompile Include="src\lexer\Characters.cpp" />
