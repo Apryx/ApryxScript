@@ -235,9 +235,9 @@ namespace apryx {
 		LOG("Test done!"); 
 	}
 
-	void testFile()
+	void testFile(const std::string &filename)
 	{
-		Lexer lexer(std::make_shared<std::ifstream>("test.apx"));
+		Lexer lexer(std::make_shared<std::ifstream>(filename));
 		lexer.next();
 
 		Parser parser;

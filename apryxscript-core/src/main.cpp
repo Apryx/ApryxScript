@@ -19,10 +19,9 @@ int main(void)
 	apryx::testModifiers();
 	apryx::testLexer();
 	apryx::testParser();
-	apryx::testFile();
 	*/
 
-	apryx::testDecoratedAST();
+	apryx::testFile("test.apx");
 
 	WAIT();
 	return 0;

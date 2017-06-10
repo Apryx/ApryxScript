@@ -44,6 +44,7 @@ namespace apryx {
 
 		static Type getInt();
 		static Type getFloat();
+		static Type getDouble();
 		static Type getString();
 		static Type getVoid();
 		static Type getClass(const std::string cls);

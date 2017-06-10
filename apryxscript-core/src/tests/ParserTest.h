@@ -1,5 +1,7 @@
 #pragma once
 
+#include <string>
+
 namespace apryx {
 	void testLexer();
 	void testParser();
@@ -14,5 +16,5 @@ namespace apryx {
 
 	void testModifiers();
 
-	void testFile();
+	void testFile(const std::string &filename);
 }

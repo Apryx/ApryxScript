@@ -470,6 +470,13 @@ namespace apryx {
 			lexer.next();
 			return exp;
 		}
+		if (lexer.current().m_Type == Token::DOUBLE) {
+			auto exp = std::make_shared<ConstantExpression>(lexer.current().m_Data);
+			exp->m_Token = lexer.current();
+			exp->m_Decoration.m_Type = Type::getDouble();
+			lexer.next();
+			return exp;
+		}
 		if (lexer.current().m_Type == Token::STRING) {
 			auto exp = std::make_shared<ConstantExpression>(lexer.current().m_Data);
 			exp->m_Token = lexer.current();

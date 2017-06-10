@@ -98,6 +98,15 @@ namespace apryx {
 		return type;
 	}
 
+	Type Type::getDouble()
+	{
+		Type type;
+		type.m_Type = BUILD_IN;
+
+		type.m_Name = "D";
+		return type;
+	}
+
 	Type Type::getString()
 	{
 		Type type;

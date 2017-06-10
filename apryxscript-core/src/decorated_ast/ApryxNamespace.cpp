@@ -31,7 +31,7 @@ namespace apryx {
 
 	bool ApryxNamespace::addVariable(ApryxVariable variable)
 	{
-
+		return false;
 	}
 
 	std::vector<ApryxVariable> ApryxNamespace::getVariablesByName(const std::string & name, bool searchParent)
