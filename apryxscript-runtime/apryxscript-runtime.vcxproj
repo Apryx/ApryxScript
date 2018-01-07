@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -19,8 +19,9 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{01B0FEFE-883A-4756-AFE2-08B656DEAC0A}</ProjectGuid>
-    <RootNamespace>apryxscriptcore</RootNamespace>
+    <VCProjectVersion>15.0</VCProjectVersion>
+    <ProjectGuid>{B3F6A185-916D-46AE-81B3-BBE3FEBB75A8}</ProjectGuid>
+    <RootNamespace>apryxscriptruntime</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -68,30 +69,23 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)src;$(SolutionDir)Dependencies\boost</IncludePath>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)src;$(SolutionDir)Dependencies\boost</IncludePath>
-  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)src;$(SolutionDir)Dependencies\boost</IncludePath>
+    <IncludePath>$(ProjectDir)src;$(IncludePath)</IncludePath>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)src;$(SolutionDir)Dependencies\boost</IncludePath>
-  </PropertyGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
-      <Optimization>Disabled</Optimization>
-      <SDLCheck>true</SDLCheck>
-    </ClCompile>
-  </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -101,6 +95,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -114,6 +109,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -121,59 +117,24 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="src\ast2decorated_ast\Decorator.h" />
-    <ClInclude Include="src\ast\Expression.h" />
-    <ClInclude Include="src\ast\Statement.h" />
-    <ClInclude Include="src\debug\Debug.h" />
-    <ClInclude Include="src\decorated_ast\AccessModifier.h" />
-    <ClInclude Include="src\decorated_ast\ApryxFunction.h" />
-    <ClInclude Include="src\decorated_ast\ApryxVariable.h" />
-    <ClInclude Include="src\decorated_ast\Decoration.h" />
-    <ClInclude Include="src\decorated_ast\ApryxNamespace.h" />
-    <ClInclude Include="src\generator\Generator.h" />
-    <ClInclude Include="src\language\Language.h" />
-    <ClInclude Include="src\lexer\Characters.h" />
-    <ClInclude Include="src\lexer\Lexer.h" />
-    <ClInclude Include="src\logger\log.h" />
-    <ClInclude Include="src\parser\Parser.h" />
-    <ClInclude Include="src\decorated_ast\Type.h" />
-    <ClInclude Include="src\tests\BytecodeTest.h" />
-    <ClInclude Include="src\tests\ParserTest.h" />
-    <ClInclude Include="src\vm\ScriptVM.h" />
-    <ClInclude Include="src\vm\VMFrame.h" />
-    <ClInclude Include="src\vm\VMFunction.h" />
-    <ClInclude Include="src\vm\VMObject.h" />
-    <ClInclude Include="src\vm\VMResources.h" />
-    <ClInclude Include="src\vm\VMTypes.h" />
-    <ClInclude Include="src\vm\VMValue.h" />
-    <ClInclude Include="src\vm\VMWriter.h" />
-    <ClInclude Include="src\xml\AST2XML.h" />
+    <ClCompile Include="src\memory\Class.cpp" />
+    <ClCompile Include="src\memory\Field.cpp" />
+    <ClCompile Include="src\memory\Function.cpp" />
+    <ClCompile Include="src\memory\Type.cpp" />
+    <ClCompile Include="src\runtimemain.cpp" />
+    <ClCompile Include="src\runtime\ByteReader.cpp" />
+    <ClCompile Include="src\runtime\ByteStack.cpp" />
+    <ClCompile Include="src\runtime\Runtime.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\ast2decorated_ast\Decorator.cpp" />
-    <ClCompile Include="src\ast\Expression.cpp" />
-    <ClCompile Include="src\ast\Statement.cpp" />
-    <ClCompile Include="src\decorated_ast\ApryxNamespace.cpp" />
-    <ClCompile Include="src\generator\Generator.cpp" />
-    <ClCompile Include="src\language\Language.cpp" />
-    <ClCompile Include="src\lexer\Characters.cpp" />
-    <ClCompile Include="src\lexer\Lexer.cpp" />
-    <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\parser\Parser.cpp" />
-    <ClCompile Include="src\decorated_ast\Type.cpp" />
-    <ClCompile Include="src\tests\BytecodeTest.cpp" />
-    <ClCompile Include="src\tests\ParserTest.cpp" />
-    <ClCompile Include="src\vm\ScriptVM.cpp" />
-    <ClCompile Include="src\vm\VMFrame.cpp" />
-    <ClCompile Include="src\vm\VMFunction.cpp" />
-    <ClCompile Include="src\vm\VMObject.cpp" />
-    <ClCompile Include="src\vm\VMResources.cpp" />
-    <ClCompile Include="src\vm\VMTypes.cpp" />
-    <ClCompile Include="src\vm\VMValue.cpp" />
-    <ClCompile Include="src\xml\AST2XML.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="test.apx" />
+    <ClInclude Include="src\bytecode\ByteCode.h" />
+    <ClInclude Include="src\memory\Class.h" />
+    <ClInclude Include="src\memory\Field.h" />
+    <ClInclude Include="src\memory\Type.h" />
+    <ClInclude Include="src\memory\Function.h" />
+    <ClInclude Include="src\runtime\ByteReader.h" />
+    <ClInclude Include="src\runtime\ByteStack.h" />
+    <ClInclude Include="src\runtime\Runtime.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

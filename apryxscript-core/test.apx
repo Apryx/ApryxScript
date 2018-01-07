@@ -1,5 +1,4 @@
 
 function main(){
-	var a = 0
-	var b = 1d
-}
+	return 0;
+	}
