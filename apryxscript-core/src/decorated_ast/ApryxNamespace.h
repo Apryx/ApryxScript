@@ -1,40 +1,21 @@
 #pragma once
 
 #include <vector>
-
-#include "Type.h"
-#include "ApryxVariable.h"
+#include <memory>
+#include <string>
 
 namespace apryx {
 
-	enum class ApryxNamespaceType {
-		PACKAGE,
-		CLASS,
-		FUNCTION
-	};
+	class ApryxFunction;
+	class ApryxType;
 
-	class ApryxNamespace{
-		std::vector<ApryxNamespace> m_ChildScopes;
+	class ApryxNamespace {
+	public:
+		ApryxNamespace* m_Parent;
 
-		std::vector<ApryxVariable> m_Variables;
-	
 		std::string m_Name;
 
-		ApryxNamespace *m_Parent;
-		ApryxNamespaceType m_Type;
-
-		int m_AnonymouseScopeCount = 0;
-	public:
-		ApryxNamespace(std::string name) : m_Name(std::move(name)) {};
-
-		ApryxNamespace *createAnonymouseNamespace();
-		ApryxNamespace *createNamespace(std::string name);
-
-		bool addVariable(ApryxVariable variable);
-		std::vector<ApryxVariable> getVariablesByName(const std::string &name, bool searchParent = true);
-
-	
-		void setParent(ApryxNamespace *nmsp) { m_Parent = nmsp; };
+		std::vector<std::shared_ptr<ApryxFunction>> m_Functions;
+		std::vector<std::shared_ptr<ApryxType>> m_Types;
 	};
-
 }

@@ -5,48 +5,36 @@
 
 namespace apryx {
 
-	void SemanticChecker::next()
+	std::shared_ptr<ApryxNamespace> Decorator::decorate(std::shared_ptr<CompilationUnit> unit)
 	{
-		if (!hasNext())
-			return;
+		// There should be a root namespace
+		auto nms = std::make_shared<ApryxNamespace>();
 
-		steps++;
+		// TODO add the builtin types (other module)
 
-		//First try to process the statements
-		if (m_Statements.size() > 0) {
-			auto p = m_Statements.front();
-			m_Statements.pop();
+		for (auto statement : unit->m_Statements) {
+			if (auto stStatement = std::dynamic_pointer_cast<StructureStatement>(statement)) {
 
-			p->accept(*this);
+				auto type = std::make_shared<ApryxType>();
+
+				// Double name yay
+				// TODO extract the name and other properties from the name
+				type->m_Name = stStatement->m_Name->m_Name;
+
+				nms->m_Types.push_back(type);
+			}
 		}
+		
+		// Functions second
+		for (auto statement : unit->m_Statements) {
+			if (auto fnStatement = std::dynamic_pointer_cast<FunctionStatement>(statement)) {
+				
+				auto fn = std::make_shared<ApryxFunction>();
 
-	}
+				fn->m_Name = fnStatement->m_Name;
 
-	void SemanticChecker::insert(std::shared_ptr<Statement> statement)
-	{
-		m_Statements.push(statement);
-	}
-	
-	bool SemanticChecker::hasNext()
-	{
-		return m_Statements.size() > 0;
-	}
-
-	void SemanticChecker::visit(const FunctionStatement & exp)
-	{
-
-	}
-
-	void SemanticChecker::visit(const VariableStatement & exp)
-	{
-
-	}
-
-	void SemanticChecker::visit(const BlockStatement & exp)
-	{
-		for (auto& e : exp.m_Statements)
-		{
-			insert(e);
+				nms->m_Functions.push_back(fn);
+			}
 		}
 	}
 

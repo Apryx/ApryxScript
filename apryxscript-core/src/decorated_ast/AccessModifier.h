@@ -3,9 +3,9 @@
 namespace apryx {
 
 	enum class AccessModifier {
-		PROTECTED,
+		PUBLIC,
 		PRIVATE,
-		PUBLIC
+		PROTECTED
 	};
 
 }

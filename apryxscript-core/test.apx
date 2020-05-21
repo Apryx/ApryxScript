@@ -1,19 +1,5 @@
-include "hans.apx";
-
-namespace JustF;
-
-struct Hans {
-	var a : float
-	var b : float
-}
-
-struct Frank {
-	var h : Hans
-}
+extern function println(line : string);
 
 function main(){
-	var f = Frank();
-	var s = 1;
-
-	return 0;
+	println("Hello World")	
 }

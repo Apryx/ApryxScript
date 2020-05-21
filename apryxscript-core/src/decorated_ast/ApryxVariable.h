@@ -1,16 +1,16 @@
 #pragma once
 
-#include "AccessModifier.h"
-#include "Type.h"
+#include <string>
+#include <memory>
+
+#include "ApryxType.h"
 
 namespace apryx {
 
-	struct ApryxVariable {
+	class ApryxVariable {
 		std::string m_Name;
-		Type m_Type;
 
-		AccessModifier m_Access;
-		bool m_Static;
+		std::shared_ptr<ApryxType> m_Type;
 	};
 
 }
