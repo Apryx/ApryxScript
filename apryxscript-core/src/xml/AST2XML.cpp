@@ -27,9 +27,10 @@ namespace apryx {
 	{
 		std::stringstream stream;
 
-		if (auto variable = dynamic_cast<Variable*>(statement)) {
+		if (auto variable = dynamic_cast<VariableStatement*>(statement)) {
 			open(stream, "variable", {
-				{"name", variable->m_Name},{"declaredType", variable->m_DeclaredType}
+				// TODO fix the new XML output here
+				//{"name", variable->m_Name},{"declaredType", variable->m_DeclaredType}
 			});
 
 			if (variable->m_InitialValue) {
@@ -38,9 +39,10 @@ namespace apryx {
 
 			close(stream, "variable");
 		}
-		else if (auto function = dynamic_cast<Function*>(statement)) {
+		else if (auto function = dynamic_cast<FunctionStatement*>(statement)) {
 			open(stream, "function", {
-				{ "name", function->m_Name },{ "returnType", function->m_DeclaredReturnType }
+				// TODO fix the actual XML output here
+				//{ "name", function->m_Name },{ "returnType", function->m_DeclaredReturnType }
 			});
 
 			if (function->m_Statement) {
@@ -49,9 +51,9 @@ namespace apryx {
 
 			close(stream, "function");
 		}
-		else if (auto structure = dynamic_cast<Structure*>(statement)) {
+		else if (auto structure = dynamic_cast<StructureStatement*>(statement)) {
 			open(stream, "structure", {
-				{ "name", structure->m_Name },{ "extends", structure->m_Parent }
+				//{ "name", structure->m_Name },{ "extends", structure->m_Parent }
 			});
 
 			if (structure->m_Statement) {
@@ -60,7 +62,7 @@ namespace apryx {
 
 			close(stream, "structure");
 		}
-		else if (auto block = dynamic_cast<Block*>(statement)) {
+		else if (auto block = dynamic_cast<BlockStatement*>(statement)) {
 			stream << convertToXML(block);
 		}
 
@@ -80,7 +82,7 @@ namespace apryx {
 		return stream.str();
 	}
 
-	std::string convertToXML(Block *block)
+	std::string convertToXML(BlockStatement *block)
 	{
 		std::stringstream stream;
 
@@ -99,10 +101,10 @@ namespace apryx {
 	{
 		std::stringstream stream;
 
-		if (auto constantExpression = dynamic_cast<ConstantExpression*>(expression)) {
+		if (auto constantExpression = dynamic_cast<LiteralExpression*>(expression)) {
 			open(stream, "constant", {});
 
-			stream << constantExpression->m_Constant;
+			stream << constantExpression->m_Value;
 
 			close(stream, "constant");
 		}

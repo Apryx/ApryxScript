@@ -12,12 +12,12 @@ namespace apryx {
 	class Class {
 		std::string m_Name;
 		std::vector<Field> m_Fields;
-		std::vector<Function> m_Functions;
+		std::vector<FunctionStatement> m_Functions;
 	public:
-		Class(std::string name, std::vector<Field> fields, std::vector<Function> functions);
+		Class(std::string name, std::vector<Field> fields, std::vector<FunctionStatement> functions);
 
 		int getFunctionIndexBySignature(const std::string &name);
-		Function &getFunction(int index);
+		FunctionStatement &getFunction(int index);
 		
 		int getFieldIndex(const std::string &name);
 		Field &getField(int index);

@@ -16,7 +16,7 @@ int main()
 {
 	using namespace apryx;
 
-	Function mainFunction = Function(
+	FunctionStatement mainFunction = FunctionStatement(
 		"main",
 		Type(Type::Int),
 		std::vector<Field>(),

@@ -33,7 +33,7 @@ namespace apryx {
 		return -1;
 	}
 
-	size_t Runtime::execute(const Function & function)
+	size_t Runtime::execute(const FunctionStatement & function)
 	{
 		ByteReader reader = ByteReader(function.code());
 
@@ -133,7 +133,7 @@ namespace apryx {
 		if (functionIndex < 0)
 			return;
 
-		Function &function = cls.getFunction(functionIndex);
+		FunctionStatement &function = cls.getFunction(functionIndex);
 
 		execute(function);
 	}

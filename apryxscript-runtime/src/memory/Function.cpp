@@ -3,11 +3,11 @@
 #include <sstream>
 
 namespace apryx{
-	Function::Function(std::string name, Type returnType, std::vector<Field> parameters, ByteSequence code)
+	FunctionStatement::FunctionStatement(std::string name, Type returnType, std::vector<Field> parameters, ByteSequence code)
 		:m_Name(name), m_ReturnType(returnType), m_Parameters(parameters), m_Code(code)
 	{ }
 
-	std::string Function::signature() const
+	std::string FunctionStatement::signature() const
 	{
 		std::stringstream string;
 

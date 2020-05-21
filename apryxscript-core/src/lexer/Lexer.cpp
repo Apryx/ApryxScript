@@ -474,6 +474,9 @@ namespace apryx {
 		case Token::MODIFIER_STATIC:
 			o << "MODIFIER_STATIC";
 			break;
+		case Token::MODIFIER_EXTERN:
+			o << "MODIFIER_EXTERN";
+			break;
 
 		case Token::KEYWORD_IN:
 			o << "OPERATOR_KEYWORD";
@@ -499,6 +502,12 @@ namespace apryx {
 			break;
 		case Token::KEYWORD_EXTENDS:
 			o << "KEYWORD_EXTENDS";
+			break;
+		case Token::KEYWORD_NAMESPACE:
+			o << "KEYWORD_NAMESPACE";
+			break;
+		case Token::KEYWORD_INCLUDE:
+			o << "KEYWORD_INCLUDE";
 			break;
 
 		case Token::STRING:
@@ -680,6 +689,9 @@ namespace apryx {
 		{ Token::Type::KEYWORD_RETURN, "return" },
 
 		{ Token::Type::KEYWORD_EXTENDS, "extends" },
+
+		{ Token::Type::KEYWORD_INCLUDE, "include" },
+		{ Token::Type::KEYWORD_NAMESPACE, "namespace" },
 	};
 
 	const std::vector<std::pair<Token::Type, std::string>> modifierTypes = {
@@ -688,6 +700,7 @@ namespace apryx {
 		{ Token::Type::MODIFIER_PRIVATE, "private" },
 		{ Token::Type::MODIFIER_STATIC, "static" },
 		{ Token::Type::MODIFIER_LOCAL, "local" },
+		{ Token::Type::MODIFIER_EXTERN, "extern" },
 	};
 
 	const std::vector<std::pair<Token::Type, std::string>> keywordOperatorTypes = {

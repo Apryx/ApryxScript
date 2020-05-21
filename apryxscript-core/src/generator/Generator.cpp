@@ -61,10 +61,10 @@ namespace apryx {
 		m_Writer.getfield(exp.m_Identifier);
 	}
 
-	void ExpressionGenerator::visit(const ConstantExpression & exp)
+	void ExpressionGenerator::visit(const LiteralExpression & exp)
 	{
-		if (exp.m_Decoration.m_Type == Type::getInt()) {
-			int i = std::stoi(exp.m_Constant);
+		if (exp.m_Type == LiteralExpression::INTEGER) {
+			int i = std::stoi(exp.m_Value);
 
 			if (std::abs(i) <= 127)
 				m_Writer.push((byte_t)i);
@@ -73,5 +73,33 @@ namespace apryx {
 			else
 				m_Writer.push(i);
 		}
+	}
+
+
+	//LEGACY
+	std::string Context::toString()
+	{
+		return std::string();
+	}
+
+	void Context::performOperator(VMWriter &vmw, const std::string & op)
+	{
+		if (op == "+") {
+			vmw.fadd();
+		}
+		else if (op == "-") {
+			vmw.fsub();
+		}
+		else if (op == "*") {
+			vmw.fmul();
+		}
+		else if (op == "/") {
+			vmw.fdiv();
+		}
+	}
+
+	void Context::performPrefixOperator(VMWriter &vmw, const std::string & op)
+	{
+
 	}
 }

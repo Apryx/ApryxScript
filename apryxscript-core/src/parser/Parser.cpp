@@ -9,13 +9,13 @@
 
 namespace apryx {
 
-	std::shared_ptr<Function> Parser::parseFunction(Lexer & lexer, std::vector<Token> modifiers)
+	std::shared_ptr<FunctionStatement> Parser::parseFunction(Lexer & lexer, std::vector<Token> modifiers)
 	{
 		if (lexer.current().m_Type != Token::KEYWORD_FUNCTION) {
 			unexpectedToken(lexer, Token::KEYWORD_FUNCTION);
 			return nullptr;
 		}
-		auto function = std::make_shared<Function>();
+		auto function = std::make_shared<FunctionStatement>();
 
 		if (lexer.next().m_Type != Token::IDENTIFIER){
 			unexpectedToken(lexer, Token::IDENTIFIER);
@@ -24,16 +24,26 @@ namespace apryx {
 
 		function->m_Name = lexer.current().m_Data;
 
-		if (lexer.next().m_Type != Token::OPEN_BRACKET) {
+		lexer.next();
+
+		if (lexer.current().m_Type != Token::OPEN_BRACKET) {
 			unexpectedToken(lexer, Token::OPEN_BRACKET);
 			return nullptr;
 		}
 
-		if (lexer.next().m_Type != Token::CLOSE_BRACKET) {
-			function->m_Arguments = parseExpression(lexer);
-			if (lexer.current().m_Type != Token::CLOSE_BRACKET) {
-				unexpectedToken(lexer, Token::CLOSE_BRACKET);
-				return nullptr;
+		// Consume open bracket
+		lexer.next();
+
+		while(lexer.current().m_Type != Token::CLOSE_BRACKET && lexer.current().m_Type == Token::END) {
+			auto param = parseNameAndType(lexer);
+
+			if (param != nullptr) {
+				function->m_Parameters.push_back(param);
+			}
+
+			// Consume the seperator
+			if (lexer.current().m_Type == Token::SEPERATOR) {
+				lexer.next();
 			}
 		}
 
@@ -43,15 +53,8 @@ namespace apryx {
 		if (lexer.current().m_Type == Token::COLON) {
 			//Consume the :
 			lexer.next();
-			if (auto s = parseType(lexer)) {
-				function->m_DeclaredReturnType = *s;
-			} else {
-				unexpectedToken(lexer);
-				return nullptr;
-			}
-		}
-		else {
-			function->m_DeclaredReturnType = "void";
+
+			function->m_ReturnType = parseNamedType(lexer);
 		}
 
 		function->m_Statement = parseStatement(lexer);
@@ -59,80 +62,104 @@ namespace apryx {
 		return function;
 	}
 
-	std::shared_ptr<Variable> Parser::parseVariable(Lexer & lexer, std::vector<Token> modifiers)
+	std::shared_ptr<VariableStatement> Parser::parseVariable(Lexer & lexer, std::vector<Token> modifiers)
 	{
 		if (lexer.current().m_Type != Token::KEYWORD_VARIABLE) {
 			unexpectedToken(lexer);
 			return nullptr;
 		}
-		auto var = std::make_shared<Variable>();
+		auto var = std::make_shared<VariableStatement>();
 
 		if (lexer.next().m_Type != Token::IDENTIFIER) {
 			unexpectedToken(lexer, Token::IDENTIFIER);
 			return nullptr;
 		}
 
-		var->m_Name = lexer.current().m_Data;
-
-		lexer.next();
-		if (lexer.current().m_Type == Token::COLON) {
-			lexer.next();
-			if (auto s = parseType(lexer)) {
-				var->m_DeclaredType = *s;
-			} else {
-				unexpectedToken(lexer);
-				return nullptr;
-			}
-		}
+		var->m_NameAndType = parseNameAndType(lexer);
 		
 		if (lexer.current().m_Type == Token::OPERATOR_EQUALS) {
 			lexer.next();
 			var->m_InitialValue = parseExpression(lexer);
 		}
 
-		if(!var->isValid()){
-			unexpectedToken(lexer);
-			lexer.next();
-			return nullptr;
-		}
-
 		return var;
 	}
 
-	std::shared_ptr<Structure> Parser::parseStructure(Lexer & lexer, std::vector<Token> modifiers)
+	std::shared_ptr<StructureStatement> Parser::parseStructure(Lexer & lexer, std::vector<Token> modifiers)
 	{
 		if (lexer.current().m_Type != Token::KEYWORD_CLASS && lexer.current().m_Type != Token::KEYWORD_STRUCT) {
 			unexpectedToken(lexer);
 			return nullptr;
 		}
 
-		auto cls = std::make_shared<Structure>();
+		auto cls = std::make_shared<StructureStatement>();
 
-		if (lexer.next().m_Type != Token::IDENTIFIER) {
+		cls->m_Type = lexer.current().m_Type == Token::KEYWORD_CLASS? 
+			StructureStatement::REFERENCE : StructureStatement::VALUE;
+
+		// Consume the keyword
+		lexer.next();
+
+		if (lexer.current().m_Type != Token::IDENTIFIER) {
 			unexpectedToken(lexer, Token::IDENTIFIER);
 			return nullptr;
 		}
-		cls->m_Name = lexer.current().m_Data;
+
+		cls->m_Name = parseNamedType(lexer);
 
 		//base class
-		if (lexer.next().m_Type == Token::KEYWORD_EXTENDS) {
+		if (lexer.current().m_Type == Token::KEYWORD_EXTENDS) {
 			lexer.next();
-			auto a = parseType(lexer);
-			if (!a) {
-				unexpectedToken(lexer, Token::IDENTIFIER);
-				return nullptr;
-			}
-			else {
-				cls->m_Parent = *a;
-			}
+
+			cls->m_Parent = parseNamedType(lexer);
 		}
-		else {
-			cls->m_Parent = "Object";
-		}
+
+		auto c = lexer.current();
 
 		cls->m_Statement = parseStatement(lexer);
 
 		return cls;
+	}
+
+	std::shared_ptr<NamespaceStatement> Parser::parseNamespace(Lexer & lexer)
+	{
+		if (lexer.current().m_Type != Token::KEYWORD_NAMESPACE) {
+			unexpectedToken(lexer);
+			return nullptr;
+		}
+
+		auto nsm = std::make_shared<NamespaceStatement>();
+
+		// Consume the namespace token
+		lexer.next();
+
+		nsm->m_Name = parseNamedType(lexer);
+
+		return nsm;
+	}
+
+	std::shared_ptr<IncludeStatement> Parser::parseInclude(Lexer & lexer)
+	{
+		if (lexer.current().m_Type != Token::KEYWORD_INCLUDE) {
+			unexpectedToken(lexer);
+			return nullptr;
+		}
+
+		// Consume the keyword
+		lexer.next();
+
+		if (lexer.current().m_Type != Token::STRING) {
+			unexpectedToken(lexer);
+			return nullptr;
+		}
+
+		auto include = std::make_shared<IncludeStatement>();
+
+		include->m_File = lexer.current().m_Data;
+
+		lexer.next();
+
+		return include;
 	}
 
 	void Parser::unexpectedToken(Lexer & lexer, Token::Type expected)
@@ -159,11 +186,28 @@ namespace apryx {
 			if (lexer.current().m_Type == Token::KEYWORD_FUNCTION) {
 				return parseFunction(lexer, modifiers);
 			}
+			if (lexer.current().m_Type == Token::KEYWORD_FUNCTION) {
+				return parseFunction(lexer, modifiers);
+			}
 			else if (lexer.current().m_Type == Token::KEYWORD_VARIABLE){
 				return parseVariable(lexer, modifiers);
 			}
 			else if (lexer.current().m_Type == Token::KEYWORD_CLASS || lexer.current().m_Type == Token::KEYWORD_STRUCT) {
 				return parseStructure(lexer, modifiers);
+			}
+			else if (lexer.current().m_Type == Token::KEYWORD_INCLUDE) {
+
+				if (modifiers.size() > 0)
+					LOG_WARNING("Warning! Illigal modifiers. " << lexer.current());
+
+				return parseInclude(lexer);
+			}
+			else if (lexer.current().m_Type == Token::KEYWORD_NAMESPACE) {
+
+				if (modifiers.size() > 0)
+					LOG_WARNING("Warning! Illigal modifiers. " << lexer.current());
+
+				return parseNamespace(lexer);
 			}
 			else if (lexer.current().m_Type == Token::KEYWORD_RETURN) {
 				lexer.next();
@@ -195,8 +239,8 @@ namespace apryx {
 			//Yes, we do completely ignore line ends, they mean basically nothing. The only thing there are really good for is expression seperation, and that
 			//works just fine with this current system e.g. a + b; a + b; . However a + b a + b is just as valid.
 			
-			//TODO find out if this has implications
-			return nullptr;// parseStatement(lexer);
+			// There is no way now to know whether or not this is an error or just a valid line end that is ignored
+			return nullptr;
 		}
 		//Else, it basically always is an expression
 		else {
@@ -217,17 +261,15 @@ namespace apryx {
 
 	//TODO return just a vector of Statements, because of 
 	//anonymouse scoping fucking with basically everything
-	std::shared_ptr<Block> Parser::parseAll(Lexer & lexer)
+	std::shared_ptr<CompilationUnit> Parser::parseAll(Lexer & lexer)
 	{
-		auto block = std::make_shared<Block>();
+		auto block = std::make_shared<CompilationUnit>();
 
 		while (lexer) {
 			auto s = parseStatement(lexer);
 
 			if (s)
 				block->m_Statements.push_back(s);
-			else
-				unexpectedToken(lexer);
 		}
 
 		return block;
@@ -457,30 +499,30 @@ namespace apryx {
 			return exp;
 		}
 		if (lexer.current().m_Type == Token::INTEGER) {
-			auto exp = std::make_shared<ConstantExpression>(lexer.current().m_Data);
+			auto exp = std::make_shared<LiteralExpression>(lexer.current().m_Data);
 			exp->m_Token = lexer.current();
-			exp->m_Decoration.m_Type = Type::getInt();
+			exp->m_Type = LiteralExpression::INTEGER;
 			lexer.next();
 			return exp;
 		}
 		if (lexer.current().m_Type == Token::FLOAT) {
-			auto exp = std::make_shared<ConstantExpression>(lexer.current().m_Data);
+			auto exp = std::make_shared<LiteralExpression>(lexer.current().m_Data);
 			exp->m_Token = lexer.current();
-			exp->m_Decoration.m_Type = Type::getFloat();
+			exp->m_Type = LiteralExpression::FLOAT;
 			lexer.next();
 			return exp;
 		}
 		if (lexer.current().m_Type == Token::DOUBLE) {
-			auto exp = std::make_shared<ConstantExpression>(lexer.current().m_Data);
+			auto exp = std::make_shared<LiteralExpression>(lexer.current().m_Data);
 			exp->m_Token = lexer.current();
-			exp->m_Decoration.m_Type = Type::getDouble();
+			exp->m_Type = LiteralExpression::DOUBLE;
 			lexer.next();
 			return exp;
 		}
 		if (lexer.current().m_Type == Token::STRING) {
-			auto exp = std::make_shared<ConstantExpression>(lexer.current().m_Data);
+			auto exp = std::make_shared<LiteralExpression>(lexer.current().m_Data);
 			exp->m_Token = lexer.current();
-			exp->m_Decoration.m_Type = Type::getString();
+			exp->m_Type = LiteralExpression::STRING;
 			lexer.next();
 			return exp;
 		}
@@ -491,13 +533,13 @@ namespace apryx {
 		}
 	}
 
-	std::shared_ptr<Block> Parser::parseBlock(Lexer & lexer)
+	std::shared_ptr<BlockStatement> Parser::parseBlock(Lexer & lexer)
 	{
 		if (lexer.current().m_Type != Token::OPEN_CURLY) {
 			unexpectedToken(lexer, Token::OPEN_CURLY);
 			return nullptr;
 		}
-		auto block = std::make_shared<Block>();
+		auto block = std::make_shared<BlockStatement>();
 
 		//Consume {
 		lexer.next();
@@ -517,15 +559,44 @@ namespace apryx {
 		return block;
 	}
 
-	boost::optional<std::string> Parser::parseType(Lexer & lexer)
+	std::shared_ptr<NameAndType> Parser::parseNameAndType(Lexer & lexer)
+	{
+		if (lexer.current().m_Type != Token::IDENTIFIER) {
+			unexpectedToken(lexer, Token::IDENTIFIER);
+			return nullptr;
+		}
+
+		auto nameAndType = std::make_shared<NameAndType>();
+		nameAndType->m_Name = lexer.current().m_Data;
+
+		// Consume the identifier
+		lexer.next();
+
+		if (lexer.current().m_Type != Token::COLON) {
+			return nameAndType; // Name and type without type
+		}
+
+		// Consume the :
+		lexer.next();
+
+		nameAndType->m_Type = parseNamedType(lexer);
+
+		return nameAndType;
+	}
+
+	std::shared_ptr<NamedType> Parser::parseNamedType(Lexer & lexer)
 	{
 		if (lexer.current().m_Type == Token::IDENTIFIER) {
-			std::string data = lexer.current().m_Data;
+			auto result = std::make_shared<NamedType>();
+
+			result->m_Name = lexer.current().m_Data;
+
 			lexer.next();
-			return data;
+
+			return result;
 		}
 		else {
-			return boost::none;
+			return nullptr;
 		}
 	}
 }

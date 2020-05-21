@@ -20,7 +20,7 @@ namespace apryx {
 		void dumpStack();
 	
 	public:
-		size_t execute(const Function &function);
+		size_t execute(const FunctionStatement &function);
 
 		void executeStatic(
 			const std::string &className,

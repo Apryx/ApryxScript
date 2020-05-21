@@ -6,7 +6,7 @@
 
 namespace apryx {
 
-	class Function {
+	class FunctionStatement {
 		std::string m_Name;
 
 		Type m_ReturnType;
@@ -14,7 +14,7 @@ namespace apryx {
 
 		ByteSequence m_Code;
 	public:
-		Function(std::string name, Type returnType, std::vector<Field> parameters, ByteSequence code);
+		FunctionStatement(std::string name, Type returnType, std::vector<Field> parameters, ByteSequence code);
 
 		const std::string &name() const { return m_Name; };
 		const Type &returnType() const { return m_ReturnType; };

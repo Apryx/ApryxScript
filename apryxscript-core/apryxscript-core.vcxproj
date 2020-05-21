@@ -75,7 +75,7 @@
     <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)src;$(SolutionDir)Dependencies\boost</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)src;$(SolutionDir)Dependencies\boost</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)src</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)src;$(SolutionDir)Dependencies\boost</IncludePath>
@@ -122,7 +122,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="src\ast2decorated_ast\Decorator.h" />
+    <ClInclude Include="src\ast\ast.h" />
+    <ClInclude Include="src\ast\ASTVisitor.h" />
     <ClInclude Include="src\ast\Expression.h" />
+    <ClInclude Include="src\ast\NameAndType.h" />
+    <ClInclude Include="src\ast\NamedType.h" />
     <ClInclude Include="src\ast\Statement.h" />
     <ClInclude Include="src\debug\Debug.h" />
     <ClInclude Include="src\decorated_ast\AccessModifier.h" />
@@ -152,6 +156,8 @@
   <ItemGroup>
     <ClCompile Include="src\ast2decorated_ast\Decorator.cpp" />
     <ClCompile Include="src\ast\Expression.cpp" />
+    <ClCompile Include="src\ast\NameAndType.cpp" />
+    <ClCompile Include="src\ast\NamedType.cpp" />
     <ClCompile Include="src\ast\Statement.cpp" />
     <ClCompile Include="src\decorated_ast\ApryxNamespace.cpp" />
     <ClCompile Include="src\generator\Generator.cpp" />

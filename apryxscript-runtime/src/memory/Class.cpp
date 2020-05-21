@@ -2,7 +2,7 @@
 
 namespace apryx {
 
-	Class::Class(std::string name, std::vector<Field> fields, std::vector<Function> functions)
+	Class::Class(std::string name, std::vector<Field> fields, std::vector<FunctionStatement> functions)
 		:m_Name(name), m_Fields(fields), m_Functions(functions)
 	{ }
 
@@ -15,7 +15,7 @@ namespace apryx {
 		return -1;
 	}
 
-	Function & Class::getFunction(int index)
+	FunctionStatement & Class::getFunction(int index)
 	{
 		return m_Functions[index];
 	}

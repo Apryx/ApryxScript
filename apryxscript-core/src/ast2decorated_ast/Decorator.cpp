@@ -32,17 +32,17 @@ namespace apryx {
 		return m_Statements.size() > 0;
 	}
 
-	void SemanticChecker::visit(const Function & exp)
+	void SemanticChecker::visit(const FunctionStatement & exp)
 	{
 
 	}
 
-	void SemanticChecker::visit(const Variable & exp)
+	void SemanticChecker::visit(const VariableStatement & exp)
 	{
 
 	}
 
-	void SemanticChecker::visit(const Block & exp)
+	void SemanticChecker::visit(const BlockStatement & exp)
 	{
 		for (auto& e : exp.m_Statements)
 		{

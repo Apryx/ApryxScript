@@ -1,7 +1,6 @@
 #pragma once
 
 #include <vector>
-#include <boost/optional.hpp>
 
 #include "Type.h"
 #include "ApryxVariable.h"

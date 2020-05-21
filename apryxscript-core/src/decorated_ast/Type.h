@@ -37,7 +37,7 @@ namespace apryx {
 		//Class
 		const std::string &getName() const;
 		
-		//Function
+		//FunctionStatement
 		int getArgumentCount() const;
 		const Type &getArgumentType(int index) const;
 		const Type &getReturnType() const;

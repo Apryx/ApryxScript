@@ -3,11 +3,11 @@
 #include <memory>
 #include <queue>
 
-#include "ast/Statement.h"
+#include "ast/ASTVisitor.h"
 
 namespace apryx { 
 
-	class SemanticChecker : public StatementVisitor {
+	class SemanticChecker : public ASTVisitor {
 
 		//Semantic checker
 		//
@@ -35,10 +35,10 @@ namespace apryx {
 
 		int steps = 0;
 	private:
-		virtual void visit(const Function &exp) override;
-		virtual void visit(const Variable &exp) override;
-		virtual void visit(const Block &exp) override;
-		virtual void visit(const Structure &exp) override {};
+		virtual void visit(const FunctionStatement &exp) override;
+		virtual void visit(const VariableStatement &exp) override;
+		virtual void visit(const BlockStatement &exp) override;
+		virtual void visit(const StructureStatement &exp) override {};
 		virtual void visit(const ReturnStatement &exp) override {};
 		virtual void visit(const ExpressionStatement &exp) override {};
 
@@ -48,7 +48,7 @@ namespace apryx {
 		virtual void visit(const ListExpression &exp) override {};
 		virtual void visit(const LookupExpression &exp) override {};
 		virtual void visit(const IdentiefierExpression &exp) override {};
-		virtual void visit(const ConstantExpression &exp) override {};
+		virtual void visit(const LiteralExpression &exp) override {};
 
 
 	public:

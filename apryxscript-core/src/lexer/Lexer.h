@@ -19,6 +19,7 @@ namespace apryx {
 			MODIFIER_PRIVATE,	// private
 			MODIFIER_STATIC,	// static
 			MODIFIER_LOCAL,		// local
+			MODIFIER_EXTERN,	// extern
 
 			KEYWORD_RETURN,		// static
 			KEYWORD_IN,			// in
@@ -29,6 +30,9 @@ namespace apryx {
 			KEYWORD_WHILE,		// while
 			KEYWORD_REPEAT,		// repeat
 
+			KEYWORD_INCLUDE,	// include
+			KEYWORD_NAMESPACE,	// namespace
+			
 			KEYWORD_EXTENDS,	// extends
 
 			STRING,

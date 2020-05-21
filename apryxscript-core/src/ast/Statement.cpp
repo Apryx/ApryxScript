@@ -4,30 +4,30 @@
 
 #include "vm/VMWriter.h"
 
+#include "ASTVisitor.h"
+
 namespace apryx {
-	std::string Variable::toString()
+
+	std::string VariableStatement::toString()
 	{
 		std::stringstream stream;
 
 		stream << "var ";
-		stream << m_Name;
-		if (m_DeclaredType.size() > 0)
-			stream << ":" << m_DeclaredType;
-		if (m_InitialValue)
-			stream << "=" << m_InitialValue->toString();
+		
+		stream << m_NameAndType->toString();
 
 		stream << ";";
 
 		return stream.str();
 	}
 
-	void Variable::accept(StatementVisitor & exp)
+	void VariableStatement::accept(ASTVisitor & exp)
 	{
 		exp.visit(*this);
 	}
 
 	
-	std::string Block::toString()
+	std::string BlockStatement::toString()
 	{
 		std::stringstream stream;
 
@@ -38,7 +38,7 @@ namespace apryx {
 
 		return stream.str();
 	}
-	void Block::accept(StatementVisitor & exp)
+	void BlockStatement::accept(ASTVisitor & exp)
 	{
 		exp.visit(*this);
 	}
@@ -52,27 +52,45 @@ namespace apryx {
 
 		return stream.str();
 	}
-	void ReturnStatement::accept(StatementVisitor & exp)
+	
+	void ReturnStatement::accept(ASTVisitor & exp)
 	{
 		exp.visit(*this);
 	}
-	std::string Function::toString()
+
+	std::string FunctionStatement::toString()
 	{
 		std::stringstream stream;
 
 		stream << "function ";
 		stream << m_Name;
-		stream << "(" << (m_Arguments ? m_Arguments->toString() : "") << ")";
-		stream << ":";
-		stream << m_ReturnType;
+		stream << "(";
+
+		for (int i = 0; i < m_Parameters.size(); i++) {
+			
+			stream << m_Parameters[i]->toString();
+
+			if (i != m_Parameters.size() - 1) {
+				stream << ", ";
+			}
+		}
+
+		stream << ")";
+		
+		if (m_ReturnType) {
+			stream << " : ";
+			stream << m_ReturnType->toString();
+		}
 		stream << m_Statement->toString();
 
 		return stream.str();
 	}
-	void Function::accept(StatementVisitor & exp)
+	void FunctionStatement::accept(ASTVisitor & exp)
 	{
 		exp.visit(*this);
 	}
+
+
 	std::string ExpressionStatement::toString()
 	{
 		std::stringstream stream;
@@ -83,158 +101,81 @@ namespace apryx {
 		return stream.str();
 	}
 
-	void ExpressionStatement::accept(StatementVisitor & exp)
+	void ExpressionStatement::accept(ASTVisitor & exp)
 	{
 		exp.visit(*this);
 	}
 
-	//LEGACY
-	std::string Context::toString()
-	{
-		return std::string();
-	}
-
-	void Context::performOperator(VMWriter &vmw, const std::string & op)
-	{
-		if (op == "+") {
-			vmw.fadd();
-		}
-		else if (op == "-") {
-			vmw.fsub();
-		}
-		else if (op == "*") {
-			vmw.fmul();
-		}
-		else if (op == "/") {
-			vmw.fdiv();
-		}
-	}
-
-	void Context::performPrefixOperator(VMWriter &vmw, const std::string & op)
-	{
-
-	}
-	std::string Structure::toString()
+	std::string StructureStatement::toString()
 	{
 		std::stringstream stream;
 
-		stream << "class ";
-		stream << m_Name;
-		stream << " extends ";
-		stream << m_Parent;
+		if (m_Type == REFERENCE) {
+			stream << "class ";
+		}
+		else {
+			stream << "struct ";
+		}
+
+		stream << m_Name->toString();
+
+		if (m_Parent) {
+			stream << " extends ";
+			stream << m_Parent->toString();
+		}
+
 		stream << m_Statement->toString();
 
 		return stream.str();
 	}
 
-	void Structure::accept(StatementVisitor & exp)
+	void StructureStatement::accept(ASTVisitor & exp)
 	{
 		exp.visit(*this);
 	}
 
-	std::string OperatorExpression::toString()
+
+	std::string CompilationUnit::toString()
 	{
 		std::stringstream stream;
 
-		stream << "(";
-		stream << m_Lhs->toString();
-		stream << m_Operator;
-		stream << m_Rhs->toString();
-		stream << ")";
+		for (auto &a : m_Statements)
+			stream << a->toString();
 
 		return stream.str();
 	}
-	void OperatorExpression::accept(StatementVisitor & exp)
-	{
-		exp.visit(*this);
-	}
-	std::string IdentiefierExpression::toString()
-	{
-		return m_Identifier;
-	}
 
-	void IdentiefierExpression::accept(StatementVisitor & exp)
+	void CompilationUnit::accept(ASTVisitor & exp)
 	{
 		exp.visit(*this);
 	}
 
-	std::string InvokeExpression::toString()
-	{
-
-		std::stringstream stream;
-
-		stream << "(";
-		stream << m_Lhs->toString();
-		stream << "(";
-		stream << (m_Args == nullptr ? "" : m_Args->toString());
-		stream << ")";
-		stream << ")";
-
-		return stream.str();
-	}
-	void InvokeExpression::accept(StatementVisitor & exp)
-	{
-		exp.visit(*this);
-	}
-	std::string ConstantExpression::toString()
-	{
-		if (m_Decoration.m_Type == Type::getString()) {
-			return "\"" + m_Constant + "\"";
-		}
-		else {
-			return m_Constant;
-		}
-	}
-	void ConstantExpression::accept(StatementVisitor & exp)
-	{
-		exp.visit(*this);
-	}
-	std::string LookupExpression::toString()
+	std::string NamespaceStatement::toString()
 	{
 		std::stringstream stream;
 
-		stream << "(";
-		stream << m_Lhs->toString();
-		stream << ".";
-		stream << m_Rhs->toString();
-		stream << ")";
+		stream << "namespace " << m_Name->toString() << ";";
 
 		return stream.str();
 	}
-	void LookupExpression::accept(StatementVisitor & exp)
+
+	void NamespaceStatement::accept(ASTVisitor & exp)
 	{
 		exp.visit(*this);
 	}
-	std::string PrefixOperatorExpression::toString()
+
+	std::string IncludeStatement::toString()
 	{
 		std::stringstream stream;
 
-		stream << "(";
-		stream << m_Operator;
-		stream << m_Rhs->toString();
-		stream << ")";
+		stream << "include \"" << m_File << "\";";
 
 		return stream.str();
 	}
-	void PrefixOperatorExpression::accept(StatementVisitor & exp)
+
+	void IncludeStatement::accept(ASTVisitor & exp)
 	{
 		exp.visit(*this);
 	}
-	std::string ListExpression::toString()
-	{
-		std::stringstream stream;
 
-		for (int i = 0; i < m_List.size(); i++) {
-			stream << m_List[i]->toString();
-
-			if (i != m_List.size() - 1)
-				stream << ",";
-		}
-
-		return stream.str();
-	}
-	void ListExpression::accept(StatementVisitor & exp)
-	{
-		exp.visit(*this);
-	}
 }
